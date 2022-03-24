@@ -6,5 +6,9 @@
         "dbname": "doggy-contester",
         "user": "",
         "password": ""
+    },
+    "auth": {
+        "secretKey": "test",
+        "expiresIn": 43200
     }
 }

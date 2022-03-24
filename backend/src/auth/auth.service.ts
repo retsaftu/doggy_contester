@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
 import { AuthDto } from './dto/auth.dto';
 import * as mongodb from 'mongodb';
 
@@ -31,6 +31,26 @@ export class AuthService {
         }
       }
     ]).toArray())[0];
+  }
+
+  async validateUser(email: string, password: string) {
+    const user = await this.findUser(email);
+    if (!user) {
+      throw new UnauthorizedException(USER_NOT_FOUND_ERROR);
+    }
+    const isCorrectPassword = await compare(password, user.passwordHash);
+    if (!isCorrectPassword) {
+      throw new UnauthorizedException(WRONG_PASSWORD_ERROR);
+    }
+    return { email: user.email };
+  }
+
+  async login(email: string) {
+    const payload = { email };
+    console.log(`email`, email);
+    return {
+      access_token: await this.jwtService.signAsync(payload)
+    };
   }
 
 }
