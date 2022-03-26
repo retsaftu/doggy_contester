@@ -1,0 +1,100 @@
+.container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .form {
+        min-width: 20%;
+        max-width: 80%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-shadow: none;
+        padding: min(4em, 20%);
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            .logo {
+                margin-bottom: 1.34375em;
+                width: 9.375em;
+            }
+
+            .input{
+                width: 100%;   /* background-color: #EDF1F7; */
+            }
+
+            .button {
+                box-shadow: none !important;
+                width: 100%;
+                height: 2.75em;
+                font-size: 1.3em;
+            }
+
+            .service-registration-btn {
+                box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.25) !important;
+                margin-top: 1.34375em;
+                img {
+                    max-width: 70%;
+                    max-height: 70%;
+                }
+            }
+
+            .links {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                margin: 1.34375em 0em;
+                a {
+                    cursor: pointer;
+                }
+            }
+            
+            .signIn {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                margin: 1.34375em 0em;
+                a {
+                    cursor: pointer;
+                }
+            }
+
+            .divider-line {
+                width: 100%;
+                h3 {
+                    width:100%;
+                    text-align:center; 
+                    border-bottom: 1px solid #000; 
+                    line-height:0.1em; 
+                    margin:10px 0 20px;
+                    font-weight: 500;
+                    span { 
+                        background:#fff; 
+                        padding:0 10px; 
+                    }
+                } 
+            }
+        }
+    }
+}
+
+::ng-deep {
+    .mat-focused .mat-form-field-label {
+        /*change color of label*/
+        // color: black !important;
+        display: none;
+    }
+    .mat-form-field-underline {
+        /*change color of underline*/
+        display: none;
+    } 
+    .mat-form-field-ripple {
+        /*change color of underline when focused*/
+        background-color: transparent !important;;
+    }
+}
