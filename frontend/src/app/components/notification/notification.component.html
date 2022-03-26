@@ -1,0 +1,11 @@
+<div class="wrapper">
+    <div class="bar" [ngClass]="appereanceClass"></div>
+    <div class="message">
+        <fa-icon class="icon" [icon]="icon" [ngClass]="appereanceClass + '-icon'"></fa-icon>
+        <span> {{data.message}}</span>
+    </div>
+    <div class="button">
+        <!-- <button mat-stroked-button (click)="snackBarRef.dismiss()">{{data.action}}</button> -->
+        <button mat-stroked-button (click)="snackBarRef.dismiss()"><fa-icon [icon]="['fas', 'window-close']"></fa-icon></button>
+    </div>
+</div>
