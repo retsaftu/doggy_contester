@@ -7,12 +7,11 @@ import * as mongodb from 'mongodb';
 @Injectable()
 export class ContestService {
   constructor(
-    @Inject('DATABASE_CONNECTION') private db: mongodb.Db,
-    private readonly jwtService: JwtService
+    @Inject('DATABASE_CONNECTION') private db: mongodb.Db
   ) { }
 
-  create(createContestDto: CreateContestDto) {
-    return 'This action adds a new contest';
+  async create(createContestDto: CreateContestDto) {
+    return await this.db.collection('contest').insertOne(createContestDto);
   }
 
   async findAll() {
