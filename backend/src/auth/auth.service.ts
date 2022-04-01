@@ -5,18 +5,21 @@ import * as mongodb from 'mongodb';
 import { genSalt, hash, compare } from 'bcryptjs';
 import { USER_NOT_FOUND_ERROR, WRONG_PASSWORD_ERROR } from './auth.constants';
 import { JwtService } from '@nestjs/jwt';
+import { RegisterDto } from './dto/register.dto';
 @Injectable()
 export class AuthService {
   constructor(
     @Inject('DATABASE_CONNECTION') private db: mongodb.Db,
     private readonly jwtService: JwtService
   ) { }
-  async createUser(dto: AuthDto) {
+  async createUser(dto: RegisterDto) {
     const salt = await genSalt(10);
 
     return await this.db.collection('users').insertOne(
       {
-        email: dto.login,
+        name: dto.name,
+        username: dto.username,
+        email: dto.email,
         passwordHash: await hash(dto.password, salt)
       }
     );
@@ -42,7 +45,7 @@ export class AuthService {
     if (!isCorrectPassword) {
       throw new UnauthorizedException(WRONG_PASSWORD_ERROR);
     }
-    return { email: user.email };
+    return { _email: user.email };
   }
 
   async login(email: string) {

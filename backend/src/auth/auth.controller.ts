@@ -2,6 +2,7 @@ import { BadRequestException, Body, Controller, HttpCode, Post, UsePipes, Valida
 import { AuthService } from './auth.service';
 import { AuthDto } from "./dto/auth.dto";
 import { ALREADY_REGISTERED_ERROR } from './auth.constants';
+import { RegisterDto } from './dto/register.dto';
 
 
 @Controller('auth')
@@ -10,8 +11,8 @@ export class AuthController {
 
   @UsePipes(new ValidationPipe())
   @Post('register')
-  async register(@Body() dto: AuthDto) {
-    const oldUser = await this.authService.findUser(dto.login);
+  async register(@Body() dto: RegisterDto) {
+    const oldUser = await this.authService.findUser(dto.email);
     if (oldUser) {
       throw new BadRequestException(ALREADY_REGISTERED_ERROR);
     }
@@ -21,10 +22,10 @@ export class AuthController {
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
   @Post('login')
-  async login(@Body() { login, password }: AuthDto) {
-    const { email } = await this.authService.validateUser(login, password);
-    return this.authService.login(email);
+  async login(@Body() { email, password }: AuthDto) {
+    const { _email } = await this.authService.validateUser(email, password);
+    return this.authService.login(_email);
 
   }
- 
+
 }
