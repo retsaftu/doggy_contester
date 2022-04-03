@@ -1,4 +1,6 @@
 package com.doggy_contester_mobile;
+import expo.modules.ReactActivityDelegateWrapper;
+import com.facebook.react.ReactActivityDelegate;
 
 import com.facebook.react.ReactActivity;
 
@@ -11,5 +13,12 @@ public class MainActivity extends ReactActivity {
   @Override
   protected String getMainComponentName() {
     return "doggy_contester_mobile";
+  }
+
+  @Override
+  protected ReactActivityDelegate createReactActivityDelegate() {
+    return new ReactActivityDelegateWrapper(this,
+      new ReactActivityDelegate(this, getMainComponentName())
+    );
   }
 }
