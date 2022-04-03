@@ -1,0 +1,63 @@
+@import '../../../custom-theme.scss';
+
+.wrapper {
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+}
+
+.button, .message {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.message {
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    font-size: 20px;
+    margin-right: 8px;
+}
+
+.button button{
+    // background-color: white;
+    color: white;
+    // width: fit-content;
+}
+
+.bar {
+    margin: 0;
+    width: 2%;
+}
+
+.error {
+    background-color: $notification-error;
+}
+.error-icon {
+    color: $notification-error;
+}
+
+.success {
+    background-color: $notification-success;
+}
+.success-icon {
+    color: $notification-success;
+}
+
+.warn {
+    background-color: $notification-warning;
+}
+.warn-icon {
+    color: $notification-warning;
+}
+
+.info {
+    background-color: $notification-info;
+}
+.info-icon {
+    color: $notification-info;
+}

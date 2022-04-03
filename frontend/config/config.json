@@ -1,0 +1,8 @@
+{
+    "lb-endpoints": {
+        "doggy-contester-backend": {
+            "host": "localhost",
+            "port": 3000
+        }
+    }
+}

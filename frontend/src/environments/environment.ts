@@ -3,7 +3,17 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+
+  host: "localhost",
+  port: 3000,
+
+  getApiUrl: function() {
+    return `http://${this.host}:${this.port}`
+  },
+
+  googleClientID: "355861108791-ch399vu1qttgpom13tbc1avk58onp888.apps.googleusercontent.com",
+  tokenHeader: "Authentication_token"
 };
 
 /*
