@@ -9,14 +9,16 @@ export default StyleSheet.create({
         backgroundColor:'#fff',
     },
     input:{
-        borderBottomWidth: 0.3,
         shadowColor: '#000',
         shadowOffset:{
             width:0,
             height:1
         },
-        textAlign:'center',
-        marginVertical:'4%'
+        // textAlign:'center',
+        marginVertical:'4%',
+
+        paddingLeft:"6%"
+        // backgroundColor:'#E5E5E5'
     },
     button:{
         marginHorizontal:'30%',
@@ -29,13 +31,13 @@ export default StyleSheet.create({
         borderStyle:'solid',
     },
     image:{
-        width:130,
-        height:130
+        width:100,
+        height:100
     },
     imagePosition:{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-around',
-        height: '40%'
+        height: '20%'
     }
 })

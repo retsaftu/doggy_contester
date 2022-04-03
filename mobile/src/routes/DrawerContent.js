@@ -4,38 +4,16 @@ import {DrawerContentScrollView, DrawerItem} from "@react-navigation/drawer";
 import { Drawer } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 const pkg = require('../../package.json');
-
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18n from "i18n-js";
 import userService from "../service/UserService";
 
 //Компонент меню которая появляется слева(если провести по экрану слева направо)
 export function DrawerContent(props){
-    const arr=[];
-    const [array,setArray]=useState([]);
-    const [username,setUsername]=useState('');
-    const [isLoaded,setIsLoaded]=useState(false);
+
     const getData=async ()=>{
-        const user=await AsyncStorage.getItem('username');
-        await setUsername(user);
-        await setIsLoaded(true);
-        await AsyncStorage.getItem('language')
-            .then(language => {
-                if (language){
-                    i18n.locale = language;
-                }else {
-                    i18n.locale = 'ru';
-                }
-            });
-        let currentUser=await userService.getCurrentUserInfo();
-        let permissionList=currentUser.roles[0].permissionList;
-        permissionList.map((list)=>{
-            if (list.menuId){
-                arr.push(list.menuId);
-            }
-        })
-        setArray(arr);
-        // console.log(array)
+
     }
 
     useEffect(()=>{
@@ -56,114 +34,52 @@ export function DrawerContent(props){
                                 size={size}
                             />
                         )}
-                        label={i18n.t('Agis')}
+                        label={'Home'}
                         onPress={()=>{props.navigation.navigate('Home')}}
                     />
-                    {array.includes("pressure_main")
-                        ?
-                        <DrawerItem
-                            icon={({color, size})=>(
-                                <Icon name='filter'
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label={i18n.t('Pressure')}
-                            onPress={()=>{props.navigation.navigate('PressureTab')}}
-                        />
-                        :null
-                    }
-                    {array.includes("flowmeter_main")
-                        ?
-                        <DrawerItem
-                            icon={({color, size})=>(
-                                <Icon name='approximately-equal-box'
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label={i18n.t('FlowMeter')}
-                            onPress={()=>{props.navigation.navigate('FlowMeterTab')}}
-                        />
-                        :null
-                    }
-                    {array.includes("service_main")
-                        ?
-                        <DrawerItem
-                            icon={({color, size})=>(
-                                <Icon name='passport-biometric'
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label={i18n.t('Service')}
-                            onPress={()=>{props.navigation.navigate('Service')}}
-                        />
-                        :null
-                    }
-                    {array.includes("kns_room_main")
-                        ?
-                        <DrawerItem
-                            icon={({color, size})=>(
-                                <Icon name='folder-settings'
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label={i18n.t('Kns')}
-                            onPress={()=>{props.navigation.navigate('KnsStack')}}
-                        />
-                        :null
-                    }
-                    {array.includes("passport-list")
-                        ?
-                        <DrawerItem
-                            icon={({color, size})=>(
-                                <Icon name='apps-box'
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label={i18n.t('Passports')}
-                            onPress={()=>{props.navigation.navigate('Passports')}}
-                        />
-                        :null
-                    }
                     <DrawerItem
                         icon={({color, size})=>(
-                            <Icon name='receipt'
+                            <Icon name='clipboard-list'
                                 color={color}
                                 size={size}
                             />
                         )}
-                        label='Zander'
-                        onPress={()=>{props.navigation.navigate('Zander Stack')}}
+                        label={'Contests'}
+                        onPress={()=>{props.navigation.navigate('Contests')}}
+                    />
+                    <DrawerItem
+                        icon={({color, size})=>(
+                            <MaterialIcons name='leaderboard'
+                                color={color}
+                                size={size}
+                            />
+                        )}
+                        label={'Leader Board'}
+                        onPress={()=>{props.navigation.navigate('Home')}}
                     />
                 </Drawer.Section>
             </DrawerContentScrollView>
-            <Drawer.Section style={styles.bottomDrawerSection}>
-                {
-                    isLoaded
-                    ?
-                    <View style={styles.textWrap}>
-                        <Text style={styles.text}>{username}</Text>
-                    </View>
-                    :
-                    null
-                }
-                <View style={styles.textWrap}>
-                    <Text style={styles.text}>Версия {pkg.version}</Text>
-                </View>
+            <Drawer.Section style={styles.bottomDrawerSection}>       
                 <DrawerItem
                     icon={({color, size})=>(
-                        <Icon name='database-export'
+                        <MaterialIcons name='account-circle'
                             color={color}
                             size={size}
                         />
                     )}
-                    label={i18n.t('Settings')}
-                    onPress={()=>{props.navigation.navigate('Settings')}}
-                />
+                    label={'Profile'}
+                    onPress={()=>{props.navigation.navigate('Profile')}}
+                />     
+                <DrawerItem
+                    icon={({color, size})=>(
+                        <Icon name='bell'
+                            color={color}
+                            size={size}
+                        />
+                    )}
+                    label={'Notifications'}
+                    onPress={()=>{props.navigation.navigate('Notifications')}}
+                />     
                 <DrawerItem
                     icon={({color, size})=>(
                         <Icon name='exit-to-app'
@@ -171,7 +87,7 @@ export function DrawerContent(props){
                             size={size}
                         />
                     )}
-                    label={i18n.t('SignOut')}
+                    label={'Sign Out'}
                     onPress={()=>{logOut()}}
                 />
             </Drawer.Section>
@@ -198,7 +114,7 @@ const styles = StyleSheet.create({
     },
     text:{
         color:"#505050",
-        fontSize:16,
+        fontSize:18,
         marginLeft:'7%',
         marginVertical:'3%',
         paddingBottom:'3%',
