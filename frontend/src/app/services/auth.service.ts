@@ -18,17 +18,17 @@ export class AuthService {
     const expirationTime = expires_at == undefined ? new Date(60 * 60 * 24) : new Date(Number(expires_at))
     this.setToken(googleToken, expirationTime);
     // TODO: отправить запрос на правильный url
-    return this.http.post(`${environment.getApiUrl()}/api/auth/registerByGoogleAccount`, userRegistrationInfo);
+    return this.http.post(`/api/auth/registerByGoogleAccount`, userRegistrationInfo);
   }
 
   register(userRegistrationInfo: UserRegistrationInfo) {
     // TODO: отправить запрос на правильный url
-    return this.http.post(`${environment.getApiUrl()}/api/auth/registerByGoogleAccount`, userRegistrationInfo);
+    return this.http.post(`/api/auth/registerByGoogleAccount`, userRegistrationInfo);
   }
 
   login (userLoginInfo: UserLoginInfo) {
     // TODO: отправить запрос на правильный url
-    return this.http.get(`${environment.getApiUrl()}/api/auth/login?${userLoginInfo}`)
+    return this.http.get(`/api/auth/login?${userLoginInfo}`)
       .pipe(
         tap((response: any) => {
           this.setToken(response['token'], response['expirationTime']);
