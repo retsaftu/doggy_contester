@@ -13,7 +13,8 @@ export const environment = {
   },
 
   googleClientID: "355861108791-ch399vu1qttgpom13tbc1avk58onp888.apps.googleusercontent.com",
-  tokenHeader: "Authentication_token"
+  tokenHeader: "Authentication_token",
+  themeField: 'theme'
 };
 
 /*

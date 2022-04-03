@@ -17,6 +17,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faWindowClose, faComment } from '@fortawesome/free-solid-svg-icons';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
+import {MatDividerModule} from '@angular/material/divider';
 
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 import { GoogleLoginProvider } from 'angularx-social-login';
@@ -26,12 +27,22 @@ import { environment } from 'src/environments/environment';
 import { AuthComponent } from './components/auth/auth.component';
 import { NotificationComponent } from './components/notification/notification.component';
 import { ApiInterceptorInterceptor } from './interceptors/api-interceptor.interceptor';
+import { HomeComponent } from './components/home/home.component';
+import { NavigationComponent } from './components/navigation/navigation.component';
+import { MainComponent } from './components/main/main.component';
+import { ContestItemComponent } from './components/contest-item/contest-item.component';
+import { ContestComponent } from './components/contest/contest.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthComponent,
-    NotificationComponent
+    NotificationComponent,
+    HomeComponent,
+    NavigationComponent,
+    MainComponent,
+    ContestItemComponent,
+    ContestComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +58,8 @@ import { ApiInterceptorInterceptor } from './interceptors/api-interceptor.interc
     MatCardModule,
     SocialLoginModule,
     FontAwesomeModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDividerModule
   ],
   providers: [
     {

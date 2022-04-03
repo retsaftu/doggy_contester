@@ -134,7 +134,7 @@ $doggy-contester-light-theme: custom-create-light-color-config(
   $doggy-contester-frontend-primary,
   $doggy-contester-frontend-accent, 
   $doggy-contester-frontend-warn
-);
+);  
 
 $doggy-contester-dark-theme: mat.define-dark-theme((
   color: (
@@ -149,3 +149,10 @@ $doggy-contester-dark-theme: mat.define-dark-theme((
 // that you are using.
 @include mat.all-component-themes($doggy-contester-light-theme);
 
+.theme-dark {
+  @include mat.all-component-colors($doggy-contester-dark-theme);
+}
+
+.theme-light {
+  @include mat.all-component-themes($doggy-contester-light-theme);
+}
