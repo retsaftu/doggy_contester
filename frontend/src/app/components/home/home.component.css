@@ -1,0 +1,18 @@
+main {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 1em 0;
+}
+.wrapper {
+    width: 90%;
+}
+.wrapper div {
+    /* width: 70%; */
+}
+h1 {
+    font-weight: 500;
+}
+.contests-wrapper{
+    margin: 1em 0;
+}
