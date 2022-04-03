@@ -66,18 +66,18 @@
 
             .divider-line {
                 width: 100%;
-                h3 {
-                    width:100%;
-                    text-align:center; 
-                    border-bottom: 1px solid #000; 
-                    line-height:0.1em; 
-                    margin:10px 0 20px;
+                display: flex;
+                align-items: center;
+                box-sizing: border-box;
+                span {
+                    padding: 0 15px;
+                    text-transform: uppercase;
                     font-weight: 500;
-                    span { 
-                        background:#fff; 
-                        padding:0 10px; 
-                    }
-                } 
+                    font-size: 18px;
+                }
+                mat-divider {
+                    position: relative !important;
+                }
             }
         }
     }
@@ -97,4 +97,21 @@
         /*change color of underline when focused*/
         background-color: transparent !important;;
     }
+}
+
+.container-tmp {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.line-tmp {
+    flex: auto;
+}
+
+.text-tmp {
+    padding-left: 10px;
+    padding-right: 10px;
 }
