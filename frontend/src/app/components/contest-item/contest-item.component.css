@@ -1,0 +1,47 @@
+mat-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    margin-bottom: 20px;
+}
+h2 {
+    margin: 0;
+    padding: 0;
+    width: 40%;
+}
+.contest-item{
+    margin: 0 5px;
+    width: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+mat-card div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 60%;
+}
+.numberOfParticipants span {
+    margin-right: 5px;
+}
+.owner{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.dateTime {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.content {
+    font-weight: 500;
+}
+button {
+    width: 65%;
+}
