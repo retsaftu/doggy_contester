@@ -1,0 +1,17 @@
+<mat-card>
+    <nav>
+        <ul>
+            <li class="logo">
+                <img src="../../../assets/logo.png">
+            </li>
+            <li><a routerLink="">Home</a></li>
+            <li><a routerLink="/contests">Contests</a></li>
+            <li><a routerLink="/leaderboard">Leaderboard</a></li>
+        </ul>
+        <ul>
+            <li class="item-with-icon" (click)="changeTheme()"><mat-icon>brightness_medium</mat-icon></li>
+            <li class="item-with-icon"><mat-icon aria-hidden="false">notifications</mat-icon></li>
+            <li class="item-with-icon"><mat-icon>account_circle</mat-icon><span class="username">User</span></li>
+        </ul>
+    </nav>
+</mat-card>

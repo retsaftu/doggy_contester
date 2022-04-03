@@ -1,0 +1,42 @@
+mat-card {
+    width: 100%;
+    box-sizing: border-box;
+}
+nav {
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 80px;
+}
+ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
+li {
+    margin-right: 40px;
+    font-weight: 500;
+    vertical-align: middle;
+    cursor: pointer;
+}
+.item-with-icon {
+    display: flex;
+    align-items: center;
+}
+.logo img{
+    width: 50px;
+}
+a {
+    cursor: pointer;
+    transition: .1s;
+    border-bottom: 0px;
+}
+a:hover{
+    border-bottom: 5px solid #F00500;
+}
+.username {
+    margin-left: 8px;
+}
