@@ -1,18 +1,16 @@
-<main>
+<div class="main">
     <div class="wrapper">
-        <div>
-            <div class="contests-wrapper">
-                <h1>My contests</h1>
-                <app-contest-item *ngFor="let contest of userContests" [contestInfo]=contest></app-contest-item>
-            </div>
-            <div class="contests-wrapper">
-                <h1>Active contests</h1>
-                <app-contest-item *ngFor="let contest of activeContests" [contestInfo]=contest></app-contest-item>
-            </div>
-            <div class="contests-wrapper">
-                <h1>Currently running contests</h1>
-                <app-contest-item *ngFor="let contest of contests" [contestInfo]=contest></app-contest-item>
-            </div>
+        <div class="contests-wrapper">
+            <h1>My contests</h1>
+            <app-contest-item *ngFor="let contest of userContests" [contestInfo]=contest></app-contest-item>
+        </div>
+        <div class="contests-wrapper">
+            <h1>Active contests</h1>
+            <app-contest-item *ngFor="let contest of activeContests" [contestInfo]=contest></app-contest-item>
+        </div>
+        <div class="contests-wrapper">
+            <h1>Currently running contests</h1>
+            <app-contest-item *ngFor="let contest of contests" [contestInfo]=contest></app-contest-item>
         </div>
     </div>
-</main>
+</div>
