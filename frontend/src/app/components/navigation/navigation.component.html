@@ -2,16 +2,18 @@
     <nav>
         <ul>
             <li class="logo">
-                <img src="../../../assets/logo.png">
+                <a routerLink=""><img src="../../../assets/logo.png"></a>
             </li>
-            <li><a routerLink="">Home</a></li>
-            <li><a routerLink="/contests">Contests</a></li>
-            <li><a routerLink="/leaderboard">Leaderboard</a></li>
+            <li><a routerLink="" [ngClass]="{'activeRoute': '' == currentRoute}">Home</a></li>
+            <li><a routerLink="/contests" [ngClass]="{'activeRoute': 'contests' == currentRoute}">Contests</a></li>
+            <li><a routerLink="/leaderboard" [ngClass]="{'activeRoute': 'leaderboard' == currentRoute}">Leaderboard</a></li>
         </ul>
         <ul>
             <li class="item-with-icon" (click)="changeTheme()"><mat-icon>brightness_medium</mat-icon></li>
             <li class="item-with-icon"><mat-icon aria-hidden="false">notifications</mat-icon></li>
-            <li class="item-with-icon"><mat-icon>account_circle</mat-icon><span class="username">User</span></li>
+            <li class="item-with-icon" *ngIf="isAuthenticated"><mat-icon>account_circle</mat-icon><span class="username">User</span></li>
+            <li *ngIf="!isAuthenticated"><button mat-raised-button (click)="login()">Log in</button></li>
+            <li *ngIf="!isAuthenticated"><button mat-raised-button color="primary" (click)="signUp()">Sign up</button></li>
         </ul>
     </nav>
 </mat-card>

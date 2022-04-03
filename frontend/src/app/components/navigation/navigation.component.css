@@ -1,23 +1,27 @@
 mat-card {
     width: 100%;
     box-sizing: border-box;
+    padding: 0;
 }
 nav {
     box-sizing: border-box;
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 0 80px;
+    padding: 1em 8em;
 }
 ul {
+    max-width: 45%;
+    min-width: 30%;
     list-style: none;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0;
     margin: 0;
 }
 li {
-    margin-right: 40px;
+    /* margin-right: 40px; */
     font-weight: 500;
     vertical-align: middle;
     cursor: pointer;
@@ -34,8 +38,8 @@ a {
     transition: .1s;
     border-bottom: 0px;
 }
-a:hover{
-    border-bottom: 5px solid #F00500;
+.activeRoute{
+    border-bottom: 3px solid #F00500;
 }
 .username {
     margin-left: 8px;

@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, EventEmitter, Inject, OnInit, Renderer2 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SocialAuthService, SocialUser  } from "angularx-social-login";
 import { GoogleLoginProvider } from "angularx-social-login";
 import { AuthService } from 'src/app/services/auth.service';
 import { UserLoginInfo, UserRegistrationInfo } from 'src/app/entities/user.entity';
+import { environment } from 'src/environments/environment';
+import { ActivatedRoute, ParamMap, Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
@@ -11,6 +14,9 @@ import { UserLoginInfo, UserRegistrationInfo } from 'src/app/entities/user.entit
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
+
+  private readonly lightThemeClass = 'theme-light';
+  private readonly DEFAULT_CLASSES = 'mat-typography mat-app-background' // Без этого ничего не работает
 
   showLoginPage = true;
 
@@ -24,20 +30,36 @@ export class AuthComponent implements OnInit {
   });
 
   loginForm = new FormGroup({
-    username: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required])
   })
 
   constructor(private socialAuthService: SocialAuthService,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              @Inject(DOCUMENT) private document: Document, private renderer: Renderer2,
+              private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+    // Changing theme
+    let currentTheme = localStorage.getItem(environment.themeField);
+    if(currentTheme == '' || currentTheme == undefined || currentTheme == null) {
+      currentTheme = this.lightThemeClass;
+    }
+    this.renderer.setAttribute(this.document.body, 'class',  this.DEFAULT_CLASSES + ' ' + currentTheme);
+
+    // Changing form
+    this.activatedRoute.queryParams.subscribe(params => {
+      console.log(params);
+      if(!!params['signUp'] && params['signUp'] == "show") {
+        this.showLoginPage = false;
+        console.log('here')
+      }
+    })
   }
 
   registerByGoogleAccount() {
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
     this.socialAuthService.authState.subscribe((user) => {
-      console.log(user);
       const email = user.email;
       const username =  email.substring(0, email.indexOf('@'));
       const registerUserInfo = new UserRegistrationInfo(username, email, user.name);
@@ -68,12 +90,12 @@ export class AuthComponent implements OnInit {
     if(this.isLoginFormFieldsAreEmpty()) {
       return;
     }
-    const loginUserInfo = new UserLoginInfo(this.loginFormUsername?.value, this.loginFormPassword?.value);
+    const loginUserInfo = new UserLoginInfo(this.loginFormEmail?.value, this.loginFormPassword?.value);
     this.authService.login(loginUserInfo); // TODO: обработать ответ
   }
 
   isLoginFormFieldsAreEmpty() {
-    return this.loginFormUsername?.hasError('required') || this.loginFormPassword?.hasError('required');
+    return this.loginFormEmail?.hasError('required') || this.loginFormPassword?.hasError('required');
   }
 
   isRegisterFormFieldsAreEmpty() {
@@ -81,7 +103,7 @@ export class AuthComponent implements OnInit {
     || this.registrationFormPassword?.hasError('required');
   }
 
-  get loginFormUsername() {return this.loginForm.get('username');}
+  get loginFormEmail() {return this.loginForm.get('email');}
 
   get loginFormPassword() {return this.loginForm.get('password');}
 
