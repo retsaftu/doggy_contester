@@ -19,6 +19,7 @@ export class NavigationComponent implements OnInit {
 
   ngOnInit(): void {
     const currentTheme = localStorage.getItem(environment.themeField);
+    this.isDark = currentTheme == this.darkThemeClass;
     this.renderer.setAttribute(this.document.body, 'class',  this.DEFAULT_CLASSES + ' ' + currentTheme)
   }
 
