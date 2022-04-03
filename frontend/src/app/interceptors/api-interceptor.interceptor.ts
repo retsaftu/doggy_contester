@@ -26,7 +26,7 @@ export class ApiInterceptorInterceptor implements HttpInterceptor {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type',
   'Access-Control-Allow-Methods': 'GET',
-  'Content-Type':  'application/json',
+  // 'Content-Type':  'application/json',
   }
 
   if(this.authService.isLoggedIn()) {
