@@ -13,15 +13,18 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from '../../css/GlobalStyles'
 import Ionicons from "react-native-vector-icons/Ionicons";
-import i18n from 'i18n-js'
+import CustomisableAlert, { showAlert, closeAlert } from "react-native-customisable-alert";
+import Loader from "react-native-modal-loader";
 import RNFetchBlob from 'rn-fetch-blob'
 export default class AuthForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: '',
+            email: '',
             password: '',
-            isPending:false
+            isPending:false,
+            isLoader:false,
+
         }
     }
 
@@ -50,60 +53,55 @@ export default class AuthForm extends Component {
 
     //Функция авторизации
     authHandler = async () => {
-        //Получаем url прописанный в юзером
-        // let item=await AsyncStorage.getItem('url')
-        // let url;
-        // //только при разработке! удалить для продакшна
-        // if (!item){
-        //     item='agis.kz:5115';
-        //     await AsyncStorage.setItem('url', item)
-        //     url=`https://${item}/api/identity/signin`
-        // } else {
-        //     url=`https://${item}/api/identity/signin`
-        // }
-        // //только при разработке! удалить для продакшна
+        let user={
+            email: this.state.email,
+            password: this.state.password
+        }
+        let url='http://192.168.1.121:3000/auth/login'
 
-
-
-
-
-        // //Перезаписываем и сохраняем логин и пароль в один объект для авторизации
-        // await AsyncStorage.removeItem('username')
-        // await AsyncStorage.setItem('username', this.state.username)
-        // await AsyncStorage.removeItem('password')
-        // await AsyncStorage.setItem('password', this.state.password)
-        // let username=this.state.username
-        // let password=this.state.password
-        // let user={username, password}
-        // //Пост метод для авторизации, с помощью выше созданного юзера
-        // try {
-        //     this.setState({isPending:true})
-        //     await RNFetchBlob.config({
-        //     trusty : true
-        //     })
-        //     .fetch('POST',url, {
-        //     Accept: 'application/json',
-        //     'Content-Type':'application/json'
-        //     },JSON.stringify(user))
-        //     .then(res=>res.json())
-        //     .then(async (data)=>{
-        //         let currentUser=data.data;
-        //         await AsyncStorage.setItem('currentUser', JSON.stringify(currentUser))
-        //         if (data.message==='OK' && data.details==='success'){
-        //             this.setState({isPending:false})
-        //             this.props.navigation.navigate('Navigator')
-        //         }else if (data.status === 400){
-        //             Alert.alert('Ошибка!', 'Неверные логин или пароль!')
-        //         }else{
-        //             Alert.alert('Внимание!', 'Проблемы с соединением')
-        //         }
-        //     })
-        //     .catch((e)=>{
-        //         console.log(e)
-        //         Alert.alert('Внимание!', 'Проверьте введен ли адрес! \n\nНеверные логин или пароль!')
-        //     })
-        // }catch (err){
-        // }
+        console.log(`user`, user);
+        if(this.state.email.length>0 && this.state.password.length>0){
+            try {
+                await this.setState({isLoader:true})
+                await RNFetchBlob.config({
+                trusty : true
+                })
+                .fetch('POST',url, {
+                'Accept': 'application/json',
+                'Content-Type':'application/json'
+                },JSON.stringify(user))
+                .then(res=>res.json())
+                .then(async (data)=>{
+                    console.log(`data`, data);
+                    if (data.access_token){
+                        await AsyncStorage.setItem('token', data.access_token)
+                        await this.setState({isLoader:false})
+                        this.props.navigation.navigate('Navigator')
+                    }else if (data.statusCode === 401){
+                        await this.setState({isLoader:false})
+                        showAlert({
+                            title: 'Ошибка!',
+                            message: 'Неверные логин или пароль!',
+                            alertType: 'error'
+                        })
+                    }
+                })
+            }catch (err){
+                console.log(err)
+                await this.setState({isLoader:false})
+                showAlert({
+                    title: 'Ошибка!',
+                    message: 'Проблемы с соединением!',
+                    alertType: 'error'
+                })
+            }
+        } else {
+            showAlert({
+                title: 'Внимание!',
+                message: 'Введите все поля!',
+                alertType: 'error'
+            })
+        } 
     }
 
     //Переход на страницу настроек
@@ -120,6 +118,25 @@ export default class AuthForm extends Component {
             <View
                 // behavior={Platform.OS === "ios" ? "padding" : "height"}
                 style={localStyles.outerContainer}>
+                <Loader loading={this.state.isLoader} color="black" size='large'/>
+                <CustomisableAlert
+                    // dismissable
+                    btnStyle={{
+                        backgroundColor:'rgba(240, 5, 0, 1)'
+                    }}
+                    titleStyle={{
+                    fontSize: 24,
+                    fontWeight: 'bold'
+                    }}
+                    textStyle={{
+                        fontSize: 18,
+                    }}
+                    btnLabelStyle={{
+                    color: 'white',
+                    paddingHorizontal: 10,
+                    textAlign: 'center',
+                    }}
+                />
                 <TouchableWithoutFeedback
                     onPress={Keyboard.dismiss}
                 >
@@ -135,9 +152,9 @@ export default class AuthForm extends Component {
                         </View>
                         <TextInput
                             style={[styles.input, {backgroundColor:'rgba(0, 81, 202, 0.04)'}]}
-                            value={this.state.username}
-                            onChangeText={val => this.setState({username: val})}
-                            placeholder={'Username'}
+                            value={this.state.email}
+                            onChangeText={val => this.setState({email: val})}
+                            placeholder={'Email'}
                         />
                         
                         <TextInput
@@ -148,18 +165,18 @@ export default class AuthForm extends Component {
                             placeholder={'Password'}
                         />
                         {
-                            this.state.username.length>0 && this.state.password.length>0
+                            this.state.email.length>0 && this.state.password.length>0
                             ?
                             <TouchableOpacity
-                                // onPress={this.authHandler}
-                                onPress={()=>{this.props.navigation.navigate('Navigator')}}
+                                onPress={this.authHandler}
+                                // onPress={()=>{this.props.navigation.navigate('Navigator')}}
                                 style={[localStyles.button, {backgroundColor:'rgba(240, 5, 0, 1)'}]}>
                                 <Text style={{color:'rgba(255, 255, 255, 1)', fontWeight:"bold"}}>Login</Text>
                             </TouchableOpacity>
                             :
                             <TouchableOpacity
-                                // onPress={this.authHandler}
-                                onPress={()=>{this.props.navigation.navigate('Navigator')}}
+                                onPress={this.authHandler}
+                                // onPress={()=>{this.props.navigation.navigate('Navigator')}}
                                 style={[localStyles.button,{backgroundColor:'rgba(220, 220, 220, 1)'}]}>
                                 <Text style={{color:'rgba(163, 163, 163, 1)', fontWeight:"bold"}}>Login</Text>
                             </TouchableOpacity>

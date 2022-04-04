@@ -1,12 +1,16 @@
 import React, {Component} from "react";
 import {View, Text, FlatList, StyleSheet, TouchableOpacity, ScrollView,TextInput, SectionList, Button} from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons'
-
+import CustomisableAlert, { showAlert, closeAlert } from "react-native-customisable-alert";
+import Loader from "react-native-modal-loader";
+import RNFetchBlob from 'rn-fetch-blob'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default class CreateContest extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isLoader:false,
             contestName:'',
             startDate:'',
             endDate:'',
@@ -25,13 +29,93 @@ export default class CreateContest extends Component {
 
     }
 
-    getData=async ()=>{
+    successAlert=()=>{
+        this.props.navigation.push('Navigator')
+    }
+
+    save=async ()=>{
+        const token=await AsyncStorage.getItem('token');
+        let contest={
+            name: this.state.contestName,
+            // description: this.state.description,
+            description: '32 строка в коде тест, потом убрать',
+            tasks:[]
+        }
+        let url='http://192.168.1.121:3000/contest'
+
+        console.log(`contest`, contest);
+        if(this.state.contestName.length>0){
+            try {
+                await this.setState({isLoader:true})
+                await RNFetchBlob.config({
+                trusty : true
+                })
+                .fetch('POST',url, {
+                'Accept': 'application/json',
+                'Content-Type':'application/json',
+                'Authorization': 'Bearer '+token
+                },JSON.stringify(contest))
+                .then(res=>res.json())
+                .then(async (data)=>{
+                    console.log(`data`, data);
+                    if (data.acknowledged){
+                        await this.setState({isLoader:false})
+                        showAlert({
+                            title: 'Success!',
+                            message: 'Contest successfully created!',
+                            alertType: 'success',
+                            onPress:this.successAlert
+                        })
+                    }else if (data.statusCode === 401){
+                        await this.setState({isLoader:false})
+                        showAlert({
+                            title: 'Error!',
+                            message: 'Something went wrong! Try again!',
+                            alertType: 'error'
+                        })
+                    }
+                })
+            }catch (err){
+                console.log(err)
+                await this.setState({isLoader:false})
+                showAlert({
+                    title: 'Error!',
+                    message: 'Problems with connection!',
+                    alertType: 'error'
+                })
+            }
+        } else {
+            showAlert({
+                title: 'Warning!',
+                message: 'Enter all fields!',
+                alertType: 'error'
+            })
+        } 
     }
 
 
     render() {
         return(
             <View style={styles.body}>
+                <Loader loading={this.state.isLoader} color="black" size='large'/>
+                <CustomisableAlert
+                    // dismissable
+                    btnStyle={{
+                        backgroundColor:'rgba(240, 5, 0, 1)'
+                    }}
+                    titleStyle={{
+                    fontSize: 24,
+                    fontWeight: 'bold'
+                    }}
+                    textStyle={{
+                        fontSize: 18,
+                    }}
+                    btnLabelStyle={{
+                    color: 'white',
+                    paddingHorizontal: 10,
+                    textAlign: 'center',
+                    }}
+                />
                 <ScrollView 
                         nestedScrollEnabled={true}
                         style={{ flex:1}}>
@@ -157,12 +241,11 @@ export default class CreateContest extends Component {
                         }}
                     />
                     </View>
-                    <Button title="sasf" onPress={()=>{
-                        console.log(`this.state.problems`, this.state.problems);
-                        console.log(`.data`, this.state.problems[0].data);
-                        console.log(`this.state.tests`, this.state.tests);
-                        console.log(`.data`, this.state.tests[0].data);
-                    }}/>
+                    <TouchableOpacity
+                        onPress={this.save}
+                        style={styles.button}>
+                        <Text style={{color:'rgba(255, 255, 255, 1)', fontWeight:"bold"}}>Save</Text>
+                    </TouchableOpacity>
                 </ScrollView>
             </View>
         )
@@ -197,5 +280,23 @@ const styles=StyleSheet.create({
         color:'black',
         marginVertical:'4%',
         fontWeight:'bold'
+    },
+    button:{
+        backgroundColor:'rgba(240, 5, 0, 1)',
+        alignItems: "center",
+        padding: 10,
+        color: 'black',
+        borderColor: '#DDDDDD',
+        borderWidth:1,
+        borderStyle:'solid',
+        borderBottomWidth: 0.3,
+        shadowColor: '#000',
+        shadowOffset:{
+            width:0,
+            height:1
+        },
+        textAlign:'center',
+        marginVertical:'4%',
+        paddingVertical:'5%',
     },
 })

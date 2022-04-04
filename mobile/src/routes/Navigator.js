@@ -36,7 +36,7 @@ export default () => {
                 name='Notifications'
                 component={Notifications}
                 options={{title:'Notifications'}}/>
-                <Drawer.Screen
+            <Drawer.Screen
                 name='CreateContest'
                 component={CreateContest}
                 options={{title:'Create contest'}}/>

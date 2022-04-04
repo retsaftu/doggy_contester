@@ -13,7 +13,8 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from '../../css/GlobalStyles'
 import Ionicons from "react-native-vector-icons/Ionicons";
-import i18n from 'i18n-js'
+import CustomisableAlert, { showAlert, closeAlert } from "react-native-customisable-alert";
+import Loader from "react-native-modal-loader";
 import RNFetchBlob from 'rn-fetch-blob'
 export default class Registration extends Component {
     constructor(props) {
@@ -23,90 +24,78 @@ export default class Registration extends Component {
             password: '',
             email:'',
             name:'',
-            isPending:false
+            isLoader:false,
         }
     }
 
     async componentDidMount() {
-        //Получаем какой язык(русс, каз, англ) установлен
-        await AsyncStorage.getItem('language')
-            .then(language => {
-                if (language) {
-                    i18n.locale = language;
-                } else {
-                    i18n.locale = 'ru';
-                }
-            });
-        //Сохраняем логин и пароль в AsyncStorage
-        await AsyncStorage.getItem('username').then((value) => {
-            if (value !== null) {
-                this.setState({username: value});
-            }
-        }).done();
-        await AsyncStorage.getItem('password').then((value) => {
-            if (value !== null) {
-                this.setState({password: value});
-            }
-        }).done();
+
+    }
+
+    successAlert=()=>{
+        this.props.navigation.navigate('AuthForm')
     }
 
     //Функция авторизации
+
     authHandler = async () => {
-        //Получаем url прописанный в юзером
-        let item=await AsyncStorage.getItem('url')
-        let url;
-        //только при разработке! удалить для продакшна
-        if (!item){
-            item='agis.kz:5115';
-            await AsyncStorage.setItem('url', item)
-            url=`https://${item}/api/identity/signin`
+        let user={
+            email: this.state.email,
+            name:this.state.name,
+            password: this.state.password,
+            username:this.state.username
+        }
+        let url='http://192.168.1.121:3000/auth/register'
+        console.log(`user`, user);
+        if(this.state.email.length>0 && this.state.password.length>0 && this.state.username.length>0){
+            await this.setState({isLoader:true})
+            try {
+                await RNFetchBlob.config({
+                trusty : true
+                })
+                .fetch('POST',url, {
+                'Accept': 'application/json',
+                'Content-Type':'application/json'
+                },JSON.stringify(user))
+                .then(res=>res.json())
+                .then(async (data)=>{
+                    console.log(`data`, data);
+                    if (data.acknowledged){
+                        await this.setState({isLoader:false})
+                        showAlert({
+                            title: 'Успешно!',
+                            message: 'Пользователь успешно создан!',
+                            alertType: 'success',
+                            onPress:this.successAlert
+                        })
+                    }else if (data.statusCode === 401){
+                        await this.setState({isLoader:false})
+                        showAlert({
+                            title: 'Ошибка!',
+                            message: 'Неверные логин или пароль!',
+                            alertType: 'error'
+                        })
+                    }
+                })
+            }catch (err){
+                console.log(err)
+                this.setState({isLoader:false})
+                showAlert({
+                    title: 'Ошибка!',
+                    message: 'Проблемы с соединением!',
+                    alertType: 'error'
+                })
+            }
         } else {
-            url=`https://${item}/api/identity/signin`
-        }
-        //только при разработке! удалить для продакшна
-
-
-
-
-
-        //Перезаписываем и сохраняем логин и пароль в один объект для авторизации
-        await AsyncStorage.removeItem('username')
-        await AsyncStorage.setItem('username', this.state.username)
-        await AsyncStorage.removeItem('password')
-        await AsyncStorage.setItem('password', this.state.password)
-        let username=this.state.username
-        let password=this.state.password
-        let user={username, password}
-        //Пост метод для авторизации, с помощью выше созданного юзера
-        try {
-            this.setState({isPending:true})
-            await RNFetchBlob.config({
-            trusty : true
+            this.setState({isLoader:false})
+            showAlert({
+                title: 'Внимание!',
+                message: 'Введите все необходимые поля!',
+                alertType: 'error'
             })
-            .fetch('POST',url, {
-            Accept: 'application/json',
-            'Content-Type':'application/json'
-            },JSON.stringify(user))
-            .then(res=>res.json())
-            .then(async (data)=>{
-                let currentUser=data.data;
-                await AsyncStorage.setItem('currentUser', JSON.stringify(currentUser))
-                if (data.message==='OK' && data.details==='success'){
-                    this.setState({isPending:false})
-                    this.props.navigation.navigate('Navigator')
-                }else if (data.status === 400){
-                    Alert.alert('Ошибка!', 'Неверные логин или пароль!')
-                }else{
-                    Alert.alert('Внимание!', 'Проблемы с соединением')
-                }
-            })
-            .catch((e)=>{
-                console.log(e)
-                Alert.alert('Внимание!', 'Проверьте введен ли адрес! \n\nНеверные логин или пароль!')
-            })
-        }catch (err){
-        }
+        } 
     }
+    
 
     //Переход на страницу настроек
     SettingsHandler = async () => {
@@ -122,6 +111,25 @@ export default class Registration extends Component {
             <View
                 // behavior={Platform.OS === "ios" ? "padding" : "height"}
                 style={localStyles.outerContainer}>
+                <Loader loading={this.state.isLoader} color="black" size='large'/>
+                <CustomisableAlert
+                    // dismissable
+                    btnStyle={{
+                        backgroundColor:'rgba(240, 5, 0, 1)'
+                    }}
+                    titleStyle={{
+                    fontSize: 24,
+                    fontWeight: 'bold'
+                    }}
+                    textStyle={{
+                        fontSize: 18,
+                    }}
+                    btnLabelStyle={{
+                    color: 'white',
+                    paddingHorizontal: 10,
+                    textAlign: 'center',
+                    }}
+                />
                 <TouchableWithoutFeedback
                     onPress={Keyboard.dismiss}
                 >

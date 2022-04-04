@@ -11,6 +11,7 @@ export default class Home extends Component {
         }
 
     }
+    
     render(){
 
         return (
@@ -64,6 +65,7 @@ export default class Home extends Component {
 
 const styles = StyleSheet.create({
     body:{
+        flex:1,
         backgroundColor:'#EDF1F7',
         paddingLeft:'5%',
         paddingRight:'5%',
