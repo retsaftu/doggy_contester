@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ContestInfo } from '../../entities/contester.entity';
+import {MatDialog} from '@angular/material/dialog';
+import { CreateContestComponent } from '../create-contest/create-contest.component';
 
 @Component({
   selector: 'app-home',
@@ -8,7 +10,7 @@ import { ContestInfo } from '../../entities/contester.entity';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(public dialog: MatDialog) { }
 
   userContests: ContestInfo[] = [
     {
@@ -83,6 +85,12 @@ export class HomeComponent implements OnInit {
   ]
 
   ngOnInit(): void {
+  }
+
+  openCreateContestDialog() {
+    this.dialog.open(CreateContestComponent, {
+      width: '40%'
+    });
   }
 
 }

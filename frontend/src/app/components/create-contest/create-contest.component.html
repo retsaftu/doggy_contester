@@ -1,0 +1,111 @@
+<h1 mat-dialog-title>Create contest</h1>
+<mat-divider></mat-divider>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="form">
+        <mat-form-field appearance="fill" class="input">
+            <mat-label>Contest name</mat-label>
+            <input type="text" formControlName="name" matInput required/>
+        </mat-form-field><br>
+
+        <div class="datetime">
+            <mat-form-field appearance="fill">
+                <mat-label>Duration</mat-label>
+                <app-timepicker-input #durationinput formControlName="duration" required></app-timepicker-input>
+                <mat-icon class="icon-button" matSuffix (click)="openDurationpicker()">access_time</mat-icon>
+            </mat-form-field>
+
+            <!-- Timepicker -->
+            <mat-form-field appearance="fill">
+                <mat-label>Contest time</mat-label>
+                <app-timepicker-input #timeinput formControlName="time" required></app-timepicker-input>
+                <mat-icon class="icon-button" matSuffix (click)="openTimepicker()">access_time</mat-icon>
+            </mat-form-field>
+        </div>
+
+        <!-- Datepicker -->
+        <mat-form-field appearance="fill" class="input">
+            <mat-label>Contest date</mat-label>
+            <input matInput [matDatepicker]="date" formControlName="date" required>
+            <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+            <mat-datepicker #date></mat-datepicker>
+        </mat-form-field>
+
+        <div formArrayName="problems" class="problem-creation-wrapper" *ngFor="let problem of problems.controls; let i = index">
+            <span class="create-delete-block" *ngIf="getNumberOfProblems() == (i + 1)" (click)="createNewProblem()">
+                <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+            </span>
+            <span class="create-delete-block" *ngIf="getNumberOfProblems() != (i + 1)" (click)="deleteProblem(i)">
+                <fa-icon class="icon" [icon]="['fas', 'minus']"></fa-icon>
+            </span>
+            <mat-accordion>
+                
+                <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Problem {{formatProblemIndex(i)}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <form [formGroupName]="i">
+
+                    <mat-form-field appearance="fill" class="input">
+                        <mat-label>Problem name</mat-label>
+                        <input type="text" formControlName="name" matInput required/>
+                    </mat-form-field><br>
+                    <mat-form-field class="input" appearance="fill">
+                        <mat-label>Problem description</mat-label>
+                        <textarea formControlName="description" matInput required></textarea>
+                    </mat-form-field>
+                    <mat-form-field class="input" appearance="fill">
+                        <mat-label>Sample input</mat-label>
+                        <textarea formControlName="sampleTestInput" matInput required></textarea>
+                    </mat-form-field>
+                    <mat-form-field class="input" appearance="fill">
+                        <mat-label>Sample output    </mat-label>
+                        <textarea formControlName="sampleTestOutput" matInput required></textarea>
+                    </mat-form-field>
+                    <div class="limits">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Memmory limit (MB)</mat-label>
+                            <input type="number" formControlName="memmoryLimit" matInput required/>
+                        </mat-form-field>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Time limit (sec.)</mat-label>
+                            <input type="number" formControlName="timeLimit"  matInput required/>
+                        </mat-form-field>
+                    </div>
+
+                    <div formArrayName="tests" class="test-creation-wrapper" *ngFor="let test of getTests(i).controls; let j = index">
+                        <span class="create-delete-block" *ngIf="getNumberOfTests(i) == (j + 1)" (click)="createNewTest(i)">
+                            <fa-icon class="icon" [icon]="['fas', 'plus']"></fa-icon>
+                        </span>
+                        <span class="create-delete-block" *ngIf="getNumberOfTests(i) != (j + 1)" (click)="deleteTest(i, j)">
+                            <fa-icon class="icon" [icon]="['fas', 'minus']"></fa-icon>
+                        </span>
+                        <mat-accordion>
+                            <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Test {{formatTestIndex(j)}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <form [formGroupName]="j">
+                                <mat-form-field class="input" appearance="fill">
+                                    <mat-label>Test input</mat-label>
+                                    <textarea formControlName="testInput" matInput required></textarea>
+                                </mat-form-field>
+                                <mat-form-field class="input" appearance="fill">
+                                    <mat-label>Test output</mat-label>
+                                    <textarea formControlName="testOutput" matInput required></textarea>
+                                </mat-form-field>
+                            </form>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </form>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+        <button type="submit" (click)="createContest()" mat-flat-button color="primary" [disabled]="!isAllContestFieldsAreValid()">Create</button>
+    </form>
+</mat-dialog-content>

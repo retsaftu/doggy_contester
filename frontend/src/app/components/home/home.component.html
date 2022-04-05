@@ -13,4 +13,9 @@
             <app-contest-item *ngFor="let contest of contests" [contestInfo]=contest></app-contest-item>
         </div>
     </div>
+    <div class="create-contest-btn">
+        <button (click)="openCreateContestDialog()" mat-fab color="primary" aria-label="Create contest">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
 </div>
