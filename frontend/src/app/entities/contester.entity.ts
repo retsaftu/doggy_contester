@@ -1,4 +1,6 @@
 
+import { getDifferenceInDays, getDifferenceInHours, getDifferenceInMinutes, Time } from "./time";
+
 // Basic contest info to display
 export class ContestInfo {
     id: number;
@@ -19,21 +21,6 @@ export class ContestInfo {
       this.duration = this.getDuration(this.startDate, this.endDate);
     }
 
-    private getDifferenceInDays(date1: Date, date2: Date) {
-      const diffInMs = Math.abs(date2.getTime() - date1.getTime());
-      return Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-    }
-    
-    private getDifferenceInHours(date1: Date, date2: Date) {
-      const diffInMs = Math.abs(date2.getTime() - date1.getTime());
-      return diffInMs / (1000 * 60 * 60) % 24;
-    }
-    
-    private getDifferenceInMinutes(date1: Date, date2: Date) {
-      const diffInMs = Math.abs(date2.getTime() - date1.getTime());
-      return Math.floor(diffInMs / (1000 * 60)) % 60;
-    }
-
     private normilizeDate(date: Date) {
       date.setSeconds(0);
       date.setMilliseconds(0);
@@ -48,50 +35,21 @@ export class ContestInfo {
       date1 = this.normilizeDate(date1);
       date2 = this.normilizeDate(date2);
       let duration = '';
-      const days = this.getDifferenceInDays(date1, date2);
+      const days = getDifferenceInDays(date1, date2);
       if(days > 0) {
         duration += (days + ' day' + this.getPlural(days) + ' ');
       }
-      const hours = this.getDifferenceInHours(date1, date2);
+      const hours = getDifferenceInHours(date1, date2);
       if(hours > 0) {
         duration += (hours + ' hour' + this.getPlural(hours) + ' ');
       }
-      const minutes = this.getDifferenceInMinutes(date1, date2);
+      const minutes = getDifferenceInMinutes(date1, date2);
       if(minutes > 0) {
         duration += (minutes + ' minutes' + this.getPlural(minutes) + ' ');
       }
       return duration.trim();
     }
 }
-
-export class Time {
-
-    private _hours: string = '00';
-    private _minutes: string = '00';
-  
-    constructor(hours: string, minutes: string) {
-      this.hours = hours;
-      this.minutes = minutes;
-    }
-  
-    set hours(hours: string) {
-      this._hours = hours.length <= 1 ? '0' + hours : hours;
-    }
-  
-    set minutes(minutes: string) {
-      this._minutes = minutes.length <= 1 ? '0' + minutes : minutes;
-    }
-  
-    get hours() {
-      return this._hours;
-    }
-  
-    get minutes() {
-      return this._minutes;
-    }
-  
-}
-
 // Model to create contest
 export class ContestCreation {
 
@@ -154,5 +112,48 @@ export enum ProblemStatus {
 }
 
 export class ContestProblem {
-  constructor(status: ProblemStatus | undefined | null, number: string, title: string, acceptance: number | null | undefined) {}
+  constructor(public status: ProblemStatus | undefined | null, public number: string, 
+              public title: string, public acceptance: number | null | undefined) {}
+}
+
+export class LeaderboardProblemInfo {
+  constructor(public number: string, public published?: Date, public status?: ProblemStatus | null | undefined) {}
+}
+
+export class LeaderboardUserInfo {
+
+  public solved = 0;
+  public numberOfProblems!: number;
+
+  constructor(public rank: number, public username: string, public problems: LeaderboardProblemInfo[]) {
+    this.numberOfProblems = this.problems.length;
+    this.problems.forEach((problem) => {
+      this.solved += (problem.status == ProblemStatus.ACCEPTED ? 1 : 0);
+    })
+  }
+}
+
+export enum SubmissionResult {
+  ACCEPTED = 'Accepted',
+  WRONG_ANSWARE = 'Wrong answare',
+  RUNTIM_ERROR = 'Runtime error',
+  MEMMORY_LIMIT = 'Memmory limit',
+  TIME_LIMIT = 'Time limit'
+}
+
+export class SubmissionInfo { 
+  constructor(public number: string, public problemTitle: string, public submissionResult: SubmissionResult, 
+    public language: AvailableProgrammingLanguages, public submitTime: Date) {}
+}
+
+export enum AvailableProgrammingLanguages {
+  CPP = 'C++',
+  PY = 'Python',
+  JS = 'JavaScript'
+}
+
+export enum AvailableProgrammingLanguagesExtension {
+  CPP = 'cpp',
+  PY = 'py',
+  JS = 'JS'
 }

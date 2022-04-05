@@ -1,0 +1,22 @@
+.contest-basic-info-wrapper {
+    width: 100%;
+    padding: 1em 1.5em;
+    box-sizing: border-box;
+}
+.contest-basic-info {
+    display: flex;
+    justify-content: space-between;
+}
+.contest-basic-info span{
+    font-weight: 500;
+}
+mat-progress-bar {
+    height: 1em;
+    border-radius: 1em;
+}
+mat-card {
+    margin-bottom: 1em;
+}
+.mat-tab {
+    width: 100%;
+}

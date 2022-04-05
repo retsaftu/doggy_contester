@@ -1,5 +1,5 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
-import { Time } from 'src/app/entities/contester.entity';
+import { Time } from 'src/app/entities/time';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   Component,

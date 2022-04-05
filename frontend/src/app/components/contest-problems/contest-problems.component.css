@@ -1,0 +1,25 @@
+.contest-problems-table {
+    width: 100%;
+}
+.mat-column-status {
+    text-align: center;
+    width: 10%;
+}
+
+.mat-column-number {
+    width: 10%;
+    text-align: center;
+}
+
+.mat-column-title {
+    width: 65%;
+}
+
+.mat-column-acceptance {
+    text-align: center;
+    width: 15%;
+}
+
+.accept {
+    color: #00c853;
+}

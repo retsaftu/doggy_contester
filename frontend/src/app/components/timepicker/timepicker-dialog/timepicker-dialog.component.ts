@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MainComponent } from '../../main/main.component';
-import { Time } from 'src/app/entities/contester.entity';
+import { Time } from 'src/app/entities/time';
 
 @Component({
   selector: 'app-timepicker-dialog',

@@ -25,6 +25,9 @@ import { MatMomentDateModule } from "@angular/material-moment-adapter";
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatTableModule} from '@angular/material/table';
 
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 import { GoogleLoginProvider } from 'angularx-social-login';
@@ -44,6 +47,10 @@ import { InputNumberComponent } from './components/timepicker/input-number/input
 import { TimepickerDialogComponent } from './components/timepicker/timepicker-dialog/timepicker-dialog.component';
 import { TimepickerInputComponent } from './components/timepicker/timepicker-input/timepicker-input.component';
 import { ContestsComponent } from './components/contests/contests.component';
+import { ContestProblemsComponent } from './components/contest-problems/contest-problems.component';
+import { ContestLeaderboardComponent } from './components/contest-leaderboard/contest-leaderboard.component';
+import { ContestSubmissionComponent } from './components/contest-submission/contest-submission.component';
+import { ContestProblemComponent } from './components/contest-problem/contest-problem.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +66,11 @@ import { ContestsComponent } from './components/contests/contests.component';
     InputNumberComponent,
     TimepickerDialogComponent,
     TimepickerInputComponent,
-    ContestsComponent
+    ContestsComponent,
+    ContestProblemsComponent,
+    ContestLeaderboardComponent,
+    ContestSubmissionComponent,
+    ContestProblemComponent
   ],
   imports: [
     BrowserModule,
@@ -83,7 +94,10 @@ import { ContestsComponent } from './components/contests/contests.component';
     MatMomentDateModule,
     MatButtonToggleModule,
     MatExpansionModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatTabsModule,
+    MatTableModule
   ],
   providers: [
     {

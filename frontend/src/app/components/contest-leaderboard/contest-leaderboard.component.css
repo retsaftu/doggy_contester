@@ -1,0 +1,24 @@
+.contest-leaderboard-table {
+    width: 100%;
+}
+.leaderboard-accepted {
+    color: #00c853;
+}
+.leaderboard-fail{
+    color: #f44336;
+}
+.mat-column-rank {
+    width: 5%;
+    text-align: center;
+}
+.mat-column-username {
+    text-align: center;
+    width: 20%;
+}
+.mat-column-solved {
+    text-align: center;
+    width: 10%;
+}
+.contest-leaderboard-problem {
+    text-align: center;
+}

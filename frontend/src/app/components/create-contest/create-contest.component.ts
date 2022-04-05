@@ -4,7 +4,8 @@ import {FormArray, FormControl, FormGroup, Validators, FormBuilder, AbstractCont
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { TimepickerInputComponent } from '../timepicker/timepicker-input/timepicker-input.component';
-import { ContestCreation, ProblemCreation, TestCreation, Time } from 'src/app/entities/contester.entity';
+import { ContestCreation, ProblemCreation, TestCreation } from 'src/app/entities/contester.entity';
+import { Time } from 'src/app/entities/time';
 import { TimepickerDialogComponent } from '../timepicker/timepicker-dialog/timepicker-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AfterViewChecked, ChangeDetectorRef } from '@angular/core'
