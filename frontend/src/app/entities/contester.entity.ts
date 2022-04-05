@@ -1,16 +1,66 @@
+
+// Basic contest info to display
 export class ContestInfo {
     id: number;
     contestTitle: string;
     numberOfParticipants: number;
     ownerUsername: string;
     startDate: Date;
+    endDate: Date;
+    duration!: string;
 
-    constructor(id: number, contestTitle: string, numberOfParticipants: number, ownerUsername: string, startDate: Date) {
-        this.id = id;
-        this.contestTitle = contestTitle;
-        this.numberOfParticipants = numberOfParticipants;
-        this.ownerUsername = ownerUsername;
-        this.startDate = startDate;
+    constructor(id: number, contestTitle: string, numberOfParticipants: number, ownerUsername: string, startDate: Date, endDate: Date) {
+      this.id = id;
+      this.contestTitle = contestTitle;
+      this.numberOfParticipants = numberOfParticipants;
+      this.ownerUsername = ownerUsername;
+      this.startDate = startDate;
+      this.endDate = endDate;
+      this.duration = this.getDuration(this.startDate, this.endDate);
+    }
+
+    private getDifferenceInDays(date1: Date, date2: Date) {
+      const diffInMs = Math.abs(date2.getTime() - date1.getTime());
+      return Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+    }
+    
+    private getDifferenceInHours(date1: Date, date2: Date) {
+      const diffInMs = Math.abs(date2.getTime() - date1.getTime());
+      return diffInMs / (1000 * 60 * 60) % 24;
+    }
+    
+    private getDifferenceInMinutes(date1: Date, date2: Date) {
+      const diffInMs = Math.abs(date2.getTime() - date1.getTime());
+      return Math.floor(diffInMs / (1000 * 60)) % 60;
+    }
+
+    private normilizeDate(date: Date) {
+      date.setSeconds(0);
+      date.setMilliseconds(0);
+      return date;
+    }
+
+    private getPlural(value: number) {
+      return value > 1 ? 's' : '';
+    }
+
+    private getDuration(date1: Date, date2: Date) {
+      date1 = this.normilizeDate(date1);
+      date2 = this.normilizeDate(date2);
+      let duration = '';
+      const days = this.getDifferenceInDays(date1, date2);
+      if(days > 0) {
+        duration += (days + ' day' + this.getPlural(days) + ' ');
+      }
+      const hours = this.getDifferenceInHours(date1, date2);
+      if(hours > 0) {
+        duration += (hours + ' hour' + this.getPlural(hours) + ' ');
+      }
+      const minutes = this.getDifferenceInMinutes(date1, date2);
+      if(minutes > 0) {
+        duration += (minutes + ' minutes' + this.getPlural(minutes) + ' ');
+      }
+      return duration.trim();
     }
 }
 
@@ -42,6 +92,7 @@ export class Time {
   
 }
 
+// Model to create contest
 export class ContestCreation {
 
     private _name!: string;
@@ -81,10 +132,12 @@ export class ContestCreation {
 
 }
 
+// Model to create test
 export class TestCreation {
     constructor(public testInput: string, public testOutput: string) {}
 }
 
+// Model to create test
 export class ProblemCreation {
     constructor(public problemName: string, public problemDescription: string, 
                 public sampleInput: string, public sampleOutput: string,
@@ -92,4 +145,14 @@ export class ProblemCreation {
                 public tests: TestCreation[]) {
                     
     }
+}
+
+export enum ProblemStatus {
+  FAIL = 'fail',
+  ACCEPTED = 'accepted',
+  NOT_SOLVED = 'not_solved',
+}
+
+export class ContestProblem {
+  constructor(status: ProblemStatus | undefined | null, number: string, title: string, acceptance: number | null | undefined) {}
 }

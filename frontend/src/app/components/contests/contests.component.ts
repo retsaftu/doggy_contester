@@ -31,7 +31,7 @@ export class ContestsComponent implements OnInit {
   generateList(start: number, end: number) {
     const contests: ContestInfo[] = [];
     for(let i=start; i<end; i++) {
-      contests.push(new ContestInfo(i, "Contest " + i, 50, "Username" + i, new Date()))
+      contests.push(new ContestInfo(i, "Contest " + i, 50, "Username" + i, new Date(), new Date(new Date().setHours(new Date().getHours() + i + 1))))
     }
     return contests;
   }
