@@ -24,6 +24,7 @@ import {MatNativeDateModule} from '@angular/material/core';
 import { MatMomentDateModule } from "@angular/material-moment-adapter";
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 import { GoogleLoginProvider } from 'angularx-social-login';
@@ -42,6 +43,7 @@ import { CreateContestComponent } from './components/create-contest/create-conte
 import { InputNumberComponent } from './components/timepicker/input-number/input-number.component';
 import { TimepickerDialogComponent } from './components/timepicker/timepicker-dialog/timepicker-dialog.component';
 import { TimepickerInputComponent } from './components/timepicker/timepicker-input/timepicker-input.component';
+import { ContestsComponent } from './components/contests/contests.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +58,8 @@ import { TimepickerInputComponent } from './components/timepicker/timepicker-inp
     CreateContestComponent,
     InputNumberComponent,
     TimepickerDialogComponent,
-    TimepickerInputComponent
+    TimepickerInputComponent,
+    ContestsComponent
   ],
   imports: [
     BrowserModule,
@@ -79,7 +82,8 @@ import { TimepickerInputComponent } from './components/timepicker/timepicker-inp
     MatNativeDateModule, 
     MatMomentDateModule,
     MatButtonToggleModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatPaginatorModule
   ],
   providers: [
     {
