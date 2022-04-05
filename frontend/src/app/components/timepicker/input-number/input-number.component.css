@@ -1,0 +1,41 @@
+.wrapper{
+    width: 2em;
+}
+input {
+    background-color: transparent;
+    border: none;
+    color: inherit;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-weight: 500;
+    font-size: 1.5em;
+}
+input:focus {
+    border: none;
+    outline: none;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+mat-icon {
+    width: 100%;
+}
+button {
+    width: 100%;
+    background-color: transparent;
+    height: fit-content;
+    color: inherit;
+    border: none;
+    cursor: pointer;
+    height: fit-content;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+}
