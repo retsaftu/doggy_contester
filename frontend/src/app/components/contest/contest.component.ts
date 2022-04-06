@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ContestInfo } from 'src/app/entities/contester.entity';
 import { Router } from '@angular/router';
 import { getDifferenceInSecondsWithoutAbs } from 'src/app/entities/time';
+import { ContestProblemComponent } from '../contest-problem/contest-problem.component';
 
 @Component({
   selector: 'app-contest',
@@ -12,6 +13,8 @@ export class ContestComponent implements OnInit {
 
   currentProgress = 0;
 
+  @ViewChild('contestProblem') contestProblemComponent!: ContestProblemComponent;
+
   private currentDate = new Date();
 
   private interval: any;
@@ -19,6 +22,8 @@ export class ContestComponent implements OnInit {
   private upgradeIntervalTicker = 10000 // in mileseconds
 
   contestInfo!: ContestInfo;
+
+  selectedIndex = 0;
 
   constructor(private router: Router) { }
 
@@ -56,6 +61,11 @@ export class ContestComponent implements OnInit {
     if(this.interval) {
       clearInterval(this.interval);
     }
+  }
+
+  openProblem(index: number) {
+    this.selectedIndex = 3; // Открыть Problem tab
+    this.contestProblemComponent.currentProblem = this.contestProblemComponent.contestProblems[index];    
   }
 
 }

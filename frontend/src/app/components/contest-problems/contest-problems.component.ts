@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ContestInfo, ContestProblem, ProblemStatus } from 'src/app/entities/contester.entity';
 
 @Component({
@@ -9,6 +9,8 @@ import { ContestInfo, ContestProblem, ProblemStatus } from 'src/app/entities/con
 export class ContestProblemsComponent implements OnInit {
 
   @Input() contestInfo!: ContestInfo;
+
+  @Output() problemIndexToOpenEvent = new EventEmitter<number>();
 
   possibleStatuses = ProblemStatus;
 
@@ -23,8 +25,6 @@ export class ContestProblemsComponent implements OnInit {
     new ContestProblem(ProblemStatus.ACCEPTED, 'F', 'Problem 8', 0.788),
   ]
 
-  // problemsJson = (this.problems))
-
   displayedColumns: string[] = ['status', 'number', 'title', 'acceptance'];
 
   constructor() { }
@@ -33,5 +33,9 @@ export class ContestProblemsComponent implements OnInit {
   }
 
   getAcceptance(value: number | null | undefined) { return !value ? 0 : value }
+
+  openProblem(problemIndex: number) {
+    this.problemIndexToOpenEvent.emit(problemIndex);
+  }
 
 }

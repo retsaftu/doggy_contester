@@ -157,3 +157,10 @@ export enum AvailableProgrammingLanguagesExtension {
   PY = 'py',
   JS = 'JS'
 }
+
+export class ProblemContent {
+  constructor(public problemName: string, public problemDescription: string, 
+    public sampleInput: string, public sampleOutput: string,
+    public memmoryLimit: number, public timeLimit: number) { 
+  }
+}

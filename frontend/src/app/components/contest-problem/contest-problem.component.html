@@ -1,1 +1,11 @@
-<p>contest-problem works!</p>
+<div class="contest-problem-wrapper">
+    <h1>{{currentProblem?.problemName}}</h1>
+    <p>{{currentProblem?.problemDescription}}</p>
+    <h2>Sample input</h2>
+    <pre>{{currentProblem?.sampleInput}}</pre>
+    <h2>Sample output</h2>
+    <pre>{{currentProblem?.sampleOutput}}</pre>
+    <div>
+        <button mat-raised-button color="primary">Upload code</button>
+    </div>
+</div>

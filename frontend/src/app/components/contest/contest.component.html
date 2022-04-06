@@ -14,15 +14,18 @@
     </div>
 </mat-card>
 <mat-card>
-    <mat-tab-group animationDuration="0ms">
-        <mat-tab label="Problems">
-            <app-contest-problems [contestInfo]="contestInfo"></app-contest-problems>
+    <mat-tab-group animationDuration="0ms" [(selectedIndex)]="selectedIndex">
+        <mat-tab label="Overview">
+            <app-contest-problems (problemIndexToOpenEvent)="openProblem($event)" [contestInfo]="contestInfo"></app-contest-problems>
         </mat-tab>
         <mat-tab label="Leaderboard">
             <app-contest-leaderboard [contestInfo]="contestInfo"></app-contest-leaderboard>
         </mat-tab>
         <mat-tab label="Submissions">
             <app-contest-submission [contestInfo]="contestInfo"></app-contest-submission>
+        </mat-tab>
+        <mat-tab label="Problem">
+            <app-contest-problem #contestProblem></app-contest-problem>
         </mat-tab>
     </mat-tab-group>
 </mat-card>

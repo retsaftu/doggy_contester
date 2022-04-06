@@ -23,3 +23,7 @@
 .accept {
     color: #00c853;
 }
+
+.contest-problems-problem-title {
+    cursor: pointer;
+}
