@@ -14,8 +14,12 @@ export class SubmissionService {
     createSubmissionDto.file = file.buffer.toString('base64');
     createSubmissionDto.originalName = file.originalname;
     createSubmissionDto.size = file.size;
-    createSubmissionDto.mimetype = file.mimetype;
     createSubmissionDto.timestamp = new Date();
+
+    const fileType = file.originalname.split('.').pop();
+    createSubmissionDto.type = fileType;
+
+    console.log(fileType);
 
     return this.db.collection('submission').insertOne(createSubmissionDto);
   }
@@ -36,8 +40,10 @@ export class SubmissionService {
     return submissions;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} submission`;
+  async findOne(id: string) {
+    const submission = await this.db.collection('submission').findOne({ _id: new mongodb.ObjectID(id) });
+    submission.file = Buffer.from(submission.file, 'base64').toString();
+    return submission;
   }
 
   update(id: number, updateSubmissionDto: UpdateSubmissionDto) {

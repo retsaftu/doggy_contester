@@ -13,5 +13,5 @@ export class CreateSubmissionDto {
 
   size: number;
 
-  mimetype: string;
+  type: string;
 }

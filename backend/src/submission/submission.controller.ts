@@ -9,6 +9,7 @@ import { UpdateSubmissionDto } from './dto/update-submission.dto';
 export class SubmissionController {
   constructor(private readonly submissionService: SubmissionService) { }
 
+  // /uploads/:userId/:taskId/:
   @Post()
   @UseInterceptors(FileInterceptor('file')) // @UseInterceptors(FileInterceptor('file', { dest: './uploads' }))
   create(
@@ -25,7 +26,7 @@ export class SubmissionController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.submissionService.findOne(+id);
+    return this.submissionService.findOne(id);
   }
 
   @Patch(':id')
