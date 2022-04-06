@@ -5,6 +5,7 @@ import { MainComponent } from './components/main/main.component';
 import { HomeComponent } from './components/home/home.component'
 import { ContestComponent } from './components/contest/contest.component';
 import { ContestsComponent } from './components/contests/contests.component';
+import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 
 const routes: Routes = [
   { path: 'auth', component: AuthComponent },
@@ -23,6 +24,10 @@ const routes: Routes = [
       {
         path: 'contests',
         component: ContestsComponent
+      },
+      {
+        path: 'leaderboard',
+        component: LeaderboardComponent
       }
     ]
   }

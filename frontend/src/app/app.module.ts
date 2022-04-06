@@ -51,6 +51,7 @@ import { ContestProblemsComponent } from './components/contest-problems/contest-
 import { ContestLeaderboardComponent } from './components/contest-leaderboard/contest-leaderboard.component';
 import { ContestSubmissionComponent } from './components/contest-submission/contest-submission.component';
 import { ContestProblemComponent } from './components/contest-problem/contest-problem.component';
+import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { ContestProblemComponent } from './components/contest-problem/contest-pr
     ContestProblemsComponent,
     ContestLeaderboardComponent,
     ContestSubmissionComponent,
-    ContestProblemComponent
+    ContestProblemComponent,
+    LeaderboardComponent
   ],
   imports: [
     BrowserModule,

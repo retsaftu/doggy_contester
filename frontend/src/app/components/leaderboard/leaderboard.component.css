@@ -1,0 +1,9 @@
+.leaderboard-table {
+    width: 100%;
+}
+.leaderboard-table-item {
+    text-align: center;
+}
+.leaderboard-table-rank {
+    width: 10%;
+}

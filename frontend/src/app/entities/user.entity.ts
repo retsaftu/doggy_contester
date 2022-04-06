@@ -21,3 +21,7 @@ export class UserLoginInfo {
         this.password = password;
     }
 }
+
+export class UserLeaderboard {
+    constructor(public username: string, public name: string, public solved: number) {}
+}
