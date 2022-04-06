@@ -3,7 +3,7 @@
     <div>
         <span class="contest-item numberOfParticipants"><span class="content">{{contestInfo?.numberOfParticipants}}</span><mat-icon aria-hidden="false" aria-label="Number of participants">people</mat-icon></span>
         <span class="contest-item owner"><mat-icon aria-hidden="false">person</mat-icon><span class="content">{{contestInfo?.ownerUsername}}</span></span>
-        <span class="contest-item dateTime"><span class="content">{{contestInfo?.startDate | date:'HH:mm, MMM d, y'}}</span><span class="content">3 hours</span></span>
+        <span class="contest-item dateTime"><span class="content">{{contestInfo?.startDate | date:'HH:mm, MMM d, y'}}</span><span class="content">{{contestInfo?.duration}}</span></span>
         <span class="contest-item"><button (click)="enterContest()" mat-raised-button color="primary">Enter</button></span>
     </div>
 </mat-card>

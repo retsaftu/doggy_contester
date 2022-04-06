@@ -1,0 +1,31 @@
+.datetime{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.datetime-wrapper {
+    display: flex;
+    height: 100%;
+    justify-content: space-around;
+    align-items: center;
+}
+.datetime-divider {
+    font-size: 1.5em;
+    display: block;
+    font-weight: 500;
+}
+.datetime-input {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+.datetime-input span{
+    font-size: 0.75em;
+}
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}

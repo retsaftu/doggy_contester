@@ -1,0 +1,7 @@
+<mat-paginator [length]="length"
+               [pageSize]="pageSize"
+               [pageSizeOptions]="pageSizeOptions"
+               (page)="changePage($event)"
+               aria-label="Select page">
+</mat-paginator>
+<app-contest-item *ngFor="let contest of contests" [contestInfo]=contest></app-contest-item>

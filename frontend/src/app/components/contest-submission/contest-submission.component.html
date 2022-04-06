@@ -1,0 +1,42 @@
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="submissions" matSort class="contest-submission-table">
+  
+      <!-- ID Column -->
+      <ng-container matColumnDef="number">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="contest-submission-table-item"> Problem # </th>
+        <td mat-cell *matCellDef="let row" class="contest-submission-table-item"> {{row.number}} </td>
+      </ng-container>
+  
+      <!-- Progress Column -->
+      <ng-container matColumnDef="problemTitle">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="contest-submission-table-item"> Problem title </th>
+        <td mat-cell *matCellDef="let row" class="contest-submission-table-item"> {{row.problemTitle}} </td>
+      </ng-container>
+  
+      <!-- Name Column -->
+      <ng-container matColumnDef="result">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="contest-submission-table-item"> Result </th>
+        <td mat-cell *matCellDef="let row" class="contest-submission-table-item"> {{row.submissionResult}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="language">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="contest-submission-table-item"> Language </th>
+        <td mat-cell *matCellDef="let row" class="contest-submission-table-item"> {{row.language}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="submitTime">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="contest-submission-table-item"> Submit time </th>
+        <td mat-cell *matCellDef="let row" class="contest-submission-table-item"> {{getSubmitTime(row.submitTime)}} </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+    
+    <mat-paginator [length]="length"
+                    [pageSize]="pageSize"
+                    [pageSizeOptions]="pageSizeOptions"
+                    (page)="changePage($event)"
+                     aria-label="Select page of users"></mat-paginator>
+  </div>

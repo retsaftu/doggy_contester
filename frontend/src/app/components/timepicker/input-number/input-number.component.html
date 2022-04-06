@@ -1,0 +1,9 @@
+<div class="wrapper">
+    <button (click)="increment()">
+        <fa-icon class="icon" [icon]="['fas', 'angle-up']"></fa-icon>
+    </button>
+    <input type="number" (change)="check($event)" [value]="valueStr" [min]="min" [max]="max">
+    <button (click)="decrement()">
+        <fa-icon class="icon" [icon]="['fas', 'angle-down']"></fa-icon>
+    </button>
+</div>

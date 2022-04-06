@@ -15,9 +15,19 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faWindowClose, faComment } from '@fortawesome/free-solid-svg-icons';
+import { faWindowClose, faComment, faAngleUp, faAngleDown, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
+import { MatMomentDateModule } from "@angular/material-moment-adapter";
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatTableModule} from '@angular/material/table';
 
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 import { GoogleLoginProvider } from 'angularx-social-login';
@@ -32,6 +42,15 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { MainComponent } from './components/main/main.component';
 import { ContestItemComponent } from './components/contest-item/contest-item.component';
 import { ContestComponent } from './components/contest/contest.component';
+import { CreateContestComponent } from './components/create-contest/create-contest.component';
+import { InputNumberComponent } from './components/timepicker/input-number/input-number.component';
+import { TimepickerDialogComponent } from './components/timepicker/timepicker-dialog/timepicker-dialog.component';
+import { TimepickerInputComponent } from './components/timepicker/timepicker-input/timepicker-input.component';
+import { ContestsComponent } from './components/contests/contests.component';
+import { ContestProblemsComponent } from './components/contest-problems/contest-problems.component';
+import { ContestLeaderboardComponent } from './components/contest-leaderboard/contest-leaderboard.component';
+import { ContestSubmissionComponent } from './components/contest-submission/contest-submission.component';
+import { ContestProblemComponent } from './components/contest-problem/contest-problem.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +61,16 @@ import { ContestComponent } from './components/contest/contest.component';
     NavigationComponent,
     MainComponent,
     ContestItemComponent,
-    ContestComponent
+    ContestComponent,
+    CreateContestComponent,
+    InputNumberComponent,
+    TimepickerDialogComponent,
+    TimepickerInputComponent,
+    ContestsComponent,
+    ContestProblemsComponent,
+    ContestLeaderboardComponent,
+    ContestSubmissionComponent,
+    ContestProblemComponent
   ],
   imports: [
     BrowserModule,
@@ -59,7 +87,17 @@ import { ContestComponent } from './components/contest/contest.component';
     SocialLoginModule,
     FontAwesomeModule,
     MatSnackBarModule,
-    MatDividerModule
+    MatDividerModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule, 
+    MatMomentDateModule,
+    MatButtonToggleModule,
+    MatExpansionModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatTabsModule,
+    MatTableModule
   ],
   providers: [
     {
@@ -81,6 +119,6 @@ import { ContestComponent } from './components/contest/contest.component';
 })
 export class AppModule { 
   constructor(private iconLibrary: FaIconLibrary) {
-    iconLibrary.addIcons(faWindowClose, faComment);
+    iconLibrary.addIcons(faWindowClose, faComment, faAngleUp, faAngleDown, faPlus, faMinus);
   }
 }

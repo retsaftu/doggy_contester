@@ -1,8 +1,9 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, EventEmitter, Inject, OnInit, Renderer2 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'app-navigation',
@@ -22,13 +23,21 @@ export class NavigationComponent implements OnInit {
   private readonly DEFAULT_CLASSES = 'mat-typography mat-app-background' // Без этого ничего не работает
 
   constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2,
-              private authService: AuthService, private router: Router) { }
+              private authService: AuthService, private router: Router) { 
+      this.router.events.subscribe((val) => {
+        if(val instanceof NavigationStart) {
+          let splitedRoute = val.url.split('/');
+          if(splitedRoute.length > 1) {
+            this.currentRoute = splitedRoute[1];
+          }
+        }
+      })
+  }
 
   ngOnInit(): void {
     this.isAuthenticated = this.authService.isLoggedIn();
 
     let splitedRoute = this.router.url.split('/');
-    console.log(splitedRoute)
     if(splitedRoute.length > 1) {
       this.currentRoute = splitedRoute[1];
     }

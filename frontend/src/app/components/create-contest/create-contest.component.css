@@ -1,0 +1,64 @@
+mat-divider {
+    margin-bottom: 1.5em;
+}
+
+.input {
+    width: 100%;
+}
+
+.datetime {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    height: fit-content;
+}
+.datetime mat-form-field {
+    width: 48%;
+}
+/* .timepicker {
+    width: 25%;
+} */
+/* .datetime mat-form-field {
+    width: 45%;
+} */
+mat-accordion {
+    width: 100%;
+}
+
+.problem-creation-wrapper, .test-creation-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1em;
+    /* align-items: center; */
+}
+
+.create-delete-block {
+    cursor: pointer;
+    margin-right: 1.2em;
+    margin-top: 1.1em;
+    font-size: bold;
+    height: fit-content;
+}
+
+.timepicker {
+    width: 30%;
+}
+
+mat-dialog-content::-webkit-scrollbar {
+    width: 10px;               /* width of the entire scrollbar */
+  }
+  mat-dialog-content::-webkit-scrollbar-track {
+    background: transparent;        /* color of the tracking area */
+  }
+  mat-dialog-content::-webkit-scrollbar-thumb {
+    background-color: rgb(128, 128, 128);    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    border: 3px solid transparent;  /* creates padding around scroll thumb */
+  }
+
+.limits {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}

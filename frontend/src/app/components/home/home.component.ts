@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ContestInfo } from '../../entities/contester.entity';
+import {MatDialog} from '@angular/material/dialog';
+import { CreateContestComponent } from '../create-contest/create-contest.component';
 
 @Component({
   selector: 'app-home',
@@ -8,81 +10,98 @@ import { ContestInfo } from '../../entities/contester.entity';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(public dialog: MatDialog) { }
+
+  private currentDate = new Date();
 
   userContests: ContestInfo[] = [
-    {
-      id: 7,
-      contestTitle: "Contest 7",
-      numberOfParticipants: 50,
-      ownerUsername: "Username1",
-      startDate: new Date()
-    },
+    new ContestInfo(
+      7,
+      "Contest 7",
+      50,
+      "Username1",
+      new Date(),
+      new Date(this.currentDate.setHours(this.currentDate.getHours()))
+    )
   ]
 
   activeContests: ContestInfo[] = [
-    {
-      id: 6,
-      contestTitle: "Contest 6",
-      numberOfParticipants: 50,
-      ownerUsername: "Username1",
-      startDate: new Date()
-    },
-    {
-      id: 7,
-      contestTitle: "Contest 7",
-      numberOfParticipants: 100,
-      ownerUsername: "Username2",
-      startDate: new Date()
-    },
-    {
-      id: 8,
-      contestTitle: "Contest 8",
-      numberOfParticipants: 1000,
-      ownerUsername: "Username3",
-      startDate: new Date()
-    },
+    new ContestInfo(
+      6,
+      "Contest 6",
+      50,
+      "Username1",
+      new Date(),
+      new Date(this.currentDate.setHours(this.currentDate.getHours() + 3))
+    ),
+    new ContestInfo(
+      7,
+      "Contest 7",
+      100,
+      "Username2",
+      new Date(),
+      new Date(this.currentDate.setHours(this.currentDate.getHours() + 3))
+    ),
+    new ContestInfo(
+      8,
+      "Contest 8",
+      1000,
+      "Username3",
+      new Date(),
+      new Date(this.currentDate.setHours(this.currentDate.getHours() + 3))
+    ),
   ]
 
   contests: ContestInfo[] = [
-    {
-      id: 1,
-      contestTitle: "Contest 1",
-      numberOfParticipants: 50,
-      ownerUsername: "Username1",
-      startDate: new Date()
-    },
-    {
-      id: 2,
-      contestTitle: "Contest 2",
-      numberOfParticipants: 100,
-      ownerUsername: "Username2",
-      startDate: new Date()
-    },
-    {
-      id: 3,
-      contestTitle: "Contest 3",
-      numberOfParticipants: 1000,
-      ownerUsername: "Username3",
-      startDate: new Date()
-    },
-    {
-      id: 4,
-      contestTitle: "Contest 4",
-      numberOfParticipants: 20,
-      ownerUsername: "Username4",
-      startDate: new Date()
-    },
-    { 
-      id: 5,
-      contestTitle: "Contest 5",
-      numberOfParticipants: 5,
-      ownerUsername: "Username5",
-      startDate: new Date()
-    },
+    new ContestInfo(
+      1,
+      "Contest 1",
+      50,
+      "Username1",
+      new Date(),
+      new Date(this.currentDate.setHours(this.currentDate.getHours() + 3))
+    ),
+    new ContestInfo(
+      2,
+      "Contest 2",
+      100,
+      "Username2",
+      new Date(),
+      new Date(this.currentDate.setHours(this.currentDate.getHours() + 3))
+    ),
+    new ContestInfo(
+      3,
+      "Contest 3",
+      1000,
+      "Username3",
+      new Date(),
+      new Date(this.currentDate.setHours(this.currentDate.getHours() + 3))
+    ),
+    new ContestInfo(
+      4,
+      "Contest 4",
+      20,
+      "Username4",
+      new Date(),
+      new Date(this.currentDate.setHours(this.currentDate.getHours() + 3))
+    ),
+    new ContestInfo(
+      5,
+      "Contest 5",
+      5,
+      "Username5",
+      new Date(),
+      new Date(this.currentDate.setHours(this.currentDate.getHours() + 3))
+    ),
   ]
 
   ngOnInit(): void {
+  }
+
+  openCreateContestDialog() {
+    this.dialog.open(CreateContestComponent, {
+      width: '40%'
+    });
   }
 
 }
