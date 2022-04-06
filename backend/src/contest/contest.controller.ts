@@ -8,7 +8,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 export class ContestController {
   constructor(private readonly contestService: ContestService) {}
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createContestDto: CreateContestDto) {
     return this.contestService.create(createContestDto);

@@ -11,6 +11,7 @@ export class ContestService {
   ) { }
 
   async create(createContestDto: CreateContestDto) {
+    console.log(`createContestDto`, createContestDto);
     return await this.db.collection('contest').insertOne(createContestDto);
   }
 
