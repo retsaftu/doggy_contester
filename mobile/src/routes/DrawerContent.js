@@ -11,15 +11,20 @@ import userService from "../service/UserService";
 
 //Компонент меню которая появляется слева(если провести по экрану слева направо)
 export function DrawerContent(props){
+    const [isAuth, setIsAuth]= useState(false);
 
     const getData=async ()=>{
-
+        const token=await AsyncStorage.getItem('token');
+        if(token){
+            await setIsAuth(true)
+        }
     }
 
     useEffect(()=>{
         getData();
     })
     const logOut = async ()=>{
+        await AsyncStorage.removeItem('token')
         await props.navigation.navigate('AuthForm')
     }
 
@@ -59,37 +64,64 @@ export function DrawerContent(props){
                     />
                 </Drawer.Section>
             </DrawerContentScrollView>
-            <Drawer.Section style={styles.bottomDrawerSection}>       
-                <DrawerItem
-                    icon={({color, size})=>(
-                        <MaterialIcons name='account-circle'
-                            color={color}
-                            size={size}
-                        />
-                    )}
-                    label={'Profile'}
-                    onPress={()=>{props.navigation.navigate('Profile')}}
-                />     
-                <DrawerItem
-                    icon={({color, size})=>(
-                        <Icon name='bell'
-                            color={color}
-                            size={size}
-                        />
-                    )}
-                    label={'Notifications'}
-                    onPress={()=>{props.navigation.navigate('Notifications')}}
-                />     
-                <DrawerItem
-                    icon={({color, size})=>(
-                        <Icon name='exit-to-app'
-                            color={color}
-                            size={size}
-                        />
-                    )}
-                    label={'Sign Out'}
-                    onPress={()=>{logOut()}}
-                />
+            <Drawer.Section style={styles.bottomDrawerSection}>      
+                {
+                    isAuth
+                    ?
+                    <DrawerItem
+                        icon={({color, size})=>(
+                            <MaterialIcons name='account-circle'
+                                color={color}
+                                size={size}
+                            />
+                        )}
+                        label={'Username'}
+                        onPress={()=>{props.navigation.navigate('Profile')}}
+                    />
+                    : 
+                    null
+                } 
+                {
+                    isAuth
+                    ?
+                    <DrawerItem
+                        icon={({color, size})=>(
+                            <Icon name='bell'
+                                color={color}
+                                size={size}
+                            />
+                        )}
+                        label={'Notifications'}
+                        onPress={()=>{props.navigation.navigate('Notifications')}}
+                    /> 
+                    : 
+                    null
+                }
+                {
+                    isAuth
+                    ?
+                    <DrawerItem
+                        icon={({color, size})=>(
+                            <Icon name='exit-to-app'
+                                color={color}
+                                size={size}
+                            />
+                        )}
+                        label={'Sign Out'}
+                        onPress={()=>{logOut()}}
+                    /> 
+                    : 
+                    <DrawerItem
+                        icon={({color, size})=>(
+                            <Icon name='exit-to-app'
+                                color={color}
+                                size={size}
+                            />
+                        )}
+                        label={'Sign In'}
+                        onPress={()=>{logOut()}}
+                    />
+                }
             </Drawer.Section>
         </View>
     )

@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import RNFetchBlob from 'rn-fetch-blob'
 import Loader from "react-native-modal-loader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {backend} from '../../config/config.json'
 
 
 export default class Contests extends Component {
@@ -11,6 +12,7 @@ export default class Contests extends Component {
         super(props);
         this.state = {
             isLoader:false,
+            isAuth:false,
             contests:[{name:'Contest Title', date:'14:00, 28/03/2022\n3 hours', count: 50}],
         }
 
@@ -21,8 +23,11 @@ export default class Contests extends Component {
     }
 
     getData=async ()=>{
-        let url='http://192.168.1.121:3000/contest';
         const token=await AsyncStorage.getItem('token');
+        if(token){
+            await this.setState({isAuth: true})
+        }
+        let url=`http://${backend.host}:3000/contest`;
         await this.setState({isLoader:true})
         await RNFetchBlob.config({
             trusty : true
@@ -30,7 +35,7 @@ export default class Contests extends Component {
             .fetch('GET',url, {
             'Accept': 'application/json',
             'Content-Type':'application/json',
-            'Authorization': 'Bearer '+token
+            // 'Authorization': 'Bearer '+token
             })
             .then(res=>res.json())
             .then(async (data)=>{
@@ -59,10 +64,10 @@ export default class Contests extends Component {
                     keyExtractor={(item, index) => item + index}
                     renderItem={({ item }) => (
                         <View style={styles.item}>
-                            <View style={styles.row}>
-                                <Text style={styles.itemText}>{item.name}</Text>
-                                <Text style={styles.itemText}>{item.description}</Text>
-                            </View>
+                            {/* <View style={styles.row}> */}
+                                <Text style={styles.header}>{item.name}</Text>
+                                {/* <Text style={styles.itemText}>{item.description}</Text> */}
+                            {/* </View> */}
                             <View style={styles.row}>
                                 <View style={styles.textIcon}>
                                     <Text style={[styles.itemText, {flex:0}]}>50  </Text>
@@ -72,23 +77,33 @@ export default class Contests extends Component {
                                     <Icon name='account' size={25} color='black'/>
                                     <Text style={{color:'black'}}>Owner</Text>
                                 </View>
-                                <TouchableOpacity style={styles.button}>
-                                    <Text style={styles.buttonText}>
-                                        Enter
-                                    </Text>
-                                </TouchableOpacity>
                             </View>
+                            <TouchableOpacity 
+                                style={styles.button}
+                                onPress={()=>{
+                                    this.props.navigation.navigate('OneContest', {name:item.name})
+                                }}>
+                                <Text style={styles.buttonText}>
+                                    Info
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                     )}
                 />
-                <TouchableOpacity
-                    style={styles.floatingButton}
-                    onPress={()=>{
-                        this.props.navigation.navigate('CreateContest')
-                    }}
-                >
-                    <Icon name='plus' size={30} color='white' />
-                </TouchableOpacity>
+                {
+                    this.state.isAuth
+                    ?
+                    <TouchableOpacity
+                        style={styles.floatingButton}
+                        onPress={()=>{
+                            this.props.navigation.navigate('CreateContest')
+                        }}
+                    >
+                        <Icon name='plus' size={30} color='white' />
+                    </TouchableOpacity>
+                    : 
+                    null
+                }
             </View>
         )
     }
@@ -103,9 +118,12 @@ const styles = StyleSheet.create({
         paddingBottom:'5%',
     },
     header:{
-        fontSize:20,
+        flex:1,
         color:'black',
-        marginVertical:'4%',
+        textAlign:'center',
+        textAlignVertical:'center',
+        fontSize:20,
+        marginVertical:'3.5%',
         fontWeight:'bold'
     },
     item:{

@@ -5,7 +5,7 @@ import CustomisableAlert, { showAlert, closeAlert } from "react-native-customisa
 import Loader from "react-native-modal-loader";
 import RNFetchBlob from 'rn-fetch-blob'
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import {backend} from '../../config/config.json'
 export default class CreateContest extends Component {
     constructor(props) {
         super(props);
@@ -41,7 +41,7 @@ export default class CreateContest extends Component {
             description: '32 строка в коде тест, потом убрать',
             tasks:[]
         }
-        let url='http://192.168.1.121:3000/contest'
+        let url=`http://${backend.host}:3000/contest`
 
         console.log(`contest`, contest);
         if(this.state.contestName.length>0){
@@ -62,7 +62,7 @@ export default class CreateContest extends Component {
                         await this.setState({isLoader:false})
                         showAlert({
                             title: 'Success!',
-                            message: 'Contest successfully created!',
+                            message: data.message,
                             alertType: 'success',
                             onPress:this.successAlert
                         })
@@ -70,7 +70,7 @@ export default class CreateContest extends Component {
                         await this.setState({isLoader:false})
                         showAlert({
                             title: 'Error!',
-                            message: 'Something went wrong! Try again!',
+                            message: data.message,
                             alertType: 'error'
                         })
                     }

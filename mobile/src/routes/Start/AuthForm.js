@@ -16,6 +16,9 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import CustomisableAlert, { showAlert, closeAlert } from "react-native-customisable-alert";
 import Loader from "react-native-modal-loader";
 import RNFetchBlob from 'rn-fetch-blob'
+import {backend} from '../../../config/config.json'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+
 export default class AuthForm extends Component {
     constructor(props) {
         super(props);
@@ -53,11 +56,13 @@ export default class AuthForm extends Component {
 
     //Функция авторизации
     authHandler = async () => {
+        console.log(`backend`, backend);
         let user={
             email: this.state.email,
             password: this.state.password
         }
-        let url='http://192.168.1.121:3000/auth/login'
+        let url=`http://${backend.host}:3000/auth/login`
+        console.log(`url`, url);
 
         console.log(`user`, user);
         if(this.state.email.length>0 && this.state.password.length>0){
@@ -81,7 +86,7 @@ export default class AuthForm extends Component {
                         await this.setState({isLoader:false})
                         showAlert({
                             title: 'Ошибка!',
-                            message: 'Неверные логин или пароль!',
+                            message: data.message,
                             alertType: 'error'
                         })
                     }
@@ -206,6 +211,17 @@ export default class AuthForm extends Component {
                             <Image source={require('../../../assets/google.png')} style={{height:30, width:30}}/>
                             <Text style={{color:'black', fontSize:15}}>  Sign in with Google</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={()=>{
+                                this.props.navigation.navigate('Navigator')
+                            }}
+                            style={localStyles.guestButton}>
+                            <MaterialIcons name='account-circle'
+                                color={'black'}
+                                size={30}
+                            />
+                            <Text style={{color:'black', fontSize:15}}>  Continue as guest</Text>
+                        </TouchableOpacity>
                     </View>
                 </TouchableWithoutFeedback>
             </View>
@@ -279,6 +295,27 @@ const localStyles=StyleSheet.create({
         },
         textAlign:'center',
         marginVertical:'4%',
+        paddingVertical:'5%',
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        justifyContent:'center'
+    },
+    guestButton:{
+        backgroundColor: 'white',
+        alignItems: "center",
+        padding: 10,
+        color: 'black',
+        borderColor: '#DDDDDD',
+        borderWidth:1,
+        borderStyle:'solid',
+        borderBottomWidth: 0.3,
+        shadowColor: '#000',
+        shadowOffset:{
+            width:0,
+            height:1
+        },
+        textAlign:'center',
+        marginVertical:'2%',
         paddingVertical:'5%',
         flexWrap: 'wrap',
         flexDirection: 'row',

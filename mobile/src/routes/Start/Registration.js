@@ -16,6 +16,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import CustomisableAlert, { showAlert, closeAlert } from "react-native-customisable-alert";
 import Loader from "react-native-modal-loader";
 import RNFetchBlob from 'rn-fetch-blob'
+import {backend} from '../../../config/config.json'
+
 export default class Registration extends Component {
     constructor(props) {
         super(props);
@@ -45,7 +47,7 @@ export default class Registration extends Component {
             password: this.state.password,
             username:this.state.username
         }
-        let url='http://192.168.1.121:3000/auth/register'
+        let url=`http://${backend.host}:3000/auth/register`
         console.log(`user`, user);
         if(this.state.email.length>0 && this.state.password.length>0 && this.state.username.length>0){
             await this.setState({isLoader:true})
@@ -72,7 +74,15 @@ export default class Registration extends Component {
                         await this.setState({isLoader:false})
                         showAlert({
                             title: 'Ошибка!',
-                            message: 'Неверные логин или пароль!',
+                            // message: 'Неверные логин или пароль!',
+                            message:data.message,
+                            alertType: 'error'
+                        })
+                    }else if (data.statusCode === 400){
+                        await this.setState({isLoader:false})
+                        showAlert({
+                            title: 'Warning!',
+                            message: data.message,
                             alertType: 'error'
                         })
                     }

@@ -8,6 +8,7 @@ import Notifications from "../screens/Notifications";
 
 import {DrawerContent} from "./DrawerContent";
 import CreateContest from "../screens/CreateContest";
+import OneContest from "../screens/OneContest";
 
 
 const Drawer = createDrawerNavigator();
@@ -40,6 +41,10 @@ export default () => {
                 name='CreateContest'
                 component={CreateContest}
                 options={{title:'Create contest'}}/>
+            <Drawer.Screen
+                name='OneContest'
+                component={OneContest}
+                options={{title:'Contest details'}}/>
         </Drawer.Navigator>
 
     )
