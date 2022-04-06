@@ -197,9 +197,9 @@ export class CreateContestComponent implements OnInit {
 
   createContest() {
 
-    if(!this.isAllContestFieldsAreValid()) {
-      return
-    }
+    // if(!this.isAllContestFieldsAreValid()) {
+    //   return
+    // }
 
     const problems: ProblemCreation[] = [];
 

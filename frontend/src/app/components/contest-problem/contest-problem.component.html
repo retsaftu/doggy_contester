@@ -6,6 +6,8 @@
     <h2>Sample output</h2>
     <pre>{{currentProblem?.sampleOutput}}</pre>
     <div>
+        <input #fileInput class="custom-file-input" type="file" [accept]=fileType (change)="processFile(fileInput)"
+            [disabled]="disabled" [ngClass]="{'disabled': disabled}">
         <button mat-raised-button color="primary">Upload code</button>
     </div>
 </div>
