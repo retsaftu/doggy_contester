@@ -1,0 +1,1 @@
+export const ID_NOT_FOUND = 'id not found';

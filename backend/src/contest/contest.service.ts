@@ -25,6 +25,62 @@ export class ContestService {
     ]).toArray());
   }
 
+  async findMyContest(myid: string) {
+    return (await this.db.collection('contest').aggregate([
+      {
+        $match: {
+          "owner._id": myid
+        }
+      }
+    ]).toArray());
+  }
+
+  async findMyActiveContest(myid: string) {
+    return (await this.db.collection('contest').aggregate([
+      // {
+      //   $match: {
+      //     participants: { "$in": [{myid}] }
+      //   }
+      // }
+      {
+        $unwind: "$participants"
+      },
+      {
+        $match: {
+          'participants._id': new mongodb.ObjectId(myid),
+          endDate: {
+            // $gte: new Date("2013-01-01T00:00:00.0Z"),
+            $lt: new Date()
+          }
+        }
+      }
+    ]).toArray());
+  }
+
+  async findCurrentContests(myid: string) {
+    return (await this.db.collection('contest').aggregate([
+      // {
+      //   $match: {
+      //     participants: { "$in": [{myid}] }
+      //   }
+      // }
+      {
+        $unwind: "$participants"
+      },
+      {
+        $match: {
+          'participants._id': {
+            $ne: new mongodb.ObjectId(myid)
+          },
+          endDate: {
+            // $gte: new Date("2013-01-01T00:00:00.0Z"),
+            $lt: new Date()
+          }
+        }
+      }
+    ]).toArray());
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} contest`;
   }
