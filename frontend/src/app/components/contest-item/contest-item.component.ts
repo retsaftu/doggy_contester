@@ -17,7 +17,7 @@ export class ContestItemComponent implements OnInit {
   }
 
   enterContest() {
-    this.router.navigate([`/contest/${this.contestInfo?.id}`])
+    this.router.navigate([`/contest/${this.contestInfo?._id}`])
   }
 
 }

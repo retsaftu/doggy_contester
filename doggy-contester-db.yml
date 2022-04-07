@@ -1,0 +1,21 @@
+version: '2.4'
+services:
+  doggy-contester-mongo-db:
+    image: "mongo:4.4"
+    user: "1000:1000"
+    container_name: doggy-contester-mongo-db
+    volumes:
+      - ./doggy-contester-mongo-db/db:/data/db
+    ports:
+       - "5000:27017"
+    restart: on-failure
+    healthcheck:
+      test: echo 'db.stats().ok' | mongo localhost:27017/just4testNur --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+networks:
+  default:
+    external:
+      name: agis-net
