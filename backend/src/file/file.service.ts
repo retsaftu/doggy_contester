@@ -39,12 +39,10 @@ export class FileService {
                     contestId: data.contestId,
                     taskId: data.taskId,
                 },
-                links:{
-                    view:'',
-                    download:''
+                links: {
+                    view: `/api/file/${fileId}`,
+                    download: `/api/file/download/${fileId}`
                 }
-
-
             }
         );
     }
