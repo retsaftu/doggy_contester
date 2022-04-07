@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { AuthDto } from "./dto/auth.dto";
 import { ALREADY_REGISTERED_ERROR } from './auth.constants';
 import { RegisterDto } from './dto/register.dto';
+import { AuthGoogleDto } from './dto/authGoogle.dto';
 
 
 @Controller('auth')
@@ -19,12 +20,14 @@ export class AuthController {
     return this.authService.createUser(dto);
   }
 
+
+
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
   @Post('login')
   async login(@Body() { email, password }: AuthDto) {
-    const { _email } = await this.authService.validateUser(email, password);
-    return this.authService.login(_email);
+    const { user } = await this.authService.validateUser(email, password);
+    return this.authService.login(user);
 
   }
 

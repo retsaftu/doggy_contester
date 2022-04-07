@@ -6,6 +6,7 @@ import { genSalt, hash, compare } from 'bcryptjs';
 import { USER_NOT_FOUND_ERROR, WRONG_PASSWORD_ERROR } from './auth.constants';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
+import { AuthGoogleDto } from './dto/authGoogle.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -45,14 +46,18 @@ export class AuthService {
     if (!isCorrectPassword) {
       throw new UnauthorizedException(WRONG_PASSWORD_ERROR);
     }
-    return { _email: user.email };
+    console.log(`user`, user);
+    return { user: user };
   }
 
-  async login(email: string) {
+  async login(user: any) {
+    const email = user.email;
     const payload = { email };
     console.log(`email`, email);
     return {
-      access_token: await this.jwtService.signAsync(payload)
+      access_token: await this.jwtService.signAsync(payload),
+      userId: user._id,
+      username: user.username
     };
   }
 
