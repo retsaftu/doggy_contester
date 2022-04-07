@@ -135,8 +135,14 @@ export class ContestService {
     ]).toArray());
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} contest`;
+  async findOne(id: string) {
+    return (await this.db.collection('contest').aggregate([
+      {
+        $match: {
+          _id: new mongodb.ObjectId(id)
+        }
+      }
+    ]).toArray());
   }
 
   update(id: number, updateContestDto: UpdateContestDto) {

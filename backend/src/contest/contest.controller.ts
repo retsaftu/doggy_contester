@@ -12,10 +12,10 @@ export class ContestController {
   @UseGuards(JwtAuthGuard)
   @Post()
   create(
-    @Req() req: any, 
+    @Req() req: any,
     @Body() createContestDto: CreateContestDto
-    ) {
-    return this.contestService.create(createContestDto,req.user);
+  ) {
+    return this.contestService.create(createContestDto, req.user);
   }
 
   @Get()
@@ -71,9 +71,11 @@ export class ContestController {
     return this.contestService.findCurrentContests(id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.contestService.findOne(+id);
+  @Get(':_id')
+  findOne(
+    @Param('_id') _id: string
+  ) {
+    return this.contestService.findOne(_id);
   }
 
   @Patch(':id')
