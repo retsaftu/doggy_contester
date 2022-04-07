@@ -29,7 +29,8 @@ export class ContestComponent implements OnInit {
 
   ngOnInit(): void {
     let splittedUrl = this.router.url.split('/');
-    const id = parseInt(splittedUrl[splittedUrl.length - 1]);
+    const id = splittedUrl[splittedUrl.length - 1];
+    console.log(`id`, id);
     const begin = new Date(new Date().setMinutes(this.currentDate.getMinutes() - 1));
     const end = new Date(new Date().setMinutes(this.currentDate.getMinutes() + 1));
     // this.contestInfo = new ContestInfo(id, "Contest name", 50, "Username1", begin, end);

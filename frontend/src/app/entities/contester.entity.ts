@@ -14,7 +14,7 @@ export class Owner {
 }
 
 export class ContestInfo {
-  id: number;
+  _id: string;
   name: string;
   total_participants: number;
   owner: Owner;
@@ -22,8 +22,8 @@ export class ContestInfo {
   endDate: Date;
   duration!: string;
 
-  constructor(id: number, name: string, total_participants: number, owner: Owner, startDate: Date, endDate: Date) {
-    this.id = id;
+  constructor(_id: string, name: string, total_participants: number, owner: Owner, startDate: Date, endDate: Date) {
+    this._id = _id;
     this.name = name;
     this.total_participants = total_participants;
     this.owner = owner;
@@ -73,7 +73,7 @@ export class ContestCreation {
   private _code?: string;
 
   constructor(name: string, description: string, duration: Time, time: Time, date: Date,
-              total_participants: number, problems: ProblemCreation[], code?: string) {
+    total_participants: number, problems: ProblemCreation[], code?: string) {
     this._name = name;
     this._problems = problems;
     this._startTime = this.getStartTime(time, date);
@@ -107,7 +107,7 @@ export class ContestCreation {
   get endTime() { return this._endTime; }
   get description() { return this._description; }
   get total_participants() { return this._total_participants; }
-  get code() {return this._code;}
+  get code() { return this._code; }
 
 }
 
