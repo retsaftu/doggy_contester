@@ -4,6 +4,7 @@ import { TextInput } from "react-native";
 import AuthForm from "./AuthForm";
 import StartSettings from "./StartSettings";
 import Registration from "./Registration";
+import AuthWithPhone from "./AuthWithPhone";
 
 const Stack=createStackNavigator();
 
@@ -16,6 +17,11 @@ export default function StartStack(){
             <Stack.Screen
                 name='AuthForm'
                 component={AuthForm}
+                options={{headerShown: false}}
+            />
+            <Stack.Screen
+                name='AuthWithPhone'
+                component={AuthWithPhone}
                 options={{headerShown: false}}
             />
             <Stack.Screen

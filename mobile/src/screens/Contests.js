@@ -81,7 +81,7 @@ export default class Contests extends Component {
                             <TouchableOpacity 
                                 style={styles.button}
                                 onPress={()=>{
-                                    this.props.navigation.navigate('OneContest', {name:item.name})
+                                    this.props.navigation.navigate('OneContest', {contest:item})
                                 }}>
                                 <Text style={styles.buttonText}>
                                     Info

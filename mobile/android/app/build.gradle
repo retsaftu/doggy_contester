@@ -195,6 +195,7 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
+    compile project(':react-native-get-sms-android')
 
 
 
