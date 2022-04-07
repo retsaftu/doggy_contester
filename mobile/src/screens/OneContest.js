@@ -16,9 +16,10 @@ export default class OneContest extends Component {
             isAuth:false,
             progress:0,
             indeterminate:true,
-            startDate:new Date(2022,3,1),
-            endDate:new Date(2022,3,30),
+            startDate:new Date(2022,3,8,0,8,1),
+            endDate:new Date(2022,3,8,0,8,55),
             contests:[{name:'Contest Title', date:'14:00, 28/03/2022\n3 hours', count: 50}],
+            currentProblem:null
         }
 
     }
@@ -32,10 +33,29 @@ export default class OneContest extends Component {
         var start = this.state.startDate,
         end = this.state.endDate,
         today = new Date();
+        today.setHours(today.getHours()+6)
         console.log(`today`, today.toLocaleDateString());
         let progress = ( ( today.getTime() - start.getTime() ) / ( end.getTime() - start.getTime() ) )
+        console.log(`start`, start);
+        console.log(`end`, end);
+        console.log(`today`, today);
+        console.log(`progress`, progress);
+        
+        this.setState({ progress });
         setTimeout(() => {
-            this.setState({ indeterminate: false, progress: progress });
+            this.setState({indeterminate: false})
+            let id=setInterval(()=>{
+                if(progress>=1){
+                    this.setState({ progress:1 });
+                    clearInterval(id)
+                } else {
+                    today=new Date();
+                    today.setHours(today.getHours()+6)
+                    progress = ( ( today.getTime() - start.getTime() ) / ( end.getTime() - start.getTime() ) )
+                    this.setState({ progress });
+                    // this.animate();
+                }
+            },1500)
         }, 1300);
     }
 
@@ -72,16 +92,54 @@ export default class OneContest extends Component {
 
     render(){
         return (
-            <View style={styles.body}>
-                <Loader loading={this.state.isLoader} color="black" size='large'/>
-                <View style={styles.item}>
-                    <Text style={styles.header}>{this.props.route.params.name}</Text>
-                    <Progress.Bar style={styles.progressBar} progress={this.state.progress} height={11} width={null} indeterminateAnimationDuration={1000} indeterminate={this.state.indeterminate} color={'rgba(240, 5, 0, 1)'}/>
-                    <View style={styles.row}>
-                        <Text style={styles.itemText}>Begin: {this.state.startDate.toLocaleDateString()}</Text>
-                        <Text style={styles.itemText}>End: {this.state.endDate.toLocaleDateString()}</Text>
+            <>
+                <ScrollView style={styles.body}>
+                    <Loader loading={this.state.isLoader} color="black" size='large'/>
+                    <View style={styles.item}>
+                        <Text style={styles.header}>{this.props.route.params.contest.name}</Text>
+                        <Progress.Bar style={styles.progressBar} progress={this.state.progress} height={11} width={null} indeterminateAnimationDuration={1000} indeterminate={this.state.indeterminate} color={'rgba(240, 5, 0, 1)'}/>
+                        <View style={styles.row}>
+                            <Text style={styles.itemText}>Begin: {this.state.startDate.toLocaleDateString()}</Text>
+                            <Text style={styles.itemText}>End: {this.state.endDate.toLocaleDateString()}</Text>
+                        </View>
                     </View>
-                </View>
+                    <View style={styles.item}>
+                        <View style={styles.row}>
+                            <Text style={styles.itemText}>{this.props.route.params.contest.description}</Text>
+                        </View>
+                        <View style={[styles.row, {justifyContent:'space-around', marginVertical:'4%'}]}>
+                            {
+                                this.props.route.params.contest.tasks.map((c,i)=>{
+                                    console.log(`c`, c);
+                                    return(
+                                        <TouchableOpacity key={i} 
+                                            style={{marginHorizontal:'5%', padding:'4%', marginVertical:'4%', backgroundColor:'rgba(240, 5, 0, 1)'}}
+                                            onPress={async ()=>{
+                                                await this.setState({currentProblem:c})
+                                            }}>
+                                            <Text style={[styles.itemText, {flex:0, color:'white', fontSize:25}]}>{c.index}</Text>
+                                        </TouchableOpacity>
+                                    )
+                                })
+                            }
+                        </View>
+                    </View>
+                    {
+                        this.state.currentProblem
+                        ?
+                        <View style={styles.item}>
+                            <View style={styles.row}>
+                                <Text style={styles.header}>{this.state.currentProblem.index}. {this.state.currentProblem.name}</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <Text style={styles.itemText}>{this.state.currentProblem.description}</Text>
+                            </View>
+                        </View>
+                        :
+                        null
+
+                    }
+                </ScrollView>
                 {
                     this.state.isAuth
                     ?
@@ -97,7 +155,7 @@ export default class OneContest extends Component {
                     : 
                     null
                 }
-            </View>
+            </>
         )
     }
 }
@@ -140,7 +198,7 @@ const styles = StyleSheet.create({
         color:'black',
         textAlign:'center',
         textAlignVertical:'center',
-        fontSize:16
+        fontSize:18
     },
     button:{
         flex:1,

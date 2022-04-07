@@ -8,7 +8,8 @@ import {
     Image,
     TouchableOpacity,
     Platform,
-    Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback
+    Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback,
+    PermissionsAndroid
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from '../../css/GlobalStyles'
@@ -18,20 +19,32 @@ import Loader from "react-native-modal-loader";
 import RNFetchBlob from 'rn-fetch-blob'
 import {backend} from '../../../config/config.json'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import SmsAndroid from 'react-native-get-sms-android';
 
-export default class AuthForm extends Component {
+export default class AuthWithPhone extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: '',
-            password: '',
+            phone:'',
             isPending:false,
             isLoader:false,
-
+            granted:false,
+            codeSent:false,
+            sms:'',
+            smsToCheck:''
         }
     }
 
     async componentDidMount() {
+        const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.SEND_SMS,
+        );
+        if(granted===PermissionsAndroid.RESULTS.GRANTED){
+            this.setState({granted:true})
+        } else {
+            this.setState({granted:false})
+        }
+
         //Получаем какой язык(русс, каз, англ) установлен
         // await AsyncStorage.getItem('language')
         //     .then(language => {
@@ -55,60 +68,51 @@ export default class AuthForm extends Component {
     }
 
     //Функция авторизации
-    authHandler = async () => {
-        console.log(`backend`, backend);
-        let user={
-            email: this.state.email,
-            password: this.state.password
+    sendCode = async () => {
+        if(this.state.granted){
+            let phoneNumbers = {
+                "addressList": [this.state.phone.toString()]
+            };
+            let sms=Math.floor(1000 + Math.random() * 9000);
+            this.setState({smsToCheck:sms})
+            console.log(`sms`, sms);
+            console.log(`JSON.stringify(phoneNumbers),`, JSON.stringify(phoneNumbers),);
+            SmsAndroid.autoSend(
+                JSON.stringify(phoneNumbers),
+                sms.toString(),
+                (fail) => {
+                    console.log(`fail`, fail);
+                    showAlert({
+                        title: 'Ошибка!',
+                        message: 'Что то пошло не так! Повторите попытку!',
+                        alertType: 'error'
+                    })
+                },
+                (success) => {
+                    console.log('success');
+                    this.setState({codeSent:true})
+                },
+            );
+        } else {
+            showAlert({
+                title: 'Ошибка!',
+                message: 'Вы не дали доступ к отправке смс!',
+                alertType: 'error'
+            })
         }
-        let url=`http://${backend.host}:3000/auth/login`
-        console.log(`url`, url);
-
-        console.log(`user`, user);
-        if(this.state.email.length>0 && this.state.password.length>0){
-            try {
-                await this.setState({isLoader:true})
-                await RNFetchBlob.config({
-                trusty : true
-                })
-                .fetch('POST',url, {
-                'Accept': 'application/json',
-                'Content-Type':'application/json'
-                },JSON.stringify(user))
-                .then(res=>res.json())
-                .then(async (data)=>{
-                    console.log(`data`, data);
-                    if (data.access_token){
-                        await AsyncStorage.setItem('token', data.access_token)
-                        await AsyncStorage.setItem('username', data.username)
-                        await AsyncStorage.setItem('userId', data.userId)
-                        await this.setState({isLoader:false})
-                        this.props.navigation.navigate('Navigator')
-                    }else if (data.statusCode === 401){
-                        await this.setState({isLoader:false})
-                        showAlert({
-                            title: 'Ошибка!',
-                            message: data.message,
-                            alertType: 'error'
-                        })
-                    }
-                })
-            }catch (err){
-                console.log(err)
-                await this.setState({isLoader:false})
-                showAlert({
-                    title: 'Ошибка!',
-                    message: 'Проблемы с соединением!',
-                    alertType: 'error'
-                })
-            }
+    }
+    authHandler = async () => {
+        console.log(`this.state.smsToCheck`, this.state.smsToCheck);
+        console.log(`this.state.my`, this.state.sms);
+        if(this.state.sms.toString()===this.state.smsToCheck.toString()){
+            await this.props.navigation.navigate('Navigator')
         } else {
             showAlert({
                 title: 'Внимание!',
-                message: 'Введите все поля!',
+                message: 'Вы ввели неправильный код!',
                 alertType: 'error'
             })
-        } 
+        }
     }
 
     //Переход на страницу настроек
@@ -157,22 +161,27 @@ export default class AuthForm extends Component {
                         <View style={styles.imagePosition}>
                             <Image source={require('../../../assets/logo.png')} style={styles.image}/>
                         </View>
-                        <TextInput
-                            style={[styles.input, {backgroundColor:'rgba(0, 81, 202, 0.04)'}]}
-                            value={this.state.email}
-                            onChangeText={val => this.setState({email: val})}
-                            placeholder={'Email'}
-                        />
-                        
-                        <TextInput
-                            style={[styles.input, {backgroundColor:'rgba(237, 241, 247, 1)'}]}
-                            value={this.state.password}
-                            secureTextEntry={true}
-                            onChangeText={val => this.setState({password: val})}
-                            placeholder={'Password'}
-                        />
                         {
-                            this.state.email.length>0 && this.state.password.length>0
+                            this.state.codeSent
+                            ?
+                            <TextInput
+                                keyboardType='number-pad'
+                                style={[styles.input, {backgroundColor:'rgba(0, 81, 202, 0.04)'}]}
+                                value={this.state.sms}
+                                onChangeText={val => this.setState({sms: val})}
+                                placeholder={'Enter your code'}
+                            />
+                            :
+                            <TextInput
+                                keyboardType='number-pad'
+                                style={[styles.input, {backgroundColor:'rgba(0, 81, 202, 0.04)'}]}
+                                value={this.state.phone}
+                                onChangeText={val => this.setState({phone: val})}
+                                placeholder={'Enter your phone number'}
+                            />
+                        }                        
+                        {
+                            this.state.codeSent
                             ?
                             <TouchableOpacity
                                 onPress={this.authHandler}
@@ -181,61 +190,32 @@ export default class AuthForm extends Component {
                                 <Text style={{color:'rgba(255, 255, 255, 1)', fontWeight:"bold"}}>Login</Text>
                             </TouchableOpacity>
                             :
+                            this.state.phone.length>0
+                            ?
                             <TouchableOpacity
-                                onPress={this.authHandler}
+                                onPress={this.sendCode}
+                                // onPress={()=>{this.props.navigation.navigate('Navigator')}}
+                                style={[localStyles.button, {backgroundColor:'rgba(240, 5, 0, 1)'}]}>
+                                <Text style={{color:'rgba(255, 255, 255, 1)', fontWeight:"bold"}}>Send code</Text>
+                            </TouchableOpacity>
+                            :
+                            <TouchableOpacity
+                                onPress={this.sendCode}
                                 // onPress={()=>{this.props.navigation.navigate('Navigator')}}
                                 style={[localStyles.button,{backgroundColor:'rgba(220, 220, 220, 1)'}]}>
-                                <Text style={{color:'rgba(163, 163, 163, 1)', fontWeight:"bold"}}>Login</Text>
+                                <Text style={{color:'rgba(163, 163, 163, 1)', fontWeight:"bold"}}>Send code</Text>
                             </TouchableOpacity>
                         }
-                        <View style={localStyles.parent}>
-                            <TouchableOpacity
-                                onPress={this.register}
-                            >                                
-                                <Text style={localStyles.child}>Sign up</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                // onPress={this.authHandler}
-                            >
-                                <Text style={localStyles.child}>Forgot password?</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={localStyles.lineSeparator}>
-                            <View style={localStyles.line} />
-                            <View>
-                                <Text style={localStyles.orText}>OR</Text>
-                            </View>
-                            <View style={localStyles.line} />
-                        </View>
                         <TouchableOpacity
-                            // onPress={this.authHandler}
+                            onPress={()=>{
+                                this.props.navigation.navigate('AuthForm')
+                            }}
                             style={localStyles.googleButton}>
-                            <Image source={require('../../../assets/google.png')} style={{height:30, width:30}}/>
-                            <Text style={{color:'black', fontSize:15}}>  Sign in with Google</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={async ()=>{
-                                await AsyncStorage.removeItem('token')
-                                this.props.navigation.navigate('AuthWithPhone')
-                            }}
-                            style={localStyles.guestButton}>
-                            <MaterialIcons name='phone'
+                            <MaterialIcons name='arrow-back'
                                 color={'black'}
-                                size={30}
+                                size={25}
                             />
-                            <Text style={{color:'black', fontSize:15}}>  Sign in with phone</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={async ()=>{
-                                await AsyncStorage.removeItem('token')
-                                this.props.navigation.navigate('Navigator')
-                            }}
-                            style={localStyles.guestButton}>
-                            <MaterialIcons name='account-circle'
-                                color={'black'}
-                                size={30}
-                            />
-                            <Text style={{color:'black', fontSize:15}}>  Continue as guest</Text>
+                            <Text style={{color:'black', fontSize:18}}>  Go back</Text>
                         </TouchableOpacity>
                     </View>
                 </TouchableWithoutFeedback>
