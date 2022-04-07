@@ -6,6 +6,7 @@ import { response } from 'express';
 
 
 import * as mongodb from 'mongodb';
+import { CreateSubmissionDto } from './dto/submission-dto';
 
 @Injectable()
 export class FileService {
@@ -19,6 +20,36 @@ export class FileService {
     ) {
         this.fileModel = new MongoGridFS(this.db, 'fs');
     }
+
+    async addSubmission(fileId: string, user, data: CreateSubmissionDto, code) {
+        let language = data.extension.split('.')[1]
+        console.log(`language`, language);
+        return await this.db.collection('submissions').insertOne(
+            {
+                file: {
+                    fileId: fileId,
+                    language: language,
+                    code: code,
+                },
+                user: {
+                    username: user.username,
+                    userId: user._id,
+                },
+                submission: {
+                    contestId: data.contestId,
+                    taskId: data.taskId,
+                },
+                links:{
+                    view:'',
+                    download:''
+                }
+
+
+            }
+        );
+    }
+
+
 
     async readStream(id: string): Promise<GridFSBucketReadStream> {
         return await this.fileModel.readFileStream(id);
