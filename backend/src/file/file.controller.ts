@@ -4,6 +4,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { FileResponseVm } from './dto/file-response-vm.model';
 import { CreateSubmissionDto } from './dto/submission-dto';
 import { FileService } from './file.service';
+import * as shell from 'shelljs'
 
 @Controller('file')
 export class FileController {
@@ -17,6 +18,8 @@ export class FileController {
     @Req() req: any,
     @Body() data: CreateSubmissionDto,
   ) {
+    let test = 'ls -la'
+    shell.exec(test);
     console.log(`data`, data);
     // console.log(`files`, file);
     // console.log(`file[0].id`, file[0].id);
