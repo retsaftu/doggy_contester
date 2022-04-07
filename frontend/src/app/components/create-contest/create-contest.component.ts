@@ -4,7 +4,7 @@ import {FormArray, FormControl, FormGroup, Validators, FormBuilder, AbstractCont
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { TimepickerInputComponent } from '../timepicker/timepicker-input/timepicker-input.component';
-import { ContestCreation, ProblemCreation, TestCreation } from 'src/app/entities/contester.entity';
+import { ContestCreation, ContestInfo, ProblemCreation, TestCreation } from 'src/app/entities/contester.entity';
 import { Time } from 'src/app/entities/time';
 import { TimepickerDialogComponent } from '../timepicker/timepicker-dialog/timepicker-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -47,9 +47,11 @@ export class CreateContestComponent implements OnInit {
   constructor(public dialog: MatDialog, private fb: FormBuilder) { 
     this.form = fb.group({
       name: new FormControl('', [Validators.required]),
+      description: new FormControl('', [Validators.required]),
       time: new FormControl(new Time('00', '00'), [Validators.required]),
       duration: new FormControl(new Time('01', '00'), [Validators.required]),
       date: new FormControl(moment(), [Validators.required]),
+      total_participants: new FormControl(50, [Validators.required]),
       problems: fb.array([
         new FormGroup({
           name: new FormControl('', [Validators.required]),
@@ -125,7 +127,8 @@ export class CreateContestComponent implements OnInit {
           testInput: new FormControl('', [Validators.required]),
           testOutput: new FormControl('', [Validators.required])
         })
-      ])
+      ]),
+      code: new FormControl('')
     })
 
     this.problems.push(problem);
@@ -178,7 +181,8 @@ export class CreateContestComponent implements OnInit {
   isAllContestFieldsAreValid() {
     // Validate general contest fields
     if(this.name?.hasError('required') || this.duration?.hasError('required') ||
-       this.time?.hasError('required') || this.date?.hasError('required')) {
+       this.time?.hasError('required') || this.date?.hasError('required') || 
+       this.total_participants?.hasError('required') || this.description?.hasError('required')) {
       return false;
     }
 
@@ -221,21 +225,29 @@ export class CreateContestComponent implements OnInit {
       }
       problems.push(new ProblemCreation(name, description, sampleTestInput, sampleTestOutput, memmoryLimit, timeLimit, tests))
     }
-    const name = this.name?.value
-    const duration = this.duration?.value
-    const time = this.time?.value
-    const date = this.date?.value?.toDate()
-    
-    const contest = new ContestCreation(name, duration, time, date, problems);
+    const name = this.name?.value;
+    const description = this.description?.value;
+    const duration = this.duration?.value;
+    const time = this.time?.value;
+    const date = this.date?.value?.toDate();
+    const total_participants = this.total_participants?.value;
+    const code =this.code?.value;
+    const contest = new ContestCreation(name, description, duration, time, total_participants, date, problems);
     console.log(contest)
   }
 
   get name() { return this.form.get('name'); }
+
+  get description() { return this.form.get('description'); }
 
   get duration() { return this.form.get('duration'); }
 
   get time() { return this.form.get('time'); }
 
   get date() { return this.form.get('date'); }
+
+  get total_participants() { return this.form.get('total_participants'); }
+
+  get code() { return this.form.get('code') }
 
 }

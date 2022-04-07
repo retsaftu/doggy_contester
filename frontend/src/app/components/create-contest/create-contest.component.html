@@ -7,6 +7,11 @@
             <input type="text" formControlName="name" matInput required />
         </mat-form-field><br>
 
+        <mat-form-field class="input" appearance="fill">
+            <mat-label>Description</mat-label>
+            <textarea formControlName="description" matInput required></textarea>
+        </mat-form-field>
+
         <div class="datetime">
             <mat-form-field appearance="fill">
                 <mat-label>Duration</mat-label>
@@ -23,12 +28,19 @@
         </div>
 
         <!-- Datepicker -->
-        <mat-form-field appearance="fill" class="input">
-            <mat-label>Contest date</mat-label>
-            <input matInput [matDatepicker]="date" formControlName="date" required>
-            <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
-            <mat-datepicker #date></mat-datepicker>
-        </mat-form-field>
+        <div class="datetime">
+            <mat-form-field appearance="fill" class="input">
+                <mat-label>Contest date</mat-label>
+                <input matInput [matDatepicker]="date" formControlName="date" required>
+                <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                <mat-datepicker #date></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Maximum number of participants</mat-label>
+                <input type="number" formControlName="total_participants" matInput required />
+            </mat-form-field>
+        </div>
 
         <div formArrayName="problems" class="problem-creation-wrapper"
             *ngFor="let problem of problems.controls; let i = index">
@@ -108,7 +120,14 @@
                         </div>
                     </form>
                 </mat-expansion-panel>
+
             </mat-accordion>
+
+            <mat-form-field class="input" appearance="fill">
+                <mat-label>Correct code example</mat-label>
+                <textarea formControlName="code" matInput></textarea>
+            </mat-form-field>
+
         </div>
         <button type="submit" (click)="createContest()" mat-flat-button color="primary">Create</button>
     </form>

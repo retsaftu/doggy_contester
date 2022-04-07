@@ -12,6 +12,7 @@ export class Owner {
     this.name = name;
   }
 }
+
 export class ContestInfo {
   id: number;
   name: string;
@@ -67,12 +68,19 @@ export class ContestCreation {
   private _startTime!: Date;
   private _endTime!: Date;
   private _problems!: ProblemCreation[];
+  private _description!: string;
+  private _total_participants!: number;
+  private _code?: string;
 
-  constructor(name: string, duration: Time, time: Time, date: Date, problems: ProblemCreation[]) {
+  constructor(name: string, description: string, duration: Time, time: Time, date: Date,
+              total_participants: number, problems: ProblemCreation[], code?: string) {
     this._name = name;
     this._problems = problems;
     this._startTime = this.getStartTime(time, date);
     this._endTime = this.getEndTime(time, duration, date);
+    this._description = description;
+    this._total_participants = total_participants;
+    this._code = code;
   }
 
   private getStartTime(time: Time, date: Date): Date {
@@ -97,6 +105,9 @@ export class ContestCreation {
   get problems() { return this._problems; }
   get startTime() { return this._startTime; }
   get endTime() { return this._endTime; }
+  get description() { return this._description; }
+  get total_participants() { return this._total_participants; }
+  get code() {return this._code;}
 
 }
 
