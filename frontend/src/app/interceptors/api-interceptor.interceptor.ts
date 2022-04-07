@@ -43,7 +43,7 @@ export class ApiInterceptorInterceptor implements HttpInterceptor {
           tap({
             next: (event) => {},
             error: (error) => {
-              console.log(`[interceptor] error ${error}`);
+              console.log(`[interceptor] error`, error);
               this.snackBarService.openErrorSnackBar(error.error.message);
             }
           })

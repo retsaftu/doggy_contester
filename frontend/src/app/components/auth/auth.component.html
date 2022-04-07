@@ -1,6 +1,6 @@
 <div class="container">
     <mat-card class="form">
-        <form (ngSubmit)="login()" *ngIf="showLoginPage" [formGroup]="loginForm">
+        <form *ngIf="showLoginPage" [formGroup]="loginForm">
             <img class="logo" src="../../../assets/logo.png">
 
             <mat-form-field appearance="fill" class="input">
@@ -16,7 +16,7 @@
                 </button>
             </mat-form-field>
 
-            <button class="button" mat-raised-button color="primary" [disabled]="isLoginFormFieldsAreEmpty()">Login</button>
+            <button class="button" (click)="login()" mat-raised-button color="primary" [disabled]="!isLoginFormValid()">Login</button>
 
             <div class="links">
                 <a (click)="showLoginPage = !showLoginPage">Sign up</a>
@@ -34,7 +34,7 @@
             </button>
         </form>
 
-        <form (ngSubmit)="register()" *ngIf="!showLoginPage" [formGroup]="registrationForm">
+        <form *ngIf="!showLoginPage" [formGroup]="registrationForm">
             <img class="logo" src="../../../assets/logo.png">
 
             <mat-form-field appearance="fill" class="input">
@@ -60,7 +60,7 @@
                 </button>
             </mat-form-field>
 
-            <button class="button" mat-raised-button color="primary" [disabled]="isRegisterFormFieldsAreEmpty()">Register</button>
+            <button class="button" mat-raised-button color="primary" (click)="register()" [disabled]="!isRegistrationFormValid()">Register</button>
 
             <div class="signIn">
                 <span>Have an account? <a (click)="showLoginPage = !showLoginPage">Sign in</a></span>

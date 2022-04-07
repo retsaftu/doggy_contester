@@ -23,15 +23,15 @@ export class AuthService {
 
   register(userRegistrationInfo: UserRegistrationInfo) {
     // TODO: отправить запрос на правильный url
-    return this.http.post(`/api/auth/registerByGoogleAccount`, userRegistrationInfo);
+    return this.http.post(`/api/auth/register`, userRegistrationInfo);
   }
 
   login (userLoginInfo: UserLoginInfo) {
     // TODO: отправить запрос на правильный url
-    return this.http.get(`/api/auth/login?${userLoginInfo}`)
+    return this.http.post(`/api/auth/login`, userLoginInfo)
       .pipe(
         tap((response: any) => {
-          this.setToken(response['token'], response['expirationTime']);
+          this.setToken(response['access_token'], response['expirationTime']);
         })
       )
   }

@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ContestInfo } from '../../entities/contester.entity';
 import {MatDialog} from '@angular/material/dialog';
 import { CreateContestComponent } from '../create-contest/create-contest.component';
+import { SnackBarService } from 'src/app/services/snack-bar.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -10,7 +12,7 @@ import { CreateContestComponent } from '../create-contest/create-contest.compone
 })
 export class HomeComponent implements OnInit {
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog, private snackBarService: SnackBarService, private authService: AuthService) { }
 
   private currentDate = new Date();
 

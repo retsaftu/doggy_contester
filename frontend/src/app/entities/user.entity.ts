@@ -13,11 +13,11 @@ export class UserRegistrationInfo {
 }
 
 export class UserLoginInfo {
-    private username: string;
+    private email: string;
     private password: string;
 
-    constructor(username: string, password: string) {
-        this.username = username;
+    constructor(email: string, password: string) {
+        this.email = email;
         this.password = password;
     }
 }

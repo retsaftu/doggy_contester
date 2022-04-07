@@ -7,6 +7,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { UserLoginInfo, UserRegistrationInfo } from 'src/app/entities/user.entity';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute, ParamMap, Route, Router } from '@angular/router';
+import { SnackBarService } from 'src/app/services/snack-bar.service';
 
 @Component({
   selector: 'app-auth',
@@ -21,6 +22,10 @@ export class AuthComponent implements OnInit {
   showLoginPage = true;
 
   hidePassword = true;
+
+  private _isRegistrationLoading = false;
+  
+  private _isLoginLoading = false;
 
   registrationForm = new FormGroup({
     name: new FormControl(''),
@@ -37,7 +42,9 @@ export class AuthComponent implements OnInit {
   constructor(private socialAuthService: SocialAuthService,
               private authService: AuthService,
               @Inject(DOCUMENT) private document: Document, private renderer: Renderer2,
-              private activatedRoute: ActivatedRoute) { }
+              private activatedRoute: ActivatedRoute,
+              private router: Router,
+              private snackBarService: SnackBarService) { }
 
   ngOnInit(): void {
     // Changing theme
@@ -49,10 +56,8 @@ export class AuthComponent implements OnInit {
 
     // Changing form
     this.activatedRoute.queryParams.subscribe(params => {
-      console.log(params);
       if(!!params['signUp'] && params['signUp'] == "show") {
         this.showLoginPage = false;
-        console.log('here')
       }
     })
   }
@@ -68,14 +73,25 @@ export class AuthComponent implements OnInit {
   }
 
   register() {
-    if(this.isRegisterFormFieldsAreEmpty()) {
+    if(!this.isRegistrationFormValid()) {
       return;
     }
     const registerUserInfo = new UserRegistrationInfo(this.registrationFormUsername?.value,
                                                       this.registrationFormEmail?.value,
                                                       this.registrationFormName?.value,
                                                       this.registrationFormPassword?.value);
-    this.authService.register(registerUserInfo); // TODO: обработать ответ
+    this.isRegistrationLoading = true;
+    this.authService.register(registerUserInfo).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.snackBarService.openSuccessSnackBar("Registered successfully!");
+        this.isRegistrationLoading = false;
+        this.clearRegistrationForm();
+      },
+      error: (err) => {
+        this.isRegistrationLoading = false
+      }
+    })
   }
 
   loginByGoogleAccount() {
@@ -87,20 +103,48 @@ export class AuthComponent implements OnInit {
   }
 
   login() {
-    if(this.isLoginFormFieldsAreEmpty()) {
+    if(!this.isLoginFormValid()) {
       return;
     }
     const loginUserInfo = new UserLoginInfo(this.loginFormEmail?.value, this.loginFormPassword?.value);
-    this.authService.login(loginUserInfo); // TODO: обработать ответ
+    this.isLoginLoading = true;
+    this.authService.login(loginUserInfo).subscribe({
+      next: (res) => {
+        this.isLoginLoading = false;
+        this.clearLoginForm();
+        this.router.navigate([''])
+      },
+      error: (err) => this.isLoginLoading = false
+    }); // TODO: обработать ответ
+  }
+
+  isRegisterFormFieldsAreEmpty() {
+    return this.registrationFormUsername?.hasError('required') || this.registrationFormEmail?.hasError('required') 
+    || this.registrationFormPassword?.hasError('required');
+  }
+
+  isRegistrationFormValid() {
+    return !this.isRegisterFormFieldsAreEmpty() && !this.registrationFormEmail?.hasError('email')
+  }
+
+  private clearRegistrationForm() {
+    this.registrationFormEmail?.reset();
+    this.registrationFormName?.reset();
+    this.registrationFormUsername?.reset();
+    this.registrationFormPassword?.reset();
   }
 
   isLoginFormFieldsAreEmpty() {
     return this.loginFormEmail?.hasError('required') || this.loginFormPassword?.hasError('required');
   }
 
-  isRegisterFormFieldsAreEmpty() {
-    return this.registrationFormUsername?.hasError('required') || this.registrationFormEmail?.hasError('required') 
-    || this.registrationFormPassword?.hasError('required');
+  isLoginFormValid() {
+    return !this.isLoginFormFieldsAreEmpty() && !this.loginFormEmail?.hasError('email');
+  }
+
+  private clearLoginForm() {
+    this.loginFormEmail?.reset();
+    this.loginFormPassword?.reset();
   }
 
   get loginFormEmail() {return this.loginForm.get('email');}
@@ -114,5 +158,35 @@ export class AuthComponent implements OnInit {
   get registrationFormPassword() {return this.registrationForm.get('password');}
 
   get registrationFormName() {return this.registrationForm.get('name');}
+
+  set isRegistrationLoading(value: boolean) {
+    this._isRegistrationLoading = value;
+    if(this._isRegistrationLoading) {
+      this.registrationFormEmail?.disable();
+      this.registrationFormUsername?.disable();
+      this.registrationFormPassword?.disable();
+      this.registrationFormName?.disable();
+    } else {
+      this.registrationFormEmail?.enable();
+      this.registrationFormUsername?.enable();
+      this.registrationFormPassword?.enable();
+      this.registrationFormName?.enable();
+    }
+  }
+
+  get isRegistrationLoading() { return this._isRegistrationLoading; }
+
+  set isLoginLoading(value: boolean) {
+    this._isLoginLoading = value;
+    if(this._isLoginLoading) {
+      this.loginFormEmail?.disable();
+      this.loginFormPassword?.disable();
+    } else {
+      this.loginFormEmail?.enable();
+      this.loginFormPassword?.enable();
+    }
+  }
+
+  get isLoginLoading() { return this._isLoginLoading }
 
 }
