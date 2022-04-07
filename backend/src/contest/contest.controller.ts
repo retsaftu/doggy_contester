@@ -9,10 +9,13 @@ import { ID_NOT_FOUND } from './contest.constants';
 export class ContestController {
   constructor(private readonly contestService: ContestService) { }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createContestDto: CreateContestDto) {
-    return this.contestService.create(createContestDto);
+  create(
+    @Req() req: any, 
+    @Body() createContestDto: CreateContestDto
+    ) {
+    return this.contestService.create(createContestDto,req.user);
   }
 
   @Get()
