@@ -70,7 +70,7 @@ export default class Contests extends Component {
                             {/* </View> */}
                             <View style={styles.row}>
                                 <View style={styles.textIcon}>
-                                    <Text style={[styles.itemText, {flex:0}]}>50  </Text>
+                                    <Text style={[styles.itemText, {flex:0}]}>{item.count}  </Text>
                                     <Icon name='account' size={25} color='black'/>
                                 </View>
                                 <View style={[styles.textIcon, {flexDirection:'column'}]}>

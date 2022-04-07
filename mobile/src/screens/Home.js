@@ -1,42 +1,118 @@
 import React, {useEffect, useState, Component} from "react";
 import {View, StyleSheet, ScrollView, TouchableOpacity, Text, FlatList, SectionList} from "react-native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {backend} from '../../config/config.json'
+import RNFetchBlob from 'rn-fetch-blob'
+
 export default class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            myContests:[{name:'Contest Title', date:'14:00, 28/03/2022\n3 hours', count: 50}],
-            activeContests:[{name:'Contest Title', date:'14:00, 28/03/2022\n3 hours', count: 50},{name:'Contest Title', date:'14:00, 28/03/2022\n3 hours', count: 50}],
-            currentContests:[{name:'Contest Title', date:'14:00, 28/03/2022\n3 hours', count: 50},{name:'Contest Titlelll', date:'14:00, 28/03/2022\n3 hours', count: 50},{name:'Contest Title', date:'14:00, 28/03/2022\n3 hours', count: 50}]
+            isAuth:false,
+            myContests:[],
+            activeContests:[],
+            currentContests:[]
         }
 
     }
+
+    async componentDidMount() {
+        await this.getData();
+    }
+
+    getData=async ()=>{
+        const token=await AsyncStorage.getItem('token');
+        // const userId=await AsyncStorage.getItem('userId');
+        if(token){
+            await this.setState({isAuth: true, isLoader:true})
+        
+            let urlForMyContests=`http://${backend.host}:3000/contest/myContests`;
+            await RNFetchBlob.config({
+                trusty : true
+                })
+                .fetch('GET',urlForMyContests, {
+                'Accept': 'application/json',
+                'Content-Type':'application/json',
+                'Authorization': 'Bearer '+token
+                })
+                .then(res=>res.json())
+                .then(async (data)=>{
+                    console.log(`myContests`, data);
+                    await this.setState({isLoader:false, myContests:data})
+                });
+
+
+            let urlForMyActive=`http://${backend.host}:3000/contest/myActiveContests`;
+            await RNFetchBlob.config({
+                trusty : true
+                })
+                .fetch('GET',urlForMyActive, {
+                'Accept': 'application/json',
+                'Content-Type':'application/json',
+                'Authorization': 'Bearer '+token
+                })
+                .then(res=>res.json())
+                .then(async (data)=>{
+                    console.log(`myActiveContests`, data);
+                    await this.setState({isLoader:false, activeContests:data})
+                });
+
+            let urlForCurrent=`http://${backend.host}:3000/contest/currentContests`;
+            await RNFetchBlob.config({
+                trusty : true
+                })
+                .fetch('GET',urlForCurrent, {
+                'Accept': 'application/json',
+                'Content-Type':'application/json',
+                'Authorization': 'Bearer '+token
+                })
+                .then(res=>res.json())
+                .then(async (data)=>{
+                    console.log(`currentContests`, data);
+                    await this.setState({isLoader:false, currentContests:data})
+                })
+        } else {
+            let urlForCurrent=`http://${backend.host}:3000/contest/currentContests`;
+            await RNFetchBlob.config({
+                trusty : true
+                })
+                .fetch('GET',urlForCurrent, {
+                'Accept': 'application/json',
+                'Content-Type':'application/json',
+                // 'Authorization': 'Bearer '+token
+                })
+                .then(res=>res.json())
+                .then(async (data)=>{
+                    console.log(`currentContests`, data);
+                    await this.setState({isLoader:false, currentContests:data})
+                })
+        }
+    }
     
     render(){
-
-        return (
-            <View style={styles.body}>
-                <SectionList
-                    sections={[
-                        {title:'My Contests', data: this.state.myContests}, 
-                        {title:'Active Contests', data: this.state.activeContests},
-                        {title:'Currently running contests', data: this.state.currentContests}
-                    ]}
-                    keyExtractor={(item, index) => item + index}
-                    renderItem={({ item }) => (
-                        <View style={styles.item}>
-                            <View style={styles.row}>
-                                <Text style={styles.itemText}>{item.name}</Text>
-                                <Text style={styles.itemText}>{item.date}</Text>
-                            </View>
-                            <View style={styles.row}>
-                                <View style={styles.textIcon}>
-                                    <Text style={[styles.itemText, {flex:0}]}>{item.count}  </Text>
-                                    <Icon name='account' size={25} color='black'/>
-                                </View>
-                                <View style={[styles.textIcon, {flexDirection:'column'}]}>
-                                    <Icon name='account' size={25} color='black'/>
-                                    <Text style={{color:'black'}}>Owner</Text>
+        if(this.state.isAuth){
+            return (
+                <View style={styles.body}>
+                    <SectionList
+                        sections={[
+                            {title:'My Contests', data: this.state.myContests}, 
+                            {title:'Active Contests', data: this.state.activeContests},
+                            {title:'Currently running contests', data: this.state.currentContests}
+                        ]}
+                        keyExtractor={(item, index) => item + index}
+                        renderItem={({ item }) => (
+                            <View style={styles.item}>
+                                <Text style={styles.header}>{item.name}</Text>
+                                <View style={styles.row}>
+                                    <View style={styles.textIcon}>
+                                        <Text style={[styles.itemText, {flex:0}]}>{item.count}  </Text>
+                                        <Icon name='account' size={25} color='black'/>
+                                    </View>
+                                    <View style={[styles.textIcon, {flexDirection:'column'}]}>
+                                        <Icon name='account' size={25} color='black'/>
+                                        <Text style={{color:'black'}}>Owner</Text>
+                                    </View>
                                 </View>
                                 <TouchableOpacity style={styles.button}>
                                     <Text style={styles.buttonText}>
@@ -44,22 +120,59 @@ export default class Home extends Component {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-                        </View>
-                    )}
-                    renderSectionHeader={({ section: { title } }) => (
-                        <Text style={styles.header}>{title}</Text>
-                    )}
-                />
-                <TouchableOpacity
-                    style={styles.floatingButton}
-                    onPress={()=>{
-                        this.props.navigation.navigate('CreateContest')
-                    }}
-                >
-                    <Icon name='plus' size={30} color='white' />
-                </TouchableOpacity>
-            </View>
-        )
+                        )}
+                        renderSectionHeader={({ section: { title } }) => (
+                            <Text style={styles.titleHeader}>{title}</Text>
+                        )}
+                    />
+                    <TouchableOpacity
+                        style={styles.floatingButton}
+                        onPress={()=>{
+                            this.props.navigation.navigate('CreateContest')
+                        }}
+                    >
+                        <Icon name='plus' size={30} color='white' />
+                    </TouchableOpacity>
+                </View>
+            )
+        }
+        else{
+            return (
+                <View style={styles.body}>
+                    <SectionList
+                        sections={[
+                            {title:'Currently running contests', data: this.state.currentContests}
+                        ]}
+                        keyExtractor={(item, index) => item + index}
+                        renderItem={({ item }) => (
+                            <View style={styles.item}>
+                                <Text style={styles.header}>{item.name}</Text>
+                                <View style={styles.row}>
+                                    <View style={styles.textIcon}>
+                                        <Text style={[styles.itemText, {flex:0}]}>{item.count}  </Text>
+                                        <Icon name='account' size={25} color='black'/>
+                                    </View>
+                                    <View style={[styles.textIcon, {flexDirection:'column'}]}>
+                                        <Icon name='account' size={25} color='black'/>
+                                        <Text style={{color:'black'}}>Owner</Text>
+                                    </View>
+                                </View>
+                                <TouchableOpacity style={styles.button}>
+                                    <Text style={styles.buttonText}>
+                                        Enter
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                        renderSectionHeader={({ section: { title } }) => (
+                            <Text style={styles.titleHeader}>{title}</Text>
+                        )}
+                    />
+                </View>
+            )
+        }
+
+        
     }
 }
 
@@ -71,10 +184,19 @@ const styles = StyleSheet.create({
         paddingRight:'5%',
         paddingBottom:'5%',
     },
-    header:{
+    titleHeader:{
         fontSize:20,
         color:'black',
         marginVertical:'4%',
+        fontWeight:'bold'
+    },
+    header:{
+        flex:1,
+        color:'black',
+        textAlign:'center',
+        textAlignVertical:'center',
+        fontSize:20,
+        marginVertical:'3.5%',
         fontWeight:'bold'
     },
     item:{

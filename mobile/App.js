@@ -4,6 +4,7 @@ import Navigator from './src/routes/Navigator'
 import {NavigationContainer} from "@react-navigation/native";
 import StartStack from "./src/routes/Start/StartStack";
 import { LogBox } from 'react-native';
+import CreateContest from './src/screens/CreateContest';
 
 LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
@@ -15,7 +16,7 @@ const Stack=createStackNavigator()
 export default function App () {
     return (
 
-    // <Test/>
+    // <CreateContest/>
         <NavigationContainer>
             <Stack.Navigator initialRouteName="StartStack" screenOptions={{
                 headerShown: false

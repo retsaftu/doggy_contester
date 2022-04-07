@@ -80,6 +80,8 @@ export default class AuthForm extends Component {
                     console.log(`data`, data);
                     if (data.access_token){
                         await AsyncStorage.setItem('token', data.access_token)
+                        await AsyncStorage.setItem('username', data.username)
+                        await AsyncStorage.setItem('userId', data.userId)
                         await this.setState({isLoader:false})
                         this.props.navigation.navigate('Navigator')
                     }else if (data.statusCode === 401){

@@ -12,11 +12,17 @@ import userService from "../service/UserService";
 //Компонент меню которая появляется слева(если провести по экрану слева направо)
 export function DrawerContent(props){
     const [isAuth, setIsAuth]= useState(false);
+    const [username, setUsername]= useState('');
+
 
     const getData=async ()=>{
         const token=await AsyncStorage.getItem('token');
+        const user=await AsyncStorage.getItem('username');
         if(token){
             await setIsAuth(true)
+        }
+        if(user){
+            setUsername(user);
         }
     }
 
@@ -75,7 +81,7 @@ export function DrawerContent(props){
                                 size={size}
                             />
                         )}
-                        label={'Username'}
+                        label={username}
                         onPress={()=>{props.navigation.navigate('Profile')}}
                     />
                     : 
