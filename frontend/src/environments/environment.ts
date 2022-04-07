@@ -14,7 +14,11 @@ export const environment = {
 
   googleClientID: "355861108791-ch399vu1qttgpom13tbc1avk58onp888.apps.googleusercontent.com",
   tokenHeader: "Authorization",
-  themeField: 'theme'
+  themeField: 'theme',
+  USER_INFO_FIELDS: {
+    USERNAME: "USER_INFO_USERNAME",
+    ID: "USER_INFO_EMAIL_ID"
+  }
 };
 
 /*

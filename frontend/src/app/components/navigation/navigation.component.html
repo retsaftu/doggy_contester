@@ -12,16 +12,16 @@
             <li class="item-with-icon" (click)="changeTheme()"><mat-icon>brightness_medium</mat-icon></li>
             <li class="item-with-icon"><mat-icon aria-hidden="false">notifications</mat-icon></li>
             <li class="item-with-icon" *ngIf="isAuthenticated" [matMenuTriggerFor]="menu">
-                <mat-icon>account_circle</mat-icon><span class="username">User</span>
+                <mat-icon>account_circle</mat-icon><span class="username">{{userInfo.username}}</span>
                 <mat-menu #menu="matMenu">
-                    <a mat-menu-item routerLink="/user/123">
+                    <button mat-menu-item (click)="openUserProfile()">
                       <mat-icon>perm_identity</mat-icon>
                       <span>Profile</span>
-                    </a>
-                    <a mat-menu-item (click)="logout()">
+                    </button>
+                    <button mat-menu-item (click)="logout()">
                       <mat-icon>exit_to_app</mat-icon>
                       <span>Logout</span>
-                    </a>
+                    </button>
                  </mat-menu>
             </li>
             <li *ngIf="!isAuthenticated"><button mat-raised-button (click)="login()">Log in</button></li>

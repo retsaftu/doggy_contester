@@ -1,7 +1,9 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, EventEmitter, Inject, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
+import { UserBasicInfo } from 'src/app/entities/user.entity';
 import { AuthService } from 'src/app/services/auth.service';
+import { UserService } from 'src/app/services/user.service';
 import { environment } from 'src/environments/environment';
 
 
@@ -18,12 +20,14 @@ export class NavigationComponent implements OnInit {
 
   currentRoute = '';
 
+  userInfo!: UserBasicInfo;
+
   private readonly lightThemeClass = 'theme-light';
   private readonly darkThemeClass = 'theme-dark';
   private readonly DEFAULT_CLASSES = 'mat-typography mat-app-background' // Без этого ничего не работает
 
   constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2,
-              private authService: AuthService, private router: Router) { 
+              private authService: AuthService, private router: Router, private userService: UserService) { 
       this.router.events.subscribe((val) => {
         if(val instanceof NavigationStart) {
           let splitedRoute = val.url.split('/');
@@ -36,6 +40,8 @@ export class NavigationComponent implements OnInit {
 
   ngOnInit(): void {
     this.isAuthenticated = this.authService.isLoggedIn();
+
+    this.userInfo = this.userService.userInfo;
 
     let splitedRoute = this.router.url.split('/');
     if(splitedRoute.length > 1) {
@@ -65,6 +71,10 @@ export class NavigationComponent implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/auth'])
+  }
+
+  openUserProfile() {
+    this.router.navigate([`/user/${this.userInfo._id}`])
   }
 
 }

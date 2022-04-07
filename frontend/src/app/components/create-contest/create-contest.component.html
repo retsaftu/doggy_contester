@@ -77,6 +77,10 @@
                             <mat-label>Sample output </mat-label>
                             <textarea formControlName="sampleTestOutput" matInput required></textarea>
                         </mat-form-field>
+                        <mat-form-field class="input" appearance="fill">
+                            <mat-label>Correct code example</mat-label>
+                            <textarea formControlName="code" matInput></textarea>
+                        </mat-form-field>
                         <div class="limits">
                             <mat-form-field appearance="fill">
                                 <mat-label>Memmory limit (MB)</mat-label>
@@ -123,12 +127,8 @@
 
             </mat-accordion>
 
-            <mat-form-field class="input" appearance="fill">
-                <mat-label>Correct code example</mat-label>
-                <textarea formControlName="code" matInput></textarea>
-            </mat-form-field>
+        </div>      
 
-        </div>
         <button type="submit" (click)="createContest()" mat-flat-button color="primary">Create</button>
     </form>
 </mat-dialog-content>

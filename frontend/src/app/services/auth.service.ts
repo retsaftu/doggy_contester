@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { UserLoginInfo, UserRegistrationInfo } from '../entities/user.entity';
+import { UserBasicInfo, UserLoginInfo, UserRegistrationInfo } from '../entities/user.entity';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { tap, map } from 'rxjs';
+import { UserService } from './user.service';
 
 
 @Injectable({
@@ -11,30 +12,28 @@ import { tap, map } from 'rxjs';
 })
 export class AuthService {
 
-  constructor(private cookieService: CookieService,
-    private http: HttpClient) { }
+  constructor(
+    private cookieService: CookieService, 
+    private userService: UserService,
+    private http: HttpClient
+  ) { }
 
   registerByGoogleAccount(userRegistrationInfo: UserRegistrationInfo, googleToken: string, expires_at?: string) {
-    console.log('rafael2');
-
     const expirationTime = expires_at == undefined ? new Date(60 * 60 * 24) : new Date(Number(expires_at))
     this.setToken(googleToken, expirationTime);
     // TODO: отправить запрос на правильный url
-    console.log('rafael3');
-
     return this.http.post(`/api/auth/registerByGoogleAccount`, userRegistrationInfo);
   }
 
   register(userRegistrationInfo: UserRegistrationInfo) {
-    // TODO: отправить запрос на правильный url
     return this.http.post(`/api/auth/register`, userRegistrationInfo);
   }
 
   login(userLoginInfo: UserLoginInfo) {
-    // TODO: отправить запрос на правильный url
     return this.http.post(`/api/auth/login`, userLoginInfo)
       .pipe(
         tap((response: any) => {
+          this.userService.userInfo = new UserBasicInfo(response['username'], response['userId'])
           this.setToken(response['access_token'], response['expirationTime']);
         })
       )
@@ -58,7 +57,7 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    console.log('auth service[isLoggedIn]', this.cookieService.get(environment.tokenHeader));
+    // console.log('auth service[isLoggedIn]', this.cookieService.get(environment.tokenHeader));
     return this.cookieService.check(environment.tokenHeader);
   }
 

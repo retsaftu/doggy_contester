@@ -64,23 +64,21 @@ export class ContestInfo {
 // Model to create contest
 export class ContestCreation {
 
-  private _name!: string;
-  private _startTime!: Date;
-  private _endTime!: Date;
-  private _problems!: ProblemCreation[];
-  private _description!: string;
-  private _total_participants!: number;
-  private _code?: string;
+  private name!: string;
+  private startDate!: Date;
+  private endDate!: Date;
+  private tasks!: ProblemCreation[];
+  private description!: string;
+  private total_participants!: number;
 
   constructor(name: string, description: string, duration: Time, time: Time, date: Date,
-    total_participants: number, problems: ProblemCreation[], code?: string) {
-    this._name = name;
-    this._problems = problems;
-    this._startTime = this.getStartTime(time, date);
-    this._endTime = this.getEndTime(time, duration, date);
-    this._description = description;
-    this._total_participants = total_participants;
-    this._code = code;
+    total_participants: number, tasks: ProblemCreation[]) {
+    this.name = name;
+    this.tasks = tasks;
+    this.startDate = this.getStartTime(time, date);
+    this.endDate = this.getEndTime(time, duration, date);
+    this.description = description;
+    this.total_participants = total_participants;
   }
 
   private getStartTime(time: Time, date: Date): Date {
@@ -101,27 +99,20 @@ export class ContestCreation {
     return endTime
   }
 
-  get name() { return this._name; }
-  get problems() { return this._problems; }
-  get startTime() { return this._startTime; }
-  get endTime() { return this._endTime; }
-  get description() { return this._description; }
-  get total_participants() { return this._total_participants; }
-  get code() { return this._code; }
-
 }
 
 // Model to create test
 export class TestCreation {
-  constructor(public testInput: string, public testOutput: string) { }
+  constructor(public input: string, public output: string) { }
 }
 
 // Model to create test
 export class ProblemCreation {
-  constructor(public problemName: string, public problemDescription: string,
-    public sampleInput: string, public sampleOutput: string,
-    public memmoryLimit: number, public timeLimit: number,
-    public tests: TestCreation[]) {
+
+  constructor(public name: string, public description: string,
+    public inputExample: string, public outputExample: string,
+    public memory: string, public time: string,
+    public tests: TestCreation[], public index: string, public code?: string) {
 
   }
 }

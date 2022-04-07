@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ContestCreation } from '../entities/contester.entity';
 
 @Injectable({
   providedIn: 'root'
@@ -29,4 +30,9 @@ export class ContestService {
   getCurrentContests(): any {
     return this.http.get('/api/contest/currentContests');
   }
+
+  createContest(contest: ContestCreation) {
+    return this.http.post('/api/contest', contest)
+  }
+
 }

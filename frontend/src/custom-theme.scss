@@ -149,6 +149,12 @@ $doggy-contester-dark-theme: mat.define-dark-theme((
 // that you are using.
 @include mat.all-component-themes($doggy-contester-light-theme);
 
+.snackbar {
+  padding: 0 !important;
+  background-color: white !important;
+  color: black;
+}
+
 .theme-dark {
   @include mat.all-component-colors($doggy-contester-dark-theme);
 

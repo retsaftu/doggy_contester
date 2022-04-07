@@ -9,6 +9,7 @@ import { Time } from 'src/app/entities/time';
 import { TimepickerDialogComponent } from '../timepicker/timepicker-dialog/timepicker-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AfterViewChecked, ChangeDetectorRef } from '@angular/core'
+import { ContestService } from 'src/app/services/contest.service';
 
 
 export const MY_FORMATS = {
@@ -44,7 +45,7 @@ export class CreateContestComponent implements OnInit {
   @ViewChild('timeinput') timeinput!: TimepickerInputComponent;
   @ViewChild('durationinput') durationinput!: TimepickerInputComponent;
 
-  constructor(public dialog: MatDialog, private fb: FormBuilder) { 
+  constructor(public dialog: MatDialog, private fb: FormBuilder, private contestService: ContestService) { 
     this.form = fb.group({
       name: new FormControl('', [Validators.required]),
       description: new FormControl('', [Validators.required]),
@@ -65,7 +66,8 @@ export class CreateContestComponent implements OnInit {
               testInput: new FormControl('', [Validators.required]),
               testOutput: new FormControl('', [Validators.required])
             })
-          ])
+          ]),
+          code: new FormControl(''),
         }) 
       ])
     })
@@ -213,8 +215,9 @@ export class CreateContestComponent implements OnInit {
       const description = problem.get('description')?.value;
       const sampleTestInput = problem.get('sampleTestInput')?.value;
       const sampleTestOutput = problem.get('sampleTestOutput')?.value;
-      const memmoryLimit = problem.get('memmoryLimit')?.value;
-      const timeLimit = problem.get('timeLimit')?.value;
+      const memmoryLimit = problem.get('memmoryLimit')?.value.toString();
+      const timeLimit = problem.get('timeLimit')?.value.toString();
+      const code = problem.get('code')?.value;
 
       const tests: TestCreation[] = [];
 
@@ -223,7 +226,7 @@ export class CreateContestComponent implements OnInit {
         const testOutput = this.getTest(i, j).get('testOutput')?.value;
         tests.push(new TestCreation(testInput, testOutput))
       }
-      problems.push(new ProblemCreation(name, description, sampleTestInput, sampleTestOutput, memmoryLimit, timeLimit, tests))
+      problems.push(new ProblemCreation(name, description, sampleTestInput, sampleTestOutput, memmoryLimit, timeLimit, tests, this.formatProblemIndex(i), code))
     }
     const name = this.name?.value;
     const description = this.description?.value;
@@ -231,9 +234,15 @@ export class CreateContestComponent implements OnInit {
     const time = this.time?.value;
     const date = this.date?.value?.toDate();
     const total_participants = this.total_participants?.value;
-    const code =this.code?.value;
-    const contest = new ContestCreation(name, description, duration, time, total_participants, date, problems);
-    console.log(contest)
+
+    const contest = new ContestCreation(name, description, duration, time, date, total_participants, problems);
+
+    console.log(contest);
+
+    this.contestService.createContest(contest).subscribe((res:any) => {
+      console.log(res)
+    })
+
   }
 
   get name() { return this.form.get('name'); }
@@ -247,7 +256,5 @@ export class CreateContestComponent implements OnInit {
   get date() { return this.form.get('date'); }
 
   get total_participants() { return this.form.get('total_participants'); }
-
-  get code() { return this.form.get('code') }
 
 }

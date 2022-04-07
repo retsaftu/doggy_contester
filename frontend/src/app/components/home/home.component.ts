@@ -107,8 +107,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
 
-    console.log(this.authService.getToken())
-
     this.contestService.getCurrentContests().subscribe((res: any) => {
       console.log(res);
     })
@@ -123,9 +121,17 @@ export class HomeComponent implements OnInit {
   }
 
   openCreateContestDialog() {
-    this.dialog.open(CreateContestComponent, {
+    const dialogRef = this.dialog.open(CreateContestComponent, {
       width: '40%'
     });
+
+    // dialogRef.afterClosed().subscribe(result: => {
+    //   // if(!!result) {
+    //     // this.userContests.push(result);
+    //   // }
+    // })
   }
+
+  get isLoggedIn() { return this.authService.isLoggedIn() }
 
 }
