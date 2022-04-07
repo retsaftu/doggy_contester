@@ -10,9 +10,21 @@ nav {
     justify-content: space-between;
     padding: 1em 8em;
 }
+.navbar-left-menu {
+    /* max-width: 60%; */
+    width: 30%;
+}
+.navbar-left-menu li, .navbar-right-menu li {
+    margin-right: 1em;
+}
+ul:last-child {
+    margin-right: 0em;
+}
+.navbar-right-menu {
+    min-width: 20%;
+    max-width: 35%;
+}
 ul {
-    max-width: 45%;
-    min-width: 30%;
     list-style: none;
     display: flex;
     align-items: center;

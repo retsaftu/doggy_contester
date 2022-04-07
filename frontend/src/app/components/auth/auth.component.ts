@@ -47,6 +47,11 @@ export class AuthComponent implements OnInit {
               private snackBarService: SnackBarService) { }
 
   ngOnInit(): void {
+
+    if(this.authService.isLoggedIn()) {
+      this.router.navigate(['/home']);
+    }
+
     // Changing theme
     let currentTheme = localStorage.getItem(environment.themeField);
     if (currentTheme == '' || currentTheme == undefined || currentTheme == null) {

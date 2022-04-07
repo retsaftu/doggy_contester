@@ -28,6 +28,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatTableModule} from '@angular/material/table';
+import {MatMenuModule} from '@angular/material/menu';
 
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 import { GoogleLoginProvider } from 'angularx-social-login';
@@ -101,7 +102,8 @@ import { UserComponent } from './components/user/user.component';
     MatPaginatorModule,
     MatProgressBarModule,
     MatTabsModule,
-    MatTableModule
+    MatTableModule,
+    MatMenuModule
   ],
   providers: [
     {

@@ -1,6 +1,6 @@
 <mat-card>
     <nav>
-        <ul>
+        <ul class="navbar-left-menu">
             <li class="logo">
                 <a routerLink=""><img src="../../../assets/logo.png"></a>
             </li>
@@ -8,10 +8,22 @@
             <li><a routerLink="/contests" [ngClass]="{'activeRoute': 'contests' == currentRoute}">Contests</a></li>
             <li><a routerLink="/leaderboard" [ngClass]="{'activeRoute': 'leaderboard' == currentRoute}">Leaderboard</a></li>
         </ul>
-        <ul>
+        <ul class="navbar-right-menu">
             <li class="item-with-icon" (click)="changeTheme()"><mat-icon>brightness_medium</mat-icon></li>
             <li class="item-with-icon"><mat-icon aria-hidden="false">notifications</mat-icon></li>
-            <li class="item-with-icon" *ngIf="isAuthenticated"><mat-icon>account_circle</mat-icon><span class="username">User</span></li>
+            <li class="item-with-icon" *ngIf="isAuthenticated" [matMenuTriggerFor]="menu">
+                <mat-icon>account_circle</mat-icon><span class="username">User</span>
+                <mat-menu #menu="matMenu">
+                    <a mat-menu-item routerLink="/user/123">
+                      <mat-icon>perm_identity</mat-icon>
+                      <span>Profile</span>
+                    </a>
+                    <a mat-menu-item (click)="logout()">
+                      <mat-icon>exit_to_app</mat-icon>
+                      <span>Logout</span>
+                    </a>
+                 </mat-menu>
+            </li>
             <li *ngIf="!isAuthenticated"><button mat-raised-button (click)="login()">Log in</button></li>
             <li *ngIf="!isAuthenticated"><button mat-raised-button color="primary" (click)="signUp()">Sign up</button></li>
         </ul>
