@@ -22,10 +22,25 @@ export class FileService {
         this.fileModel = new MongoGridFS(this.db, 'fs');
     }
 
+
+
+    streamToString(stream) {
+        const chunks = [];
+        return new Promise((resolve, reject) => {
+            stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
+            stream.on('error', (err) => reject(err));
+            stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+        })
+    }
     async startCompile(fileId: string, user, data: CreateSubmissionDto) {
         const userId = user._id;
         const contestId = data.contestId;
         const taskId = data.taskId;
+        const filestream = await this.readStream(fileId);
+        const code = await this.streamToString(filestream);
+        let language = data.extension.split('.')[1]
+
+
         const checker = (await this.db.collection('contest').aggregate([
             {
                 $match: {
@@ -53,23 +68,36 @@ export class FileService {
 
         ]).toArray())[0]
         console.log(`checker`, checker);
-        const grep = `ls -l ./uploads | grep ${userId}`;
+        const grep = `ls -l ./uploads/${userId} | grep ${taskId}`;
         const check = shell.exec(grep);
-        if (check.stdout){
-            const rmDir = "rm -dr ./uploads/" + userId;
+        if (check.stdout) {
+            const rmDir = `rm -dr ./uploads/${userId}/${taskId}`;
             shell.exec(rmDir);
         }
 
-        const dir = "mkdir ./uploads/" + userId + " && mkdir ./uploads/" + userId + "/input" + " && mkdir ./uploads/" + userId + "/output";
-        console.log(`check.stdout`, check.stdout);
-        shell.exec(dir);
+        const dir = `mkdir ./uploads/${userId}/${taskId} &&
+         mkdir ./uploads/${userId}/${taskId}/input  && 
+         mkdir ./uploads/${userId}/${taskId}/output`;
+
+        const touchFile = `echo ${code} > ./uploads/${userId}/${taskId}/${taskId}.${language}`
 
         
+
+
+
+
+        shell.exec(dir);
+
+
+
 
         let test = 'ls -la';
         let mkdir = `mkdir ${user._id}`
         const test2 = shell.exec(test);
         console.log(`test2`, test2);
+
+
+
         return test2
         // return await this.db.collection('users').updateOne(
         //     { _id: new mongodb.ObjectId(user._id) },
