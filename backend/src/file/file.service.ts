@@ -37,7 +37,8 @@ export class FileService {
         const contestId = data.contestId;
         const taskId = data.taskId;
         const filestream = await this.readStream(fileId);
-        const code = await this.streamToString(filestream);
+        const codeF = await this.streamToString(filestream);
+        const code = await codeF.toString().replace(/"/g, '\"')
         let language = data.extension.split('.')[1]
 
 
@@ -69,36 +70,51 @@ export class FileService {
         ]).toArray())[0]
         console.log(`checker`, checker);
         const grep = `ls -l ./uploads/${userId} | grep ${taskId}`;
+        const grep2 = `ls -l ./uploads/ | grep ${userId}`;
         const check = shell.exec(grep);
+        const check2 = shell.exec(grep2);
         if (check.stdout) {
             const rmDir = `rm -dr ./uploads/${userId}/${taskId}`;
             shell.exec(rmDir);
+        }
+        if (check2.stdout) {
+            const preDir = `mkdir ./uploads/${userId}`
+            shell.exec(preDir);
+
         }
 
         const dir = `mkdir ./uploads/${userId}/${taskId} &&
          mkdir ./uploads/${userId}/${taskId}/input  && 
          mkdir ./uploads/${userId}/${taskId}/output`;
 
-        const touchFile = `echo ${code} > ./uploads/${userId}/${taskId}/${taskId}.${language}`
-
-        
+        const touchFile = `echo -e "${code}" > ./uploads/${userId}/${taskId}/${taskId}.${language}`
+        console.log(`touchFile`, touchFile);
+        const renameCpp = "cd ./uploads &&" + "cp main.cpp ../uploads/" + userId + "/" + userId + ".cpp";
+        const compileClang = "cd ./uploads/" + userId + " && clang++ -o CompileForUser " + userId + ".cpp";
+        // const input = "cd ./uploads/" + userId + " && echo '" + taskInput + "' >> ./input/a.in";
+        // const output = "cd ./uploads/" + userId + " && echo -n '" + taskOutput + "' >> ./output/a.out " + " && sed -i 's/\x20//g' ./output/a.out";
+        const cpImage = "cp ./images/mainbash ./uploads/" + userId + " && chmod 777 ./uploads/" + userId + "/mainbash && sed -i 's/\r$//' ./uploads/" + userId + "/mainbash";
+        const mainbash = " cd ./uploads/" + userId + " && ./mainbash";
 
 
 
 
         shell.exec(dir);
+        shell.exec(touchFile);
+        console.log(`code`, code);
+        console.log(`typeof(code)`, typeof (code));
 
 
 
 
         let test = 'ls -la';
         let mkdir = `mkdir ${user._id}`
-        const test2 = shell.exec(test);
-        console.log(`test2`, test2);
+        // const test2 = shell.exec(test);
+        // console.log(`test2`, test2);
 
 
 
-        return test2
+        return 'asd'
         // return await this.db.collection('users').updateOne(
         //     { _id: new mongodb.ObjectId(user._id) },
         //     {
