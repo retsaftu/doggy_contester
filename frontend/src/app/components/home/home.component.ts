@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateContestComponent } from '../create-contest/create-contest.component';
 import { SnackBarService } from 'src/app/services/snack-bar.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ContestService } from 'src/app/services/contest.service';
 
 @Component({
   selector: 'app-home',
@@ -12,9 +13,16 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(public dialog: MatDialog, private snackBarService: SnackBarService, private authService: AuthService) { }
+  constructor(public dialog: MatDialog, private snackBarService: SnackBarService,
+     private contestService: ContestService, private authService: AuthService) { }
 
   private currentDate = new Date();
+
+  userContests = [];
+
+  activeContests = [];
+
+  contests = [];
 
   // userContests: ContestInfo[] = [
   //   new ContestInfo(
@@ -98,6 +106,20 @@ export class HomeComponent implements OnInit {
   // ]
 
   ngOnInit(): void {
+
+    console.log(this.authService.getToken())
+
+    this.contestService.getCurrentContests().subscribe((res: any) => {
+      console.log(res);
+    })
+    if(this.authService.isLoggedIn()) {
+      this.contestService.getMyActiveContest().subscribe((res:any) => {
+        console.log(res);
+      })
+      this.contestService.getMyContest().subscribe((res: any) => {
+        console.log(res);
+      })
+    }
   }
 
   openCreateContestDialog() {
