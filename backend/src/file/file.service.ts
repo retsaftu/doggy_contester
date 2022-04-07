@@ -47,6 +47,18 @@ export class FileService {
         );
     }
 
+    async updateImage(fileId: string, user) {
+
+        return await this.db.collection('users').updateOne(
+            { _id: new mongodb.ObjectId(user._id) },
+            {
+                $set: {
+                    avatar: `/api/file/${fileId}`,
+                }
+            }
+        )
+    }
+
 
 
     async readStream(id: string): Promise<GridFSBucketReadStream> {

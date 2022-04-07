@@ -32,7 +32,24 @@ export class FileController {
 
     const code = await streamToString(filestream)
     // console.log(`result`, result);
-    return this.fileService.addSubmission(file[0].id, req.user, data,code)
+    return this.fileService.addSubmission(file[0].id, req.user, data, code)
+  }
+
+
+  @UseGuards(JwtAuthGuard)
+  @Post('image')
+  @UseInterceptors(FilesInterceptor('file'))
+  async uploadImage(
+    @UploadedFiles() file,
+    @Req() req: any,
+    // @Body() data: CreateSubmissionDto,
+  ) {
+    // console.log(`data`, data);
+    // console.log(`files`, file);
+    // console.log(`file[0].id`, file[0].id);
+
+    // console.log(`result`, result);
+    return this.fileService.updateImage(file[0].id, req.user)
   }
 
 
