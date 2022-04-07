@@ -9,9 +9,17 @@ Clone the repository
 
     git clone git@github.com:retsaftu/doggy_contester.git
 
+Switch to the repo folder
+
+    cd doggy_contester
+
+run database
+
+    docker-compose -f doggy-contester-db.yml up -d
+
 Switch to the backend folder
 
-    cd doggy_contester/backend
+    cd backend
     
 Install dependencies
     
@@ -23,7 +31,7 @@ Start Backend
 
 Switch to the frontend folder
 
-    cd doggy_contester/frontend
+    cd frontend
     
 Install dependencies
     
