@@ -54,7 +54,7 @@ export class AuthService {
   }
 
   getToken(): string {
-    return this.cookieService.get(environment.tokenHeader);
+    return "Bearer " + this.cookieService.get(environment.tokenHeader);
   }
 
   isLoggedIn(): boolean {
