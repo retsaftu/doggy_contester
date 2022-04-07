@@ -7,6 +7,7 @@ import { response } from 'express';
 
 import * as mongodb from 'mongodb';
 import { CreateSubmissionDto } from './dto/submission-dto';
+import * as shell from 'shelljs'
 
 @Injectable()
 export class FileService {
@@ -20,6 +21,66 @@ export class FileService {
     ) {
         this.fileModel = new MongoGridFS(this.db, 'fs');
     }
+
+    async startCompile(fileId: string, user, data: CreateSubmissionDto) {
+        const userId = user._id;
+        const contestId = data.contestId;
+        const taskId = data.taskId;
+        const checker = (await this.db.collection('contest').aggregate([
+            {
+                $match: {
+                    _id: new mongodb.ObjectId(contestId)
+                }
+            },
+            {
+                $unwind: "$tasks"
+            },
+            {
+                $match: {
+                    'tasks._id': new mongodb.ObjectId(taskId)
+                }
+            },
+            {
+                $project: {
+                    tasks: {
+                        input: 1,
+                        output: 1,
+                        time: 1,
+                        memory: 1
+                    }
+                }
+            }
+
+        ]).toArray())[0]
+        console.log(`checker`, checker);
+        const grep = `ls -l ./uploads | grep ${userId}`;
+        const check = shell.exec(grep);
+        if (check.stdout){
+            const rmDir = "rm -dr ./uploads/" + userId;
+            shell.exec(rmDir);
+        }
+
+        const dir = "mkdir ./uploads/" + userId + " && mkdir ./uploads/" + userId + "/input" + " && mkdir ./uploads/" + userId + "/output";
+        console.log(`check.stdout`, check.stdout);
+        shell.exec(dir);
+
+        
+
+        let test = 'ls -la';
+        let mkdir = `mkdir ${user._id}`
+        const test2 = shell.exec(test);
+        console.log(`test2`, test2);
+        return test2
+        // return await this.db.collection('users').updateOne(
+        //     { _id: new mongodb.ObjectId(user._id) },
+        //     {
+        //         $set: {
+        //             avatar: `/api/file/${fileId}`,
+        //         }
+        //     }
+        // )
+    }
+
 
     async addSubmission(fileId: string, user, data: CreateSubmissionDto, code) {
         let language = data.extension.split('.')[1]

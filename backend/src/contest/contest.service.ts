@@ -38,6 +38,7 @@ export class ContestService {
 
     for (let _task of createContestDto.tasks) {
       let newTask = {
+        _id: new mongodb.ObjectId(),
         index: _task.index,
         name: _task.name,
         description: _task.description,
