@@ -42,6 +42,7 @@ export class SnackBarService {
        duration: 5000,
        horizontalPosition: this.horizontalPosition,
        verticalPosition: this.verticalPosition,
+       panelClass: 'snackbar'
     });
   }
 }

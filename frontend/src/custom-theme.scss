@@ -151,8 +151,20 @@ $doggy-contester-dark-theme: mat.define-dark-theme((
 
 .theme-dark {
   @include mat.all-component-colors($doggy-contester-dark-theme);
+
+  .snackbar {
+    background-color: #424242 !important;
+    color: white;
+    padding: 0;
+  }
 }
 
 .theme-light {
   @include mat.all-component-themes($doggy-contester-light-theme);
+
+  .snackbar {
+    padding: 0;
+    background-color: white !important;
+    color: black;
+  }
 }
