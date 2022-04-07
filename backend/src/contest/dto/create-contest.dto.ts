@@ -65,10 +65,10 @@ export class CreateContestDto {
     @IsString()
     description: string;
 
-    @Type(() => Owner)
-    @ValidateNested()
-    @IsObject()
-    owner: Owner;
+    // @Type(() => Owner)
+    // @ValidateNested()
+    // @IsObject()
+    // owner: Owner;
 
     @IsNumber()
     total_participants: number;

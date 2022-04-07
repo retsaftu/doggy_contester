@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Req } from '@nestjs/common';
 import { ContestService } from './contest.service';
 import { CreateContestDto } from './dto/create-contest.dto';
 import { UpdateContestDto } from './dto/update-contest.dto';
@@ -20,17 +20,31 @@ export class ContestController {
     return this.contestService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('myContests')
-  findMyContest(@Query('id') id: string) {
+  findMyContest(
+    @Req() req: any,
+    // @Query('id') id: string
+  ) {
+    console.log(`req`, req);
+    const id = req.user._id
+    console.log(`req.user`, req.user.email);
+    console.log(`req.user`, req._id);
     console.log(`id`, id);
     if (!id) {
       return ID_NOT_FOUND
     }
     return this.contestService.findMyContest(id);
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get('myActiveContests')
-  findMyActiveContest(@Query('id') id: string) {
+  findMyActiveContest(
+    @Req() req: any,
+
+    // @Query('id') id: string
+  ) {
+    const id = req.user._id
+
     console.log(`id`, id);
     if (!id) {
       return ID_NOT_FOUND
@@ -38,8 +52,15 @@ export class ContestController {
     return this.contestService.findMyActiveContest(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('currentContests')
-  findCurrentContests(@Query('id') id: string) {
+  findCurrentContests(
+    @Req() req: any,
+
+    // @Query('id') id: string
+  ) {
+    const id = req.user._id
+
     console.log(`id`, id);
     if (!id) {
       return ID_NOT_FOUND

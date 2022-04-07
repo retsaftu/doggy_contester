@@ -13,7 +13,7 @@ export class JwtStratagy extends PassportStrategy(Strategy) {
             secretOrKey: auth.secretKey
         });
     }
-    async validate({ email }) {
-        return email
+    async validate({ email, _id }) {
+        return { email, _id }
     }
 }
