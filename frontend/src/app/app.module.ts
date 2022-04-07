@@ -52,6 +52,7 @@ import { ContestLeaderboardComponent } from './components/contest-leaderboard/co
 import { ContestSubmissionComponent } from './components/contest-submission/contest-submission.component';
 import { ContestProblemComponent } from './components/contest-problem/contest-problem.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
+import { UserComponent } from './components/user/user.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import { LeaderboardComponent } from './components/leaderboard/leaderboard.compo
     ContestLeaderboardComponent,
     ContestSubmissionComponent,
     ContestProblemComponent,
-    LeaderboardComponent
+    LeaderboardComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,
