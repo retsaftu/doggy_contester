@@ -25,7 +25,10 @@ export class ContestProblemComponent implements OnInit {
 
   contestId!: number;
 
-  constructor(private router: Router, private fileService: FileService,) { }
+  constructor(
+    private router: Router,
+    private fileService: FileService,
+  ) { }
 
   contestProblems: ProblemContent[] = [];
 
@@ -45,6 +48,8 @@ export class ContestProblemComponent implements OnInit {
     this.contestId = parseInt(splittedUrl[splittedUrl.length - 1]);
     this.contestProblems = this.generationList();
     this.currentProblem = this.contestProblems[0];
+    console.log(`this.contestProblems`, this.contestProblems);
+    console.log(`this.currentProblem `, this.currentProblem);
   }
 
   generationList() {
