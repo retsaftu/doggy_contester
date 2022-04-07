@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ContestInfo } from 'src/app/entities/contester.entity';
+import { ContestService } from '../../services/contest.service';
 
 @Component({
   selector: 'app-contests',
@@ -21,19 +22,27 @@ export class ContestsComponent implements OnInit {
 
   contests: ContestInfo[] = [];
 
-  constructor() { }
+  constructor(
+    private contestService: ContestService,
+  ) { }
 
   ngOnInit(): void {
-    this.contests = this.generateList(0, this.pageSize);
+    this.generateList(0, this.pageSize);
     this.length = 100;
   }
 
   generateList(start: number, end: number) {
-    const contests: ContestInfo[] = [];
-    for(let i=start; i<end; i++) {
-      contests.push(new ContestInfo(i, "Contest " + i, 50, "Username" + i, new Date(), new Date(new Date().setHours(new Date().getHours() + i + 1))))
-    }
-    return contests;
+    const newContests = this.contestService.getContest().subscribe((res: any) => {
+      this.contests = res
+      console.log(`res`, res);
+    });
+    console.log(`newContests`, newContests);
+    return newContests;
+    // const contests: ContestInfo[] = [];
+    // for (let i = start; i < end; i++) {
+    //   contests.push(new ContestInfo(i, "Contest " + i, 50, "Username" + i, new Date(), new Date(new Date().setHours(new Date().getHours() + i + 1))))
+    // }
+    // return contests;
   }
 
   changePage(event: PageEvent) {

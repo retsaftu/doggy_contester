@@ -32,15 +32,15 @@ export class ContestComponent implements OnInit {
     const id = parseInt(splittedUrl[splittedUrl.length - 1]);
     const begin = new Date(new Date().setMinutes(this.currentDate.getMinutes() - 1));
     const end = new Date(new Date().setMinutes(this.currentDate.getMinutes() + 1));
-    this.contestInfo = new ContestInfo(id, "Contest name", 50, "Username1", begin, end);
-    
+    // this.contestInfo = new ContestInfo(id, "Contest name", 50, "Username1", begin, end);
+
     this.upgradeIntervalTicker = Math.round(getDifferenceInSecondsWithoutAbs(this.contestInfo.startDate, this.contestInfo.endDate) * 10); // Посчитать размер тика (10 = 0.01(1%) * 1000(милисекунды))
 
     this.currentProgress = this.getCurrentProgress();
-    if(this.currentProgress < 100) {
+    if (this.currentProgress < 100) {
       this.interval = setInterval(() => {
         this.currentProgress = this.getCurrentProgress();
-        if(this.currentProgress >= 100) {
+        if (this.currentProgress >= 100) {
           clearInterval(this.interval);
         }
       }, this.upgradeIntervalTicker);
@@ -50,7 +50,7 @@ export class ContestComponent implements OnInit {
   getCurrentProgress() {
     const currentDate = new Date();
     const diffStartNow = getDifferenceInSecondsWithoutAbs(this.contestInfo.startDate, currentDate);
-    if(diffStartNow < 0) {
+    if (diffStartNow < 0) {
       return 0
     }
     const diffStartEnd = getDifferenceInSecondsWithoutAbs(this.contestInfo.startDate, this.contestInfo.endDate);
@@ -58,14 +58,14 @@ export class ContestComponent implements OnInit {
   }
 
   onDestroy() {
-    if(this.interval) {
+    if (this.interval) {
       clearInterval(this.interval);
     }
   }
 
   openProblem(index: number) {
     this.selectedIndex = 3; // Открыть Problem tab
-    this.contestProblemComponent.currentProblem = this.contestProblemComponent.contestProblems[index];    
+    this.contestProblemComponent.currentProblem = this.contestProblemComponent.contestProblems[index];
   }
 
 }

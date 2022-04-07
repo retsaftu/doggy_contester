@@ -8,9 +8,10 @@ import { UpdateSubmissionDto } from './dto/update-submission.dto';
 export class SubmissionService {
   constructor(
     @Inject('DATABASE_CONNECTION') private db: mongodb.Db
-  ) {}
+  ) { }
 
   async create(createSubmissionDto: CreateSubmissionDto, file: Express.Multer.File) {
+
     createSubmissionDto.file = file.buffer.toString('base64');
     createSubmissionDto.originalName = file.originalname;
     createSubmissionDto.size = file.size;
@@ -20,7 +21,7 @@ export class SubmissionService {
     createSubmissionDto.type = fileType;
 
     console.log(fileType);
-
+    console.log(`createSubmissionDto`, createSubmissionDto);
     return this.db.collection('submission').insertOne(createSubmissionDto);
   }
 
@@ -33,7 +34,7 @@ export class SubmissionService {
       const submissionTime = new Date(submission.timestamp).toTimeString();
 
       submission.file = submissionFile;
-      
+
       // console.log(`${submissionDate} ${submissionTime}`);
       // console.log(submissionFile);
     });
