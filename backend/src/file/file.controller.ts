@@ -18,9 +18,17 @@ export class FileController {
     @Req() req: any,
     @Body() data: CreateSubmissionDto,
   ) {
+    //В компиляторе не до англа
+    //Логика построения. С токена прилетает юзер, берем айдишник создаем директорию с таким же именем.
+    // Вопрос как ее потом удалять если юзер может асинхронно заливать код тут большой вопрос.
+    // По айди контеста и айди таска через анвайнды получаем инпуты для тестов
+    // для плюсов юзаем компилятор clang или g++ смотря что лучше на серваке встанет. с js не должно быть проблем. python вопрос
+    // через баш скрипты закидываем по перенаправлению потока данных к исполняющему файлу в случае плюсов. или передаем интерпретатору
     let test = 'ls -la'
     shell.exec(test);
     console.log(`data`, data);
+    const compile = await this.fileService.startCompile(file[0].id, req.user, data)
+    return compile;
     // console.log(`files`, file);
     // console.log(`file[0].id`, file[0].id);
     const filestream = await this.fileService.readStream(file[0].id)
@@ -35,7 +43,7 @@ export class FileController {
 
     const code = await streamToString(filestream)
     // console.log(`result`, result);
-    return this.fileService.addSubmission(file[0].id, req.user, data, code)
+    // return this.fileService.addSubmission(file[0].id, req.user, data, code)
   }
 
 
