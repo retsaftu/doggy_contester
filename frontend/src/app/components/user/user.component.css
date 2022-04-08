@@ -1,0 +1,23 @@
+.user-wrapper{
+    width: 100%;
+    display: flex;
+}
+.user-avtar {
+    width: 15%;
+}
+.user-avtar mat-icon{
+    width: 100%;
+    font-size: 10em;
+}
+.user-avatar-picture img {
+    width: 100%;
+}
+.user-avatar-picture {
+    width: 100%;
+}
+.user-info {
+    padding-left: 5em;
+}
+.user-info h1, .user-info h2, .user-info h3{
+    margin: 0;
+}

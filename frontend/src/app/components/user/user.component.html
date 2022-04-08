@@ -1,12 +1,16 @@
 <mat-card>
-    {{user?.name}}{{user?.username}}
-    {{user?._id}}
-    <!-- <div class="contest-basic-info-wrapper">
-        <div class="contest-basic-info">
-
+    <div class="user-wrapper">
+        <div class="user-avtar" click="uploadAvatar()">
+            <mat-icon *ngIf="!user?.avatar">account_circle</mat-icon>
+            <div class="user-avatar-picture" *ngIf="user?.avatar">
+                <img [src]="filePath">
+            </div>
+            <input #fileInput type="file" [accept]=fileType (change)="processFile(fileInput)" mat-raised-button color="primary">
         </div>
-        <div>
-
+        <div class="user-info">
+            <h1>{{user?.name}}</h1><br>
+            <h2>{{user?.username}}</h2><br>
+            <h3>{{user?.email}}</h3><br>
         </div>
-    </div> -->
+    </div>
 </mat-card>
