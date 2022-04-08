@@ -17,8 +17,10 @@ export class FileService {
     let formData = new FormData();
     formData.append('settings', JSON.stringify({ "userId": uId }));
     formData.append('file', file);
+    formData.append('contestId', '60c09af61d2fc08732e62edd');
+    formData.append('taskId', '60c09b891d2fc08732e62ede');
+    formData.append('extension', '.js');
     console.log(`formData`, formData);
-    let formData2 = { rafa: 'rafa' }
-    return this.http.post('/api/submission', formData);
+    return this.http.post('/api/file', formData);
   }
 }

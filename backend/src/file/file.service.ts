@@ -1,6 +1,6 @@
 import { Injectable, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import { MongoGridFS } from 'mongo-gridfs'
-import { GridFSBucketReadStream } from 'mongodb'
+import { GridFSBucketReadStream, GridFSBucketWriteStream } from 'mongodb'
 import { FileInfoVm } from './dto/file-info-vm.model'
 import { response } from 'express';
 
@@ -8,6 +8,8 @@ import { response } from 'express';
 import * as mongodb from 'mongodb';
 import { CreateSubmissionDto } from './dto/submission-dto';
 import * as shell from 'shelljs'
+import * as fs from 'fs';
+const axios = require('axios');
 
 @Injectable()
 export class FileService {
@@ -77,7 +79,7 @@ export class FileService {
             const rmDir = `rm -dr ./uploads/${userId}/${taskId}`;
             shell.exec(rmDir);
         }
-        if (check2.stdout) {
+        if (!check2.stdout) {
             const preDir = `mkdir ./uploads/${userId}`
             shell.exec(preDir);
 
@@ -87,8 +89,16 @@ export class FileService {
          mkdir ./uploads/${userId}/${taskId}/input  && 
          mkdir ./uploads/${userId}/${taskId}/output`;
 
-        const touchFile = `echo -e "${code}" > ./uploads/${userId}/${taskId}/${taskId}.${language}`
-        console.log(`touchFile`, touchFile);
+        const currr = `curl -X 'GET' \ 'http://192.168.66.139:5001/file/download/624f452d6f784fcfb5aac31b'`
+        await axios({
+            method: 'get',
+            url: `http://192.168.66.139:5001/file/download/624f452d6f784fcfb5aac31b`,
+        });
+
+        // shell.exec(currr);
+
+        const touchFile = `code=${code} &&` + 'echo $code ' + ` > ./uploads/${userId}/${taskId}/${taskId}.${language}`
+        // console.log(`touchFile`, touchFile);
         const renameCpp = "cd ./uploads &&" + "cp main.cpp ../uploads/" + userId + "/" + userId + ".cpp";
         const compileClang = "cd ./uploads/" + userId + " && clang++ -o CompileForUser " + userId + ".cpp";
         // const input = "cd ./uploads/" + userId + " && echo '" + taskInput + "' >> ./input/a.in";
@@ -100,9 +110,14 @@ export class FileService {
 
 
         shell.exec(dir);
-        shell.exec(touchFile);
-        console.log(`code`, code);
+        // shell.exec(touchFile);
+        // console.log(`code`, code);
         console.log(`typeof(code)`, typeof (code));
+
+        const filestreamD = await this.downloadStream(fileId);
+
+        const write = fs.createWriteStream('rafa.js')
+        // filestreamD.pipe(write)
 
 
 
@@ -168,6 +183,10 @@ export class FileService {
 
     async readStream(id: string): Promise<GridFSBucketReadStream> {
         return await this.fileModel.readFileStream(id);
+    }
+
+    async downloadStream(id: string): Promise<string> {
+        return await this.fileModel.downloadFile(id);
     }
 
     async findInfo(id: string): Promise<FileInfoVm> {
