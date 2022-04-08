@@ -92,53 +92,55 @@ export class ContestService {
 
   async findMyActiveContest(myid: string) {
     return (await this.db.collection('contest').aggregate([
-      // {
-      //   $match: {
-      //     participants: { "$in": [{myid}] }
-      //   }
-      // }
-      {
-        $unwind: "$participants"
-      },
       {
         $match: {
-          'participants._id': new mongodb.ObjectId(myid),
-          startDate: {
-            $lt: new Date()
-          },
-          endDate: {
-            // $gte: new Date("2013-01-01T00:00:00.0Z"),
-            $gt: new Date()
-          }
+          'participants._id': new mongodb.ObjectId(myid)
         }
       }
+      // {
+      //   $unwind: "$participants"
+      // },
+      // {
+      //   $match: {
+      //     'participants._id': new mongodb.ObjectId(myid),
+      //     startDate: {
+      //       $lt: new Date()
+      //     },
+      //     endDate: {
+      //       // $gte: new Date("2013-01-01T00:00:00.0Z"),
+      //       $gt: new Date()
+      //     }
+      //   }
+      // }
     ]).toArray());
   }
 
   async findCurrentContests(myid: string) {
     return (await this.db.collection('contest').aggregate([
-      // {
-      //   $match: {
-      //     participants: { "$in": [{myid}] }
-      //   }
-      // }
-      {
-        $unwind: "$participants"
-      },
       {
         $match: {
           'participants._id': {
             $ne: new mongodb.ObjectId(myid)
           },
-          startDate: {
-            $lt: new Date()
-          },
-          endDate: {
-            // $gte: new Date("2013-01-01T00:00:00.0Z"),
-            $gt: new Date()
-          }
         }
-      },
+      }
+      // {
+      //   $unwind: "$participants"
+      // },
+      // {
+      //   $match: {
+      //     'participants._id': {
+      //       $ne: new mongodb.ObjectId(myid)
+      //     },
+      //     startDate: {
+      //       $lt: new Date()
+      //     },
+      //     endDate: {
+      //       // $gte: new Date("2013-01-01T00:00:00.0Z"),
+      //       $gt: new Date()
+      //     }
+      //   }
+      // },
     ]).toArray());
   }
 
