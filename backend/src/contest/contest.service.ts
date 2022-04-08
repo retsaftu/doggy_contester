@@ -84,7 +84,13 @@ export class ContestService {
     return (await this.db.collection('contest').aggregate([
       {
         $match: {
-          "owner._id": myid
+          "owner._id": myid,
+          startDate: {
+            $lt: new Date()
+          },
+          endDate: {
+            $gt: new Date()
+          }
         }
       }
     ]).toArray());
@@ -94,7 +100,13 @@ export class ContestService {
     return (await this.db.collection('contest').aggregate([
       {
         $match: {
-          'participants._id': new mongodb.ObjectId(myid)
+          'participants._id': new mongodb.ObjectId(myid),
+          startDate: {
+            $lt: new Date()
+          },
+          endDate: {
+            $gt: new Date()
+          }
         }
       }
       // {
@@ -122,6 +134,12 @@ export class ContestService {
           'participants._id': {
             $ne: new mongodb.ObjectId(myid)
           },
+          startDate: {
+            $lt: new Date()
+          },
+          endDate: {
+            $gt: new Date()
+          }
         }
       }
       // {
