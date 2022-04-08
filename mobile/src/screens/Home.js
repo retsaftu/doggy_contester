@@ -27,7 +27,7 @@ export default class Home extends Component {
         if(token){
             await this.setState({isAuth: true, isLoader:true})
         
-            let urlForMyContests=`http://${backend.host}:3000/contest/myContests`;
+            let urlForMyContests=`http://agis.kz:5002/api/contest/myContests`;
             await RNFetchBlob.config({
                 trusty : true
                 })
@@ -43,7 +43,7 @@ export default class Home extends Component {
                 });
 
 
-            let urlForMyActive=`http://${backend.host}:3000/contest/myActiveContests`;
+            let urlForMyActive=`http://agis.kz:5002/api/contest/myActiveContests`;
             await RNFetchBlob.config({
                 trusty : true
                 })
@@ -58,7 +58,7 @@ export default class Home extends Component {
                     await this.setState({isLoader:false, activeContests:data})
                 });
 
-            let urlForCurrent=`http://${backend.host}:3000/contest/currentContests`;
+            let urlForCurrent=`http://agis.kz:5002/api/contest/currentContests`;
             await RNFetchBlob.config({
                 trusty : true
                 })
@@ -73,7 +73,7 @@ export default class Home extends Component {
                     await this.setState({isLoader:false, currentContests:data})
                 })
         } else {
-            let urlForCurrent=`http://${backend.host}:3000/contest/currentContests`;
+            let urlForCurrent=`http://agis.kz:5002/api/contest/currentContests`;
             await RNFetchBlob.config({
                 trusty : true
                 })
@@ -106,13 +106,20 @@ export default class Home extends Component {
                                 <Text style={styles.header}>{item.name}</Text>
                                 <View style={styles.row}>
                                     <View style={styles.textIcon}>
-                                        <Text style={[styles.itemText, {flex:0}]}>{item.count}  </Text>
+                                        <Text style={[styles.itemText, {flex:0}]}>{item.total_participants}  </Text>
                                         <Icon name='account' size={25} color='black'/>
                                     </View>
-                                    <View style={[styles.textIcon, {flexDirection:'column'}]}>
+                                    <TouchableOpacity 
+                                        onPress={()=>{
+                                            this.props.navigation.push('Navigator', {screen:'Profile', params: {userId:item.owner._id}})                          
+                                        }} 
+                                        style={[styles.textIcon, {flexDirection:'column'}]}>
+                                        
                                         <Icon name='account' size={25} color='black'/>
-                                        <Text style={{color:'black'}}>Owner</Text>
-                                    </View>
+                                        <Text style={{color:'black'}}>{item.owner.name}</Text>
+                                    </TouchableOpacity>
+
+                                    
                                 </View>
                                 <TouchableOpacity style={styles.button}>
                                     <Text style={styles.buttonText}>

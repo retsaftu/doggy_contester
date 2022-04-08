@@ -112,7 +112,7 @@ export default class CreateContest extends Component {
             endDate: endDate,
             tasks:tempTasks
         }
-        let url=`http://${backend.host}:3000/contest`
+        let url=`http://agis.kz:5002/api/contest`
 
         console.log(`contest`, contest);
 

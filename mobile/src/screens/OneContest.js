@@ -65,7 +65,7 @@ export default class OneContest extends Component {
         if(token){
             await this.setState({isAuth: true})
         }
-        // let url=`http://${backend.host}:3000/contest`;
+        // let url=`http://agis.kz:5002/api/contest`;
         // await this.setState({isLoader:true})
         // await RNFetchBlob.config({
         //     trusty : true

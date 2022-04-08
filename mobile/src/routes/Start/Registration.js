@@ -47,7 +47,7 @@ export default class Registration extends Component {
             password: this.state.password,
             username:this.state.username
         }
-        let url=`http://${backend.host}:3000/auth/register`
+        let url=`http://agis.kz:5002/api/auth/register`
         console.log(`user`, user);
         if(this.state.email.length>0 && this.state.password.length>0 && this.state.username.length>0){
             await this.setState({isLoader:true})
