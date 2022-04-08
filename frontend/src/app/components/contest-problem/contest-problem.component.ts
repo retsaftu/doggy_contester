@@ -20,9 +20,6 @@ class FileSnippet {
 
 export class ContestProblemComponent implements OnInit {
 
-
-
-
   contestId!: number;
 
   constructor(
@@ -30,9 +27,9 @@ export class ContestProblemComponent implements OnInit {
     private fileService: FileService,
   ) { }
 
-  contestProblems: ProblemContent[] = [];
+  contestProblems: any[] = [];
 
-  currentProblem!: ProblemContent;
+  currentProblem!: any;
 
   fileType!: string;
 
@@ -46,10 +43,18 @@ export class ContestProblemComponent implements OnInit {
     this.fileType = '.cpp,.js,.py';
     let splittedUrl = this.router.url.split('/');
     this.contestId = parseInt(splittedUrl[splittedUrl.length - 1]);
-    this.contestProblems = this.generationList();
-    this.currentProblem = this.contestProblems[0];
-    console.log(`this.contestProblems`, this.contestProblems);
-    console.log(`this.currentProblem `, this.currentProblem);
+    // this.contestProblems = this.generationList();
+    // this.currentProblem = this.contestProblems[0];
+    // console.log(`this.contestProblems`, this.contestProblems);
+    // console.log(`this.currentProblem `, this.currentProblem);
+  }
+
+  ngOnChanges() {
+    console.log('problem contests', this.currentProblem);
+  }
+
+  setContestProblems(contestProblems: any) {
+    console.log('setContestProblems', contestProblems);
   }
 
   generationList() {

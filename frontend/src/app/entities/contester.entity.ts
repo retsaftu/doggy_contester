@@ -27,8 +27,8 @@ export class ContestInfo {
     this.name = name;
     this.total_participants = total_participants;
     this.owner = owner;
-    this.startDate = startDate;
-    this.endDate = endDate;
+    this.startDate = new Date(startDate);
+    this.endDate = new Date(endDate);
     this.duration = this.getDuration(this.startDate, this.endDate);
   }
 

@@ -3,6 +3,8 @@ import { ContestInfo } from 'src/app/entities/contester.entity';
 import { Router } from '@angular/router';
 import { getDifferenceInSecondsWithoutAbs } from 'src/app/entities/time';
 import { ContestProblemComponent } from '../contest-problem/contest-problem.component';
+import { ContestService } from 'src/app/services/contest.service';
+import { faCropSimple } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-contest',
@@ -21,31 +23,37 @@ export class ContestComponent implements OnInit {
 
   private upgradeIntervalTicker = 10000 // in mileseconds
 
-  contestInfo!: ContestInfo;
+  contestInfo: any;
 
   selectedIndex = 0;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private contestService: ContestService) { }
 
   ngOnInit(): void {
     let splittedUrl = this.router.url.split('/');
     const id = splittedUrl[splittedUrl.length - 1];
     console.log(`id`, id);
-    const begin = new Date(new Date().setMinutes(this.currentDate.getMinutes() - 1));
-    const end = new Date(new Date().setMinutes(this.currentDate.getMinutes() + 1));
-    // this.contestInfo = new ContestInfo(id, "Contest name", 50, "Username1", begin, end);
+    // const begin = new Date(new Date().setMinutes(this.currentDate.getMinutes() - 1));
+    // const end = new Date(new Date().setMinutes(this.currentDate.getMinutes() + 1));
+    this.contestService.getContestById(id).subscribe((res: any) => {
+      this.contestInfo = res[0];
+      console.log(this.contestInfo);
+      this.contestInfo.startDate = new Date(this.contestInfo.startDate);
+      this.contestInfo.endDate = new Date(this.contestInfo.endDate);
+      this.contestProblemComponent.contestProblems = this.contestInfo.tasks;
+      this.contestProblemComponent.currentProblem = this.contestInfo.tasks[0];
+      this.upgradeIntervalTicker = Math.round(getDifferenceInSecondsWithoutAbs(new Date(this.contestInfo.startDate), new Date(this.contestInfo.endDate)) * 10); // Посчитать размер тика (10 = 0.01(1%) * 1000(милисекунды))
 
-    this.upgradeIntervalTicker = Math.round(getDifferenceInSecondsWithoutAbs(this.contestInfo.startDate, this.contestInfo.endDate) * 10); // Посчитать размер тика (10 = 0.01(1%) * 1000(милисекунды))
-
-    this.currentProgress = this.getCurrentProgress();
-    if (this.currentProgress < 100) {
-      this.interval = setInterval(() => {
-        this.currentProgress = this.getCurrentProgress();
-        if (this.currentProgress >= 100) {
-          clearInterval(this.interval);
-        }
-      }, this.upgradeIntervalTicker);
-    }
+      this.currentProgress = this.getCurrentProgress();
+      if (this.currentProgress < 100) {
+        this.interval = setInterval(() => {
+          this.currentProgress = this.getCurrentProgress();
+          if (this.currentProgress >= 100) {
+            clearInterval(this.interval);
+          }
+        }, this.upgradeIntervalTicker);
+      }
+    })
   }
 
   getCurrentProgress() {
@@ -66,7 +74,7 @@ export class ContestComponent implements OnInit {
 
   openProblem(index: number) {
     this.selectedIndex = 3; // Открыть Problem tab
-    this.contestProblemComponent.currentProblem = this.contestProblemComponent.contestProblems[index];
+    this.contestProblemComponent.setContestProblems(this.contestProblemComponent.contestProblems[index]);
   }
 
 }

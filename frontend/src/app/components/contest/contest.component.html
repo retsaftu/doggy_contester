@@ -1,9 +1,9 @@
 <mat-card>
     <div class="contest-basic-info-wrapper">
         <div class="contest-basic-info">
-            <span>Begin: {{contestInfo.startDate | date:'HH:mm, MMM d, y'}}</span>
-            <h1>{{contestInfo.name}}</h1>
-            <span>End: {{contestInfo.endDate | date:'HH:mm, MMM d, y'}}</span>
+            <span>Begin: {{contestInfo?.startDate | date:'HH:mm, MMM d, y'}}</span>
+            <h1>{{contestInfo?.name}}</h1>
+            <span>End: {{contestInfo?.endDate | date:'HH:mm, MMM d, y'}}</span>
         </div>
         <div>
             <mat-progress-bar class="example-margin" [value]="currentProgress">
@@ -17,12 +17,12 @@
             <app-contest-problems (problemIndexToOpenEvent)="openProblem($event)" [contestInfo]="contestInfo">
             </app-contest-problems>
         </mat-tab>
-        <mat-tab label="Leaderboard">
+        <!-- <mat-tab label="Leaderboard">
             <app-contest-leaderboard [contestInfo]="contestInfo"></app-contest-leaderboard>
-        </mat-tab>
-        <mat-tab label="Submissions">
+        </mat-tab> -->
+        <!-- <mat-tab label="Submissions">
             <app-contest-submission [contestInfo]="contestInfo"></app-contest-submission>
-        </mat-tab>
+        </mat-tab> -->
         <mat-tab label="Problem">
             <app-contest-problem #contestProblem></app-contest-problem>
         </mat-tab>

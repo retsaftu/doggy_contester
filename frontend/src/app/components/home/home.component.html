@@ -1,9 +1,5 @@
 <div class="main">
     <div class="wrapper">
-        <div *ngIf="userContests.length != 0" class="contests-wrapper">
-            <h1>My contests</h1>
-            <app-contest-item *ngFor="let contest of userContests" [contestInfo]=contest></app-contest-item>
-        </div>
         <div *ngIf="activeContests.length != 0" class="contests-wrapper">
             <h1>Active contests</h1>
             <app-contest-item *ngFor="let contest of activeContests" [contestInfo]=contest></app-contest-item>
@@ -14,6 +10,10 @@
                 <p>No contests currently running</p>
             </div>
             <app-contest-item *ngFor="let contest of contests" [contestInfo]=contest></app-contest-item>
+        </div>
+        <div *ngIf="userContests.length != 0" class="contests-wrapper">
+            <h1>My contests</h1>
+            <app-contest-item *ngFor="let contest of userContests" [contestInfo]=contest></app-contest-item>
         </div>
     </div>
     <div class="create-contest-btn">

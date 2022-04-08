@@ -12,7 +12,7 @@ import { NotificationType, SnackBarData } from '../entities/notification.entity'
 })
 export class SnackBarService {
 
-  private horizontalPosition: MatSnackBarHorizontalPosition = 'end';
+  private horizontalPosition: MatSnackBarHorizontalPosition = 'start';
   private verticalPosition: MatSnackBarVerticalPosition = 'bottom';
 
   constructor(private snackBar:MatSnackBar) { }

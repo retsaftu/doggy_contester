@@ -1,10 +1,10 @@
 <div class="contest-problem-wrapper">
-    <h1>{{currentProblem?.problemName}}</h1>
-    <p>{{currentProblem?.problemDescription}}</p>
+    <h1>{{currentProblem?.index}} {{currentProblem?.name}}</h1>
+    <p>{{currentProblem?.description}}</p>
     <h2>Sample input</h2>
-    <pre>{{currentProblem?.sampleInput}}</pre>
+    <pre>{{currentProblem?.inputExample}}</pre>
     <h2>Sample output</h2>
-    <pre>{{currentProblem?.sampleOutput}}</pre>
+    <pre>{{currentProblem?.outputExample}}</pre>
     <div>
         <input #fileInput class="custom-file-input" type="file" [accept]=fileType (change)="processFile(fileInput)"
             [disabled]="disabled" [ngClass]="{'disabled': disabled}" mat-raised-button color="primary">

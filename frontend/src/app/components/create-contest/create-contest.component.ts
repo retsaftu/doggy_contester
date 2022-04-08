@@ -7,9 +7,11 @@ import { TimepickerInputComponent } from '../timepicker/timepicker-input/timepic
 import { ContestCreation, ContestInfo, ProblemCreation, TestCreation } from 'src/app/entities/contester.entity';
 import { Time } from 'src/app/entities/time';
 import { TimepickerDialogComponent } from '../timepicker/timepicker-dialog/timepicker-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AfterViewChecked, ChangeDetectorRef } from '@angular/core'
 import { ContestService } from 'src/app/services/contest.service';
+import { SnackBarService } from 'src/app/services/snack-bar.service';
+import { HomeComponent } from '../home/home.component';
 
 
 export const MY_FORMATS = {
@@ -45,7 +47,14 @@ export class CreateContestComponent implements OnInit {
   @ViewChild('timeinput') timeinput!: TimepickerInputComponent;
   @ViewChild('durationinput') durationinput!: TimepickerInputComponent;
 
-  constructor(public dialog: MatDialog, private fb: FormBuilder, private contestService: ContestService) { 
+  private _isLoading = false;
+
+  constructor(
+    public dialogRef: MatDialogRef<HomeComponent>,
+    public dialog: MatDialog,
+    private fb: FormBuilder, 
+    private contestService: ContestService,
+    private snackBarService: SnackBarService) { 
     this.form = fb.group({
       name: new FormControl('', [Validators.required]),
       description: new FormControl('', [Validators.required]),
@@ -175,8 +184,8 @@ export class CreateContestComponent implements OnInit {
            !problem.get('memmoryLimit')?.hasError('required') && !problem.get('timeLimit')?.hasError('required');
   }
 
-  private isTestValid(probelmIndex: number, testIndex: number) {
-    const test = this.getTest(probelmIndex, testIndex);
+  private isTestValid(problemIndex: number, testIndex: number) {
+    const test = this.getTest(problemIndex, testIndex);
     return !test.get('testInput')?.hasError('require') && !test.get('testOutput')?.hasError('required');
   }
 
@@ -201,11 +210,79 @@ export class CreateContestComponent implements OnInit {
     return true;
   }
 
+  private disableTestFields(problemIndex: number, testIndex: number) {
+    const test = this.getTest(problemIndex, testIndex);
+    test.get('testInput')?.disable();
+    test.get('testOutput')?.disable();
+  }
+
+  private disableProblemFields(problemIndex: number) {
+    const problem = this.getProblem(problemIndex);
+    problem.get('name')?.disable();
+    problem.get('description')?.disable();
+    problem.get('name')?.disable();
+    problem.get('description')?.disable();
+    problem.get('sampleTestInput')?.disable()
+    problem.get('sampleTestOutput')?.disable() &&
+    problem.get('memmoryLimit')?.disable()
+    problem.get('timeLimit')?.disable()
+  }
+
+  private disableContestFields() {
+    this.name?.disable();
+    this.duration?.disable();
+    this.time?.disable();
+    this.date?.disable();
+    this.total_participants?.disable();
+    this.description?.disable();
+    for(let i = 0; i<this.problems.length; i++) {
+      this.disableProblemFields(i);
+      for(let j=0; j<this.getTests(i).length; j++) {
+        this.disableTestFields(i, j);
+      }
+    }
+    
+  }
+  
+  private enableTestFields(problemIndex: number, testIndex: number) {
+    const test = this.getTest(problemIndex, testIndex);
+    test.get('testInput')?.enable();
+    test.get('testOutput')?.enable();
+  }
+
+  private enableProblemFields(problemIndex: number) {
+    const problem = this.getProblem(problemIndex);
+    problem.get('name')?.enable();
+    problem.get('description')?.enable();
+    problem.get('name')?.enable();
+    problem.get('description')?.enable();
+    problem.get('sampleTestInput')?.enable()
+    problem.get('sampleTestOutput')?.enable() &&
+    problem.get('memmoryLimit')?.enable()
+    problem.get('timeLimit')?.enable()
+  }
+
+  private enableContestFields() {
+    this.name?.enable();
+    this.duration?.enable();
+    this.time?.enable();
+    this.date?.enable();
+    this.total_participants?.enable();
+    this.description?.enable();
+    for(let i = 0; i<this.problems.length; i++) {
+      this.enableProblemFields(i);
+      for(let j=0; j<this.getTests(i).length; j++) {
+        this.enableTestFields(i, j);
+      }
+    }
+    
+  }
+
   createContest() {
 
-    // if(!this.isAllContestFieldsAreValid()) {
-    //   return
-    // }
+    if(!this.isAllContestFieldsAreValid()) {
+      return
+    }
 
     const problems: ProblemCreation[] = [];
 
@@ -239,10 +316,15 @@ export class CreateContestComponent implements OnInit {
 
     console.log(contest);
 
-    this.contestService.createContest(contest).subscribe((res:any) => {
-      console.log(res)
-    })
-
+    this.contestService.createContest(contest).subscribe(({
+      next: (res) => {
+        this.snackBarService.openSuccessSnackBar("Contest created succsessfully!");
+        this.dialogRef.close({created: true});
+      },
+      error: (err) => {
+        this.enableContestFields();
+      }
+    }))
   }
 
   get name() { return this.form.get('name'); }
@@ -256,5 +338,16 @@ export class CreateContestComponent implements OnInit {
   get date() { return this.form.get('date'); }
 
   get total_participants() { return this.form.get('total_participants'); }
+
+  get isLoading() { return this._isLoading; }
+
+  set isLoading(value: boolean) {
+    this._isLoading = value;
+    if(this._isLoading) {
+      this.disableContestFields();
+    } else {
+      this.enableContestFields();
+    }
+  }
 
 }

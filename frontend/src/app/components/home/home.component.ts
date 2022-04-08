@@ -18,11 +18,11 @@ export class HomeComponent implements OnInit {
 
   private currentDate = new Date();
 
-  userContests = [];
+  userContests: ContestInfo[] = [];
 
-  activeContests = [];
+  activeContests: ContestInfo[] = [];
 
-  contests = [];
+  contests: ContestInfo[] = [];
 
   // userContests: ContestInfo[] = [
   //   new ContestInfo(
@@ -106,16 +106,22 @@ export class HomeComponent implements OnInit {
   // ]
 
   ngOnInit(): void {
-
-    this.contestService.getCurrentContests().subscribe((res: any) => {
-      console.log(res);
-    })
     if(this.authService.isLoggedIn()) {
-      this.contestService.getMyActiveContest().subscribe((res:any) => {
-        console.log(res);
+      this.contestService.getMyActiveContest().subscribe((res:ContestInfo[]) => {
+        console.log('my active anotest', res);
+        this.activeContests = res
       })
-      this.contestService.getMyContest().subscribe((res: any) => {
-        console.log(res);
+      this.contestService.getMyContest().subscribe((res: ContestInfo[]) => {
+        console.log('my  anotest', res);
+        this.userContests = res;
+      })
+      this.contestService.getCurrentContests().subscribe((res: ContestInfo[]) => {
+        console.log('current anotest', res);
+        this.contests = res;
+      })
+    } else {
+      this.contestService.getCurrentContestsForUnauthorizedUser().subscribe((res: ContestInfo[]) => {
+        this.contests = res;
       })
     }
   }
@@ -125,11 +131,13 @@ export class HomeComponent implements OnInit {
       width: '40%'
     });
 
-    // dialogRef.afterClosed().subscribe(result: => {
-    //   // if(!!result) {
-    //     // this.userContests.push(result);
-    //   // }
-    // })
+    dialogRef.afterClosed().subscribe((res) => {
+      if(res.created) {
+        this.contestService.getMyContest().subscribe((res: ContestInfo[]) => {
+          this.userContests = res;
+        })
+      }
+    })
   }
 
   get isLoggedIn() { return this.authService.isLoggedIn() }

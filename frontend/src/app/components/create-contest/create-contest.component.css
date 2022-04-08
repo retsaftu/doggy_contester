@@ -62,3 +62,6 @@ mat-dialog-content::-webkit-scrollbar {
     display: flex;
     justify-content: space-between;
 }
+.limits  mat-form-field {
+    width: 48%;
+}

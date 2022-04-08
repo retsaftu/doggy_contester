@@ -22,22 +22,26 @@ export class ContestsComponent implements OnInit {
 
   contests: ContestInfo[] = [];
 
+  private allContests: ContestInfo[] = [];
+
   constructor(
     private contestService: ContestService,
   ) { }
 
   ngOnInit(): void {
-    this.generateList(0, this.pageSize);
-    this.length = 100;
+    this.contestService.getContest().subscribe((res: any) => {
+      this.allContests = res;
+      this.length = this.allContests.length;
+      this.contests = this.generateList(0, this.pageSize);
+    });
   }
 
   generateList(start: number, end: number) {
-    const newContests = this.contestService.getContest().subscribe((res: any) => {
-      this.contests = res
-      console.log(`res`, res);
-    });
-    console.log(`newContests`, newContests);
-    return newContests;
+    const tmpContest = [];
+    for(let i=start; i<end && i<this.allContests.length; i++) {
+      tmpContest.push(this.allContests[i]);
+    }
+    return tmpContest;
     // const contests: ContestInfo[] = [];
     // for (let i = start; i < end; i++) {
     //   contests.push(new ContestInfo(i, "Contest " + i, 50, "Username" + i, new Date(), new Date(new Date().setHours(new Date().getHours() + i + 1))))
