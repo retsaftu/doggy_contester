@@ -20,8 +20,8 @@ export class ContestService {
         name: owner.username
       },
       total_participants: createContestDto.total_participants,
-      startDate: createContestDto.startDate,
-      endDate: createContestDto.endDate,
+      startDate: new Date(createContestDto.startDate),
+      endDate: new Date(createContestDto.endDate),
       tasks: []
     }
     console.log(`createContest`, createContest);
@@ -102,9 +102,12 @@ export class ContestService {
       {
         $match: {
           'participants._id': new mongodb.ObjectId(myid),
+          startDate: {
+            $lt: new Date()
+          },
           endDate: {
             // $gte: new Date("2013-01-01T00:00:00.0Z"),
-            $lt: new Date()
+            $gt: new Date()
           }
         }
       }
@@ -126,9 +129,30 @@ export class ContestService {
           'participants._id': {
             $ne: new mongodb.ObjectId(myid)
           },
+          startDate: {
+            $lt: new Date()
+          },
           endDate: {
             // $gte: new Date("2013-01-01T00:00:00.0Z"),
+            $gt: new Date()
+          }
+        }
+      },
+    ]).toArray());
+  }
+
+  async findCurrentContestsForUnauthorizedUser() {
+    const currentDate = new Date();
+    console.log(currentDate)
+    return (await this.db.collection('contest').aggregate([
+      {
+        $match: {
+          startDate: {
             $lt: new Date()
+          },
+          endDate: {
+            // $gte: new Date("2013-01-01T00:00:00.0Z"),
+            $gt: new Date()
           }
         }
       }

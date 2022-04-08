@@ -41,7 +41,7 @@ export class ContestController {
   }
   @UseGuards(JwtAuthGuard)
   @Get('myActiveContests')
-  findMyActiveContest(
+  async findMyActiveContest(
     @Req() req: any,
 
     // @Query('id') id: string
@@ -69,6 +69,15 @@ export class ContestController {
       return ID_NOT_FOUND
     }
     return this.contestService.findCurrentContests(id);
+  }
+
+  @Get('currentContestsForUnauthorizedUser')
+  findCurrentContestsForUnauthorizedUser(
+    @Req() req: any,
+
+    // @Query('id') id: string
+  ) {
+    return this.contestService.findCurrentContestsForUnauthorizedUser();
   }
 
   @Get(':_id')
