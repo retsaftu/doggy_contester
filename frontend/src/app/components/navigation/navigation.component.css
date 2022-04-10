@@ -23,6 +23,7 @@ ul:last-child {
 .navbar-right-menu {
     min-width: 20%;
     max-width: 35%;
+    justify-content: space-between;
 }
 ul {
     list-style: none;
@@ -55,4 +56,20 @@ a {
 }
 .username {
     margin-left: 8px;
+}
+.navigation-profile-wrapper {
+    display: flex;
+    align-items: center;
+    /* justify-content: space-between; */
+    width: fit-content;
+}
+.navigation-profile-avatar-img {
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.navigation-profile-avatar-img img {
+    width: 100%;
+    border-radius: 50%;
 }

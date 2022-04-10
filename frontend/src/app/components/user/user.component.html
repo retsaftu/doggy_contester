@@ -1,11 +1,14 @@
 <mat-card>
     <div class="user-wrapper">
         <div class="user-avtar" click="uploadAvatar()">
-            <mat-icon *ngIf="!user?.avatar">account_circle</mat-icon>
-            <div class="user-avatar-picture" *ngIf="user?.avatar">
+            <label for="user-uploadAvatar">
+                <mat-icon *ngIf="!user?.avatar">account_circle</mat-icon>
+            </label>
+            <label for="user-uploadAvatar" class="user-avatar-picture" *ngIf="user?.avatar">
                 <img [src]="filePath">
-            </div>
-            <input #fileInput type="file" [accept]=fileType (change)="processFile(fileInput)" mat-raised-button color="primary">
+            </label>
+            <input #fileInput id="user-uploadAvatar" type="file" 
+                [accept]=fileType (change)="processFile(fileInput)">
         </div>
         <div class="user-info">
             <h1>{{user?.name}}</h1><br>

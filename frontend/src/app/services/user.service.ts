@@ -17,12 +17,16 @@ export class UserService {
   set userInfo(userInfo: UserBasicInfo) { 
     this.cookieService.set(environment.USER_INFO_FIELDS.USERNAME, userInfo.username);
     this.cookieService.set(environment.USER_INFO_FIELDS.ID, userInfo._id);
+    if(userInfo.avatar) {
+      this.cookieService.set(environment.USER_INFO_FIELDS.AVATAR, userInfo.avatar);
+    }
   }
 
   get userInfo() { 
     const username = this.cookieService.get(environment.USER_INFO_FIELDS.USERNAME);
     const _id = this.cookieService.get(environment.USER_INFO_FIELDS.ID);
-    return new UserBasicInfo(username, _id);
+    const avatar = this.cookieService.get(environment.USER_INFO_FIELDS.AVATAR);
+    return new UserBasicInfo(username, _id, avatar);
   }
 
   getContest(): any {

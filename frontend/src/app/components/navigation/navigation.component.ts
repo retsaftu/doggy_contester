@@ -53,6 +53,9 @@ export class NavigationComponent implements OnInit {
     this.renderer.setAttribute(this.document.body, 'class',  this.DEFAULT_CLASSES + ' ' + currentTheme);
   }
 
+  ngOnChange() {
+  }
+
   changeTheme() {
     this.isDark = !this.isDark;
     const hostClass = this.isDark ? this.darkThemeClass : this.lightThemeClass;

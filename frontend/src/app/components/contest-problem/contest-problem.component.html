@@ -6,7 +6,7 @@
     <h2>Sample output</h2>
     <pre>{{currentProblem?.outputExample}}</pre>
     <div>
-        <input #fileInput type="file" [accept]=fileType (change)="processFile(fileInput)" [disabled]="disabled"
-            [ngClass]="{'disabled': disabled}" mat-raised-button color="primary">
+        <input #fileInput type="file" [accept]=fileType (change)="processFile(fileInput)"
+            mat-raised-button color="primary">
     </div>
 </div>

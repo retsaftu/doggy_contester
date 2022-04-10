@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UserBasicInfo } from 'src/app/entities/user.entity';
 import { FileService } from 'src/app/services/file.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -30,13 +31,15 @@ export class UserComponent implements OnInit {
 
   filePath = '';
 
+  id = '';
+
   ngOnInit(): void {
     this.fileType = '.jpeg,.png,';
     let splittedUrl = this.router.url.split('/');
     console.log(`splittedUrl`, splittedUrl);
-    const id = splittedUrl[splittedUrl.length - 1];
-    console.log(`id`, id);
-    this.userService.getUserById(id).subscribe((res: any) => {
+    this.id = splittedUrl[splittedUrl.length - 1];
+    console.log(`id`, this.id);
+    this.userService.getUserById(this.id).subscribe((res: any) => {
       console.log(`res`, res);
       this.user = res
       this.filePath = this.user.avatar;
@@ -70,8 +73,11 @@ export class UserComponent implements OnInit {
           setTimeout(() => {
             this.selectedFile = null;
           }, 5000);
-          console.log(`res`, res);
-          this.filePath = res[0].avatar;
+          this.userService.getUserById(this.id).subscribe((res: any) => {
+            this.user = res
+            this.filePath = this.user.avatar;
+            this.userService.userInfo = new UserBasicInfo(res.username, res._id, res.avatar);
+          });
           // res.data ? this.uploadResult.emit(res.data) : null;
         },
         (err: any) => {

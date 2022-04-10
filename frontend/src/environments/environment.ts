@@ -17,7 +17,8 @@ export const environment = {
   themeField: 'theme',
   USER_INFO_FIELDS: {
     USERNAME: "USER_INFO_USERNAME",
-    ID: "USER_INFO_EMAIL_ID"
+    ID: "USER_INFO_EMAIL_ID",
+    AVATAR: "USER_AVATAR"
   }
 };
 
