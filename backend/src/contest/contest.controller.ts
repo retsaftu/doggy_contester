@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Req, Put } from '@nestjs/common';
 import { ContestService } from './contest.service';
 import { CreateContestDto } from './dto/create-contest.dto';
 import { UpdateContestDto } from './dto/update-contest.dto';
@@ -79,6 +79,15 @@ export class ContestController {
   ) {
     return this.contestService.findCurrentContestsForUnauthorizedUser();
   }
+  
+  @UseGuards(JwtAuthGuard)
+  @Patch('joinContest/:contestId')
+  joinContest(@Param('contestId') contestId: string, @Req() req: any) {
+    console.log('contestId', contestId)
+    const userId = req.user._id;
+    const username = req.user.username;
+    return this.contestService.joinContest(contestId, userId, username);
+  }
 
   @Get(':_id')
   findOne(
@@ -87,10 +96,10 @@ export class ContestController {
     return this.contestService.findOne(_id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateContestDto: UpdateContestDto) {
-    return this.contestService.update(+id, updateContestDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateContestDto: UpdateContestDto) {
+  //   return this.contestService.update(+id, updateContestDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

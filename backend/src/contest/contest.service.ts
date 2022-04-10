@@ -16,7 +16,7 @@ export class ContestService {
       name: createContestDto.name,
       description: createContestDto.description,
       owner: {
-        _id: owner._id,
+        _id: new mongodb.ObjectId(owner._id),
         name: owner.username
       },
       total_participants: createContestDto.total_participants,
@@ -84,12 +84,12 @@ export class ContestService {
     return (await this.db.collection('contest').aggregate([
       {
         $match: {
-          "owner._id": myid,
-          startDate: {
-            $lt: new Date()
-          },
+          "owner._id": new mongodb.ObjectId(myid),
+          // startDate: {
+          //   $lt: new Date()
+          // },
           endDate: {
-            $gt: new Date()
+            $gt: new Date(),
           }
         }
       }
@@ -132,6 +132,9 @@ export class ContestService {
       {
         $match: {
           'participants._id': {
+            $ne: new mongodb.ObjectId(myid)
+          },
+          'owner._id': {
             $ne: new mongodb.ObjectId(myid)
           },
           startDate: {
@@ -197,4 +200,20 @@ export class ContestService {
   remove(id: number) {
     return `This action removes a #${id} contest`;
   }
+
+  async joinContest(contestId: string, userId: string, username: string) {
+    await (this.db.collection('contest').updateOne(
+      { "_id": new mongodb.ObjectId(contestId) },
+      {
+        $push: {
+          participants: {
+            _id: new mongodb.ObjectId(userId),
+            name: username
+          }
+        }
+      }
+    ))
+  }
+
+
 }
