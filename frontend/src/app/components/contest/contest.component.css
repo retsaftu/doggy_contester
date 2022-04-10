@@ -20,3 +20,8 @@ mat-card {
 .mat-tab {
     width: 100%;
 }
+.contest-manipulate-btn {
+    position: fixed;
+    bottom: 2em;
+    right: 2em;
+}

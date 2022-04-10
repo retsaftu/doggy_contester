@@ -98,4 +98,8 @@ export class ContestService {
     return this.http.post('/api/contest', contest)
   }
 
+  joinContest(contestId: string) {
+    return this.http.patch(`/api/contest/joinContest/${contestId}`, null);
+  }
+
 }

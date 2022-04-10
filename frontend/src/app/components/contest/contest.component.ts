@@ -5,6 +5,9 @@ import { getDifferenceInSecondsWithoutAbs } from 'src/app/entities/time';
 import { ContestProblemComponent } from '../contest-problem/contest-problem.component';
 import { ContestService } from 'src/app/services/contest.service';
 import { faCropSimple } from '@fortawesome/free-solid-svg-icons';
+import { AuthService } from 'src/app/services/auth.service';
+import { UserService } from 'src/app/services/user.service';
+import { SnackBarService } from 'src/app/services/snack-bar.service';
 
 @Component({
   selector: 'app-contest',
@@ -27,7 +30,15 @@ export class ContestComponent implements OnInit {
 
   selectedIndex = 0;
 
-  constructor(private router: Router, private contestService: ContestService) { }
+  private _isParticipant = false;
+
+  constructor(
+    private router: Router,
+    private contestService: ContestService,
+    private authService: AuthService,
+    private userService: UserService,
+    private snackBarService: SnackBarService
+  ) { }
 
   ngOnInit(): void {
     let splittedUrl = this.router.url.split('/');
@@ -37,6 +48,12 @@ export class ContestComponent implements OnInit {
     // const end = new Date(new Date().setMinutes(this.currentDate.getMinutes() + 1));
     this.contestService.getContestById(id).subscribe((res: any) => {
       this.contestInfo = res[0];
+
+      for(let i=0; i<this.contestInfo?.participants?.length; i++) {
+        if(this.userService.userInfo._id.toString() == this.contestInfo?.participants[i]?._id.toString()) {
+          this._isParticipant = true;
+        }
+      }
       console.log(this.contestInfo);
       this.contestInfo.startDate = new Date(this.contestInfo.startDate);
       this.contestInfo.endDate = new Date(this.contestInfo.endDate);
@@ -75,6 +92,23 @@ export class ContestComponent implements OnInit {
   openProblem(index: number) {
     this.selectedIndex = 3; // Открыть Problem tab
     this.contestProblemComponent.setContestProblems(this.contestProblemComponent.contestProblems[index]);
+  }
+
+  get isLoggedIn() { return this.authService.isLoggedIn() }
+
+  get isOwner() { return this.contestInfo?.owner?._id == this.userService.userInfo._id }
+
+  get isStarted() { return this.contestInfo?.startDate < new Date().getTime() }
+
+  get isParticipant() { 
+    return this._isParticipant;
+   }
+
+  joinContest() {
+    this.contestService.joinContest(this.contestInfo._id.toString()).subscribe((res) => {
+      this._isParticipant = true;
+      this.snackBarService.openSuccessSnackBar("Joined to contest successfully");
+    })
   }
 
 }

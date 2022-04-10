@@ -28,3 +28,11 @@
         </mat-tab>
     </mat-tab-group>
 </mat-card>
+<div class="contest-manipulate-btn" *ngIf="isLoggedIn">
+    <button *ngIf="!isOwner && !isParticipant" (click)="joinContest()" mat-fab color="primary" aria-label="Join contest">
+        <mat-icon>person_add</mat-icon>
+    </button>
+    <button *ngIf="isOwner && !isStarted" mat-fab color="primary" aria-label="Edit contest">
+        <mat-icon>edit</mat-icon>
+    </button>
+</div>

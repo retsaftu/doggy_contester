@@ -23,7 +23,7 @@ export class UserLoginInfo {
 }
 
 export class UserBasicInfo {
-    constructor(public username: string, public _id: string) {}
+    constructor(public username: string, public _id: string, public avatar?: string) {}
 }
 
 export class UserLeaderboard {
