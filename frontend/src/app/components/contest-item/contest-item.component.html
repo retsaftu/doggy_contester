@@ -4,7 +4,7 @@
         <span class="contest-item total_participants"><span class="content">{{contestInfo?.total_participants}}</span>
             <mat-icon aria-hidden="false" aria-label="Number of participants">people</mat-icon>
         </span>
-        <span class="contest-item owner">
+        <span class="contest-item owner" (click)="openOwnerPorfile()">
             <mat-icon aria-hidden="false">person</mat-icon><span class="content">{{contestInfo?.owner?.name}}</span>
         </span>
         <span class="contest-item dateTime"><span class="content">{{contestInfo?.startDate | date:'HH:mm, MMM d,y'}}</span><span class="content">{{contestInfo?.duration}}</span></span>

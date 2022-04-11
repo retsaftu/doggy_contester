@@ -132,7 +132,7 @@ export class HomeComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((res) => {
-      if(res.created) {
+      if(res?.created) {
         this.contestService.getMyContest().subscribe((res: ContestInfo[]) => {
           this.userContests = res;
         })

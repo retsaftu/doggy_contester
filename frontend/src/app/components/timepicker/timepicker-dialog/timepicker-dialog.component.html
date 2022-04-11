@@ -1,7 +1,8 @@
 <h3 mat-dialog-title>Enter time</h3>
 <div mat-dialog-content class="datetime-wrapper">
     <div class="datetime-input">
-        <app-input-number [value]="hours" [min]="0" [max]="23" [cycle]="true" (changeValueEvent)="changeHours($event)" ></app-input-number>
+        <app-input-number *ngIf="isTime" [value]="hours" [min]="0" [max]="23" [cycle]="true" (changeValueEvent)="changeHours($event)" ></app-input-number>
+        <app-input-number *ngIf="!isTime" [value]="hours" [min]="0" [cycle]="true" (changeValueEvent)="changeHours($event)" ></app-input-number>
     </div>
     <span class="datetime-divider">:</span>
     <div class="datetime-input">

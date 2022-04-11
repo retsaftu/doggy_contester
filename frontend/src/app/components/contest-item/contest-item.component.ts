@@ -16,6 +16,10 @@ export class ContestItemComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  openOwnerPorfile() {
+    this.router.navigate([`/user/${this.contestInfo?.owner?._id}`])
+  }
+
   enterContest() {
     this.router.navigate([`/contest/${this.contestInfo?._id}`])
   }

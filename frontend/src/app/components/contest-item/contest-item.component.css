@@ -37,6 +37,7 @@ mat-card div {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 .dateTime {

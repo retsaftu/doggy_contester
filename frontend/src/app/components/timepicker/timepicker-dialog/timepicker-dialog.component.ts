@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, Input } from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MainComponent } from '../../main/main.component';
 import { Time } from 'src/app/entities/time';
@@ -13,6 +13,7 @@ export class TimepickerDialogComponent implements OnInit {
   hours = 0;
   minutes = 0;
   time = new Time('00', '00');
+  isTime = true;
 
   constructor(
     public dialogRef: MatDialogRef<MainComponent>,
@@ -24,6 +25,9 @@ export class TimepickerDialogComponent implements OnInit {
     this.minutes = parseInt(this.data.minutes);
     this.time.hours = this.data.hours;
     this.time.minutes = this.data.minutes;
+    if(this.data.isTime == false ) {
+      this.isTime = this.data.isTime;
+    }
   }
 
   changeHours(event: any) {

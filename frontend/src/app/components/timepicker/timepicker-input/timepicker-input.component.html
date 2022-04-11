@@ -4,8 +4,8 @@
      (focusin)="onFocusIn($event)"
      (focusout)="onFocusOut($event)">
   <input class="example-tel-input-element"
-         formControlName="hours" size="2"
-         maxLength="2"
+         formControlName="hours" [size]="sizeForHours"
+         [maxLength]="maxLengthForHours"
          aria-label="Hours"
          (input)="_handleInput(parts.controls['hours'], minutes)"
          #hours>

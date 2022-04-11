@@ -25,12 +25,16 @@ import {
 import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '@angular/material/form-field';
 import {Subject} from 'rxjs';
 
-export function timeValidator(timeValidatorType: TimeValidatorType): ValidatorFn {
+export function timeValidator(timeValidatorType: TimeValidatorType, isTime?: boolean): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     if(timeValidatorType == TimeValidatorType.HOURS) {
       const hours = parseInt(control.value);
       // console.log(`hours ${hours}`)
-      return hours >= 0 && hours <= 23 ? null : {hours: {value: control.value}};
+      if(isTime) {
+        return hours >= 0 && hours <= 23 ? null : {hours: {value: control.value}};
+      } else {
+        return hours >= 0 ? null : {hours: {value: control.value}};
+      }
     } else if(timeValidatorType == TimeValidatorType.MINUTES) {
       const minutes = parseInt(control.value);
       // console.log(`minutes ${minutes}`);
@@ -82,6 +86,11 @@ export class TimepickerInputComponent implements ControlValueAccessor, MatFormFi
   }
 
   @Input('aria-describedby') userAriaDescribedBy?: string;
+
+  @Input('isTime') isTime = true;
+
+  maxLengthForHours = 2;
+  sizeForHours = 2;
 
   @Input()
   get placeholder(): string {
@@ -142,13 +151,18 @@ export class TimepickerInputComponent implements ControlValueAccessor, MatFormFi
     @Optional() @Self() public ngControl: NgControl,
   ) {
     this.parts = formBuilder.group({
-      hours: [null, [Validators.required, Validators.minLength(2), Validators.maxLength(2), timeValidator(TimeValidatorType.HOURS)]],
+      hours: [null, [Validators.required, Validators.minLength(this.maxLengthForHours), Validators.maxLength(this.maxLengthForHours), timeValidator(TimeValidatorType.HOURS, this.isTime)]],
       minutes: [null, [Validators.required, Validators.minLength(2), Validators.maxLength(2), timeValidator(TimeValidatorType.MINUTES )]],
     });
 
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }
+  }
+
+  ngOnChange() {
+    this.maxLengthForHours = this.isTime ? 2 : 3;
+    this.sizeForHours = this.isTime ? 2 : 3;
   }
 
   ngOnDestroy() {

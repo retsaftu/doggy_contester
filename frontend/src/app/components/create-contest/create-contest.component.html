@@ -129,6 +129,6 @@
 
         </div>      
 
-        <button type="submit" (click)="createContest()" mat-flat-button color="primary">Create</button>
+        <button type="submit" (click)="createContest()" mat-flat-button color="primary" [disabled]="!isAllContestFieldsAreValid()">Create</button>
     </form>
 </mat-dialog-content>

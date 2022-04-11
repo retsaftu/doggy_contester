@@ -8,7 +8,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 export class InputNumberComponent implements OnInit {
 
   @Input() min = 0;
-  @Input() max = 24;
+  @Input() max?: number;
 
   @Input() cycle = false;
 
@@ -27,8 +27,8 @@ export class InputNumberComponent implements OnInit {
   }
 
   increment() {
-    if(this.value < this.max) {
-      this.value ++;
+    if(!this.max || this.value < this.max) {
+      this.value++;
     } else if(this.value == this.max && this.cycle) {
       this.value = this.min;
     }
@@ -42,7 +42,7 @@ export class InputNumberComponent implements OnInit {
       event.target.value = this.min.toString();
       this.value = this.min;
     }
-    else if(value > this.max) {
+    else if(!!this.max && value > this.max) {
       event.target.value = this.max.toString();
       this.value = this.max;
     } else if(!!value) {
@@ -58,7 +58,7 @@ export class InputNumberComponent implements OnInit {
   decrement() {
     if(this.value < this.min) {
       this.value --;
-    } else if(this.value == this.min && this.cycle) {
+    } else if(!!this.max && this.value == this.min && this.cycle) {
       this.value = this.max;
     }
     this.valueStr = this.getFormatedValue(this.value);

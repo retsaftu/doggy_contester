@@ -100,7 +100,11 @@ export class CreateContestComponent implements OnInit {
   openDurationpicker() {
     const dialogRef = this.dialog.open(TimepickerDialogComponent, {
       width: '20%',
-      data: this.form.value.duration,
+      data: {
+        hours: this.form.value.duration.hours,
+        minutes: this.form.value.duration.minutes,
+        isTime: false
+      },
     });
 
     dialogRef.afterClosed().subscribe(result => {

@@ -32,10 +32,14 @@ export class Time {
 
     private _hours: string = '00';
     private _minutes: string = '00';
-  
-    constructor(hours: string, minutes: string) {
+    public isTime: boolean = true;
+
+    constructor(hours: string, minutes: string,  isTime?: boolean) {
       this.hours = hours;
       this.minutes = minutes;
+      if(isTime == false) {
+        this.isTime = isTime;
+      }
     }
   
     set hours(hours: string) {
