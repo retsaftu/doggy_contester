@@ -26,8 +26,12 @@ export class NavigationComponent implements OnInit {
   private readonly darkThemeClass = 'theme-dark';
   private readonly DEFAULT_CLASSES = 'mat-typography mat-app-background' // Без этого ничего не работает
 
-  constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2,
-              private authService: AuthService, private router: Router, private userService: UserService) { 
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private renderer: Renderer2,
+    private authService: AuthService,
+    private router: Router, 
+    private userService: UserService) { 
       this.router.events.subscribe((val) => {
         if(val instanceof NavigationStart) {
           let splitedRoute = val.url.split('/');
@@ -51,6 +55,10 @@ export class NavigationComponent implements OnInit {
     const currentTheme = localStorage.getItem(environment.themeField);
     this.isDark = currentTheme == this.darkThemeClass;
     this.renderer.setAttribute(this.document.body, 'class',  this.DEFAULT_CLASSES + ' ' + currentTheme);
+
+    this.userService.changeEmitted$.subscribe((info) => {
+      this.userInfo = info;
+    })
   }
 
   ngOnChange() {

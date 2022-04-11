@@ -15,7 +15,7 @@
                 <div *ngIf="!userInfo?.avatar" class="navigation-profile-wrapper">
                     <mat-icon>account_circle</mat-icon><span class="username">{{userInfo?.username}}</span>
                 </div>
-                <div *ngIf="userInfo?.avatar" class="navigation-profile-wrapper">
+                <div *ngIf="!!userInfo?.avatar" class="navigation-profile-wrapper">
                    <div class="navigation-profile-avatar-img"><img [src]="userInfo?.avatar"></div><span class="username">{{userInfo?.username}}</span>
                 </div>
                 <mat-menu #menu="matMenu">

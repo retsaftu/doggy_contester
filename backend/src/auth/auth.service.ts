@@ -56,11 +56,13 @@ export class AuthService {
     const username = user.username;
     const test = user
     const payload = { email, _id, username };
+    const avatar = user.avatar;
     console.log(`email`, email);
     return {
       access_token: await this.jwtService.signAsync(payload),
       userId: user._id,
-      username: user.username
+      username: user.username,
+      avatar: user.avatar
     };
   }
 

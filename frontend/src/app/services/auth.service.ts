@@ -33,7 +33,7 @@ export class AuthService {
     return this.http.post(`/api/auth/login`, userLoginInfo)
       .pipe(
         tap((response: any) => {
-          this.userService.userInfo = new UserBasicInfo(response['username'], response['userId'])
+          this.userService.userInfo = new UserBasicInfo(response['username'], response['userId'], response['avatar'])
           this.setToken(response['access_token'], response['expirationTime']);
         })
       )

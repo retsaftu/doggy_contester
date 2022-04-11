@@ -23,9 +23,14 @@ export class UserLoginInfo {
 }
 
 export class UserBasicInfo {
-    constructor(public username: string, public _id: string, public avatar?: string) {}
+    constructor(public username: string, public _id: string, public avatar?: string | null, public about?: string) {}
+}
+
+export class UserProfileInfo {
+    constructor(public name: string, public username: string, public about?: string) {}
 }
 
 export class UserLeaderboard {
     constructor(public username: string, public name: string, public solved: number) {}
 }
+

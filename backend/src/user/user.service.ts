@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto, UpdateUserProfileDto } from './dto/update-user.dto';
 import * as mongodb from 'mongodb';
 import { JwtService } from '@nestjs/jwt';
 
@@ -27,6 +27,21 @@ export class UserService {
         }
       }
     ]).toArray())[0];
+  }
+
+  async deleteAvatar(userId: string) {
+    return (await this.db.collection('users').updateOne(
+      { _id: new mongodb.ObjectId(userId) },
+      { $unset: { avatar: 1 } }
+    ))
+  }
+
+  async updateUserProfile(userId: string, userProfile: any) {
+    console.log(userProfile);
+    return (await this.db.collection('users').findOneAndUpdate(
+      {_id: new mongodb.ObjectId(userId) },
+      { $set: userProfile }
+    ))
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

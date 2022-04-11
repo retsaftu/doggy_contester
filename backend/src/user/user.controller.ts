@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Put } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto, UpdateUserProfileDto } from './dto/update-user.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 @Controller('user')
 export class UserController {
@@ -21,6 +22,21 @@ export class UserController {
   findOne(@Param('id') id: string) {
     console.log(`id`, id);
     return this.userService.findOne(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('deleteAvatar')
+  deleteAvatar(@Req() req: any) {
+    const userId = req.user._id;
+    return this.userService.deleteAvatar(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('updateUserProfile')
+  updateUserProfile(@Req() req: any, @Body() updateUserProfile: UpdateUserProfileDto) {
+    const userId = req.user._id;
+    console.log(updateUserProfile);
+    return this.userService.updateUserProfile(userId, updateUserProfile);
   }
 
   @Patch(':id')

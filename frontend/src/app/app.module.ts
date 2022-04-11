@@ -54,6 +54,7 @@ import { ContestSubmissionComponent } from './components/contest-submission/cont
 import { ContestProblemComponent } from './components/contest-problem/contest-problem.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { UserComponent } from './components/user/user.component';
+import { AvatarDialogComponent } from './components/user/avatar-dialog/avatar-dialog.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { UserComponent } from './components/user/user.component';
     ContestSubmissionComponent,
     ContestProblemComponent,
     LeaderboardComponent,
-    UserComponent
+    UserComponent,
+    AvatarDialogComponent
   ],
   imports: [
     BrowserModule,

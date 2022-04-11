@@ -1,19 +1,53 @@
-<mat-card>
-    <div class="user-wrapper">
+<div class="user-profile-wrapper">
+    <mat-card class="user-personal-info">
+        <div *ngIf="!editMode && isOwner" class="user-profile-edit-btn"><mat-icon (click)="startEdit()">edit</mat-icon></div>
         <div class="user-avtar" click="uploadAvatar()">
-            <label for="user-uploadAvatar">
-                <mat-icon *ngIf="!user?.avatar">account_circle</mat-icon>
-            </label>
-            <label for="user-uploadAvatar" class="user-avatar-picture" *ngIf="user?.avatar">
-                <img [src]="filePath">
-            </label>
-            <input #fileInput id="user-uploadAvatar" type="file" 
-                [accept]=fileType (change)="processFile(fileInput)">
+            <div class="user-avatar-icon" *ngIf="!user?.avatar">
+                <mat-icon (click)="openDialog()">account_circle</mat-icon>
+            </div>
+            <div class="user-avatar-picture" *ngIf="user?.avatar">
+                <img (click)="openDialog()" [src]="filePath">
+            </div>
         </div>
-        <div class="user-info">
-            <h1>{{user?.name}}</h1><br>
-            <h2>{{user?.username}}</h2><br>
-            <h3>{{user?.email}}</h3><br>
+        <!-- <div class="user-info"> -->
+        <h1 *ngIf="!editMode">{{user?.name}}</h1>
+        <h2 *ngIf="!editMode">{{user?.username}}</h2>
+        <div *ngIf="!editMode" class="user-profile-about">
+            <h4>Email</h4>
+            <h3><mat-icon> email</mat-icon><span class="user-profile-email-content">{{user?.email}}</span></h3>
         </div>
-    </div>
-</mat-card>
+        <div *ngIf="!!user?.about && !editMode" class="user-profile-about">
+            <h4>About</h4>
+            <p *ngIf="!editMode">{{user?.about}}</p>
+        </div>
+
+        <form *ngIf="editMode" class="user-profile-edit-form" [formGroup]="form">
+            <mat-form-field appearance="fill" class="user-profile-edit-form-input">
+                <mat-label>Name</mat-label>
+                <input type="text" formControlName="name" matInput/>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="user-profile-edit-form-input">
+                <mat-label>Username</mat-label>
+                <input type="text" formControlName="username" matInput required/>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="user-profile-edit-form-input">
+                <mat-label>About</mat-label>
+                <textarea formControlName="about" matInput></textarea>
+            </mat-form-field>
+        </form>
+
+        <div *ngIf="editMode" class="user-profile-buttons">
+            <button mat-raised-button color="primary" (click)="saveChanges()" [disabled]="!isSomethingChanged">Save</button>
+            <button mat-raised-button (click)="cancelEditting()">Cancel</button>
+        </div>
+        <!-- </div> -->
+        <!-- <button (click)="saveChanges()">change</button> -->
+    </mat-card>
+    <mat-card>
+        <div>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ex aliquam commodi libero eaque minus beatae officiis? Natus eveniet eum voluptates dolores adipisci rerum error fuga, magni, esse exercitationem, distinctio ipsa!
+        </div>
+    </mat-card>
+</div>

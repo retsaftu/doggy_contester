@@ -1,0 +1,14 @@
+
+<h1 mat-dialog-title>Upload avatar</h1>
+<div mat-dialog-content>
+    <label class="user-uploadAvatar-label" for="user-uploadAvatar">
+        <button mat-raised-button color="primary"><label for="user-uploadAvatar">Upload avatar </label></button>
+    </label>
+    <button mat-raised-button (click)="setDefaultAvatar()">Set avatar to default</button>
+    
+    <input #fileInput id="user-uploadAvatar" type="file" 
+                    [accept]=fileType (change)="processFile(fileInput)">
+</div>            
+<div mat-dialog-actions>
+    <button mat-button (click)="cancel()">Cancel</button>
+</div>

@@ -1,0 +1,12 @@
+#user-uploadAvatar {
+    display: none;
+}
+.user-uploadAvatar-label {
+    margin-right: 2em;
+    height: fit-content;
+    width: fit-content;
+    cursor: pointer;
+}
+.user-uploadAvatar-label label {
+    cursor: pointer;
+}
