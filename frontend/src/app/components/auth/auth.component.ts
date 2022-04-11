@@ -68,16 +68,22 @@ export class AuthComponent implements OnInit {
   }
 
   registerByGoogleAccount() {
-    console.log('rafael');
-
+    this.isRegistrationLoading = true;
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
     this.socialAuthService.authState.subscribe((user) => {
       const email = user.email;
       const username = email.substring(0, email.indexOf('@'));
-      const registerUserInfo = new UserRegistrationInfo(username, email, user.name);
-      this.authService.registerByGoogleAccount(registerUserInfo, user.authToken, user.response?.expires_at).subscribe((res) => {
-        console.log(`res`, res);
-      }) // TODO: обработать ответ
+      const photo = user.photoUrl;
+      const registerUserInfo = new UserRegistrationInfo(username, email, user.name, username, photo);
+      if(this.isRegistrationLoading) {
+        this.isRegistrationLoading = false;
+        this.authService.register(registerUserInfo).subscribe((res) => {
+          this.authService.login(new UserLoginInfo(email, username)).subscribe((res) => {
+            this.router.navigate([''])
+            this.snackBarService.openWarnSnackBar("Change your password in settings! Your current password is your username");
+          })
+        })
+      }
     });
   }
 
@@ -93,7 +99,7 @@ export class AuthComponent implements OnInit {
     this.authService.register(registerUserInfo).subscribe({
       next: (res) => {
         console.log(res);
-        this.snackBarService.openSuccessSnackBar("Registered successfully!");
+        this.snackBarService.openSuccessSnackBar("Registered successfully!", 5000);
         this.isRegistrationLoading = false;
         this.clearRegistrationForm();
       },
@@ -107,7 +113,9 @@ export class AuthComponent implements OnInit {
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
     this.socialAuthService.authState.subscribe((user) => {
       console.log(user);
-      this.authService.loginByGoogleAccount(user.authToken, user.response?.expires_at) // TODO: обработать ответ
+      this.authService.loginByGoogleAccount(user.email).subscribe((res) => {
+        this.router.navigate([''])
+      })
     });
   }
 

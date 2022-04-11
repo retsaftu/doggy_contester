@@ -35,7 +35,7 @@ export class SettingsPasswordComponent implements OnInit {
       return;
     }
     this.userService.changePassword(this.oldPassword?.value, this.newPasswrod?.value).subscribe((res) => {
-      this.snackBarService.openSuccessSnackBar('Password changed successfully')
+      this.snackBarService.openSuccessSnackBar('Password changed successfully', 5000)
       this.form.get('oldPassword')?.reset('');
       this.form.get('newPassword')?.reset('');
     })

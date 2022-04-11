@@ -16,14 +16,18 @@ export class AuthService {
   async createUser(dto: RegisterDto) {
     const salt = await genSalt(10);
 
-    return await this.db.collection('users').insertOne(
-      {
-        name: dto.name,
-        username: dto.username,
-        email: dto.email,
-        passwordHash: await hash(dto.password, salt)
-      }
-    );
+    const user = {
+      name: dto.name,
+      username: dto.username,
+      email: dto.email,
+      passwordHash: await hash(dto.password, salt)
+    }
+
+    if(dto.avatar) {
+      user['avatar'] = dto.avatar;
+    }
+
+    return await this.db.collection('users').insertOne(user);
   }
 
   async findUser(email: string) {
@@ -64,6 +68,14 @@ export class AuthService {
       username: user.username,
       avatar: user.avatar
     };
+  }
+
+  async loginByGoogleAccount(email: string) {
+    const user = await this.findUser(email);
+    if (!user) {
+      throw new UnauthorizedException(USER_NOT_FOUND_ERROR);
+    }
+    return this.login(user)
   }
 
 }

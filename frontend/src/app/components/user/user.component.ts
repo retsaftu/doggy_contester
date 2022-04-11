@@ -122,7 +122,7 @@ export class UserComponent implements OnInit {
       this.userService.updateUserProfile(userProfileInfo).subscribe(
       {
         next: (res: any) => {
-          this.snackBarService.openSuccessSnackBar("Updated successfully");
+          this.snackBarService.openSuccessSnackBar("Updated successfully", 5000);
           this.editMode = false;
 
           if(this.formName != this.user.name) {

@@ -1,6 +1,6 @@
 import { BadRequestException, Body, Controller, HttpCode, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthDto } from "./dto/auth.dto";
+import { AuthDto, LoginByGoogleAccountDto } from "./dto/auth.dto";
 import { ALREADY_REGISTERED_ERROR } from './auth.constants';
 import { RegisterDto } from './dto/register.dto';
 import { AuthGoogleDto } from './dto/authGoogle.dto';
@@ -20,14 +20,20 @@ export class AuthController {
     return this.authService.createUser(dto);
   }
 
-
-
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
   @Post('login')
   async login(@Body() { email, password }: AuthDto) {
     const { user } = await this.authService.validateUser(email, password);
     return this.authService.login(user);
+
+  }
+
+  @UsePipes(new ValidationPipe())
+  @HttpCode(200)
+  @Post('loginByGoogleAccount')
+  async loginByGoogleAccount(@Body() { email }: LoginByGoogleAccountDto) {
+    return this.authService.loginByGoogleAccount(email);
 
   }
 

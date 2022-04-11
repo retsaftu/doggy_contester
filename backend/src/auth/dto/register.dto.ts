@@ -12,4 +12,7 @@ export class RegisterDto {
 
 	@IsString()
 	password: string;
+
+	@IsString()
+	avatar: string;
 }

@@ -117,7 +117,7 @@ export class ContestComponent implements OnInit {
   joinContest() {
     this.contestService.joinContest(this.contestInfo._id.toString()).subscribe((res) => {
       this._isParticipant = true;
-      this.snackBarService.openSuccessSnackBar("Joined to contest successfully");
+      this.snackBarService.openSuccessSnackBar("Joined to contest successfully", 5000);
     })
   }
 

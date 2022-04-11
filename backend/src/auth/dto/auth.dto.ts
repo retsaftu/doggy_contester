@@ -7,3 +7,8 @@ export class AuthDto {
 	@IsString()
 	password: string;
 }
+
+export class LoginByGoogleAccountDto {
+	@IsString()
+	email: string;
+}

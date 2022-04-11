@@ -17,32 +17,35 @@ export class SnackBarService {
 
   constructor(private snackBar:MatSnackBar) { }
 
-  openErrorSnackBar(message: string, action?: string) {
-    this.openSnackBar(NotificationType.ERROR, message, action);
+  openErrorSnackBar(message: string, duration?: number, action?: string) {
+    this.openSnackBar(NotificationType.ERROR, message, duration, action);
   }
 
-  openSuccessSnackBar(message: string, action?: string) {
-    this.openSnackBar(NotificationType.SUCCESS, message, action);
+  openSuccessSnackBar(message: string, duration?: number, action?: string) {
+    this.openSnackBar(NotificationType.SUCCESS, message, duration, action);
   }
 
-  openWarnSnackBar(message: string, action?: string) {
-    this.openSnackBar(NotificationType.WARN, message, action);
+  openWarnSnackBar(message: string, duration?: number, action?: string) {
+    this.openSnackBar(NotificationType.WARN, message, duration, action);
   }
 
-  openInfoSnackBar(message: string, action?: string) {
-    this.openSnackBar(NotificationType.INFO, message, action);
+  openInfoSnackBar(message: string, duration?: number, action?: string) {
+    this.openSnackBar(NotificationType.INFO, message, duration, action);
   }
 
-  private openSnackBar(messageType: NotificationType, message: string, action?: string) {
+  private openSnackBar(messageType: NotificationType, message: string, duration?: number, action?: string) {
     if(action == undefined) {
       action = 'Close';
     }
-    this.snackBar.openFromComponent(NotificationComponent, {
-       data: new SnackBarData(message, action, messageType),
-       duration: 5000,
-       horizontalPosition: this.horizontalPosition,
-       verticalPosition: this.verticalPosition,
-       panelClass: 'snackbar'
-    });
+    const settings: any = {
+      data: new SnackBarData(message, action, messageType),
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+      panelClass: 'snackbar'
+    }
+    if(duration) {
+      settings['duration'] = duration;
+    }
+    this.snackBar.openFromComponent(NotificationComponent, settings);
   }
 }

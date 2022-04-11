@@ -322,7 +322,7 @@ export class CreateContestComponent implements OnInit {
 
     this.contestService.createContest(contest).subscribe(({
       next: (res) => {
-        this.snackBarService.openSuccessSnackBar("Contest created succsessfully!");
+        this.snackBarService.openSuccessSnackBar("Contest created succsessfully!", 5000);
         this.dialogRef.close({created: true});
       },
       error: (err) => {
