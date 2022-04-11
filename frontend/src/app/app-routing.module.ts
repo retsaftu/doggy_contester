@@ -7,6 +7,12 @@ import { ContestComponent } from './components/contest/contest.component';
 import { ContestsComponent } from './components/contests/contests.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { UserComponent } from './components/user/user.component';
+import { AuthGuard } from './guards/auth.guard';
+import { SettingsMainPageComponent } from './components/settings-page/settings-main-page/settings-main-page.component';
+import { SettingsPublicProfileComponent } from './components/settings-page/settings-public-profile/settings-public-profile.component';
+import { SettingsAppearanceComponent } from './components/settings-page/settings-appearance/settings-appearance.component';
+import { SettingsEmailComponent } from './components/settings-page/settings-email/settings-email.component';
+import { SettingsPasswordComponent } from './components/settings-page/settings-password/settings-password.component';
 
 const routes: Routes = [
   { path: 'auth', component: AuthComponent },
@@ -33,6 +39,30 @@ const routes: Routes = [
       {
         path: 'user/:id',
         component: UserComponent
+      },
+      {
+        path: '',
+        component: SettingsMainPageComponent,
+        canActivate: [AuthGuard],
+        runGuardsAndResolvers: 'always',
+        children: [
+          {
+            path: 'settings/proflie',
+            component: SettingsPublicProfileComponent
+          },
+          {
+            path: 'settings/appearance',
+            component: SettingsAppearanceComponent
+          },
+          {
+            path: 'settings/email',
+            component: SettingsEmailComponent
+          },
+          {
+            path: 'settings/password',
+            component: SettingsPasswordComponent
+          }
+        ]
       }
     ]
   }

@@ -24,7 +24,7 @@
             <app-contest-submission [contestInfo]="contestInfo"></app-contest-submission>
         </mat-tab> -->
         <mat-tab label="Problem">
-            <app-contest-problem #contestProblem></app-contest-problem>
+            <app-contest-problem [currentProblem]="currentProblem" [problems]="problems"></app-contest-problem>
         </mat-tab>
     </mat-tab-group>
 </mat-card>

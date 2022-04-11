@@ -49,7 +49,7 @@ export class AuthComponent implements OnInit {
   ngOnInit(): void {
 
     if(this.authService.isLoggedIn()) {
-      this.router.navigate(['/home']);
+      this.router.navigate(['']);
     }
 
     // Changing theme

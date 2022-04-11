@@ -14,7 +14,7 @@
         <h2 *ngIf="!editMode">{{user?.username}}</h2>
         <div *ngIf="!editMode" class="user-profile-about">
             <h4>Email</h4>
-            <h3><mat-icon> email</mat-icon><span class="user-profile-email-content">{{user?.email}}</span></h3>
+            <h3><mat-icon> mail_outline</mat-icon><span class="user-profile-email-content">{{user?.email}}</span></h3>
         </div>
         <div *ngIf="!!user?.about && !editMode" class="user-profile-about">
             <h4>About</h4>

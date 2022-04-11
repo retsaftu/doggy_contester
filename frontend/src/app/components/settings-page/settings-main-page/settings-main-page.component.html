@@ -1,0 +1,49 @@
+<div class="settings-wrapper">
+    <mat-card class="settings-list">
+        <div class="settings-profile">
+            <div class="settings-profile-avatar">
+                <div class="settings-proflie-avatar-wrapper">
+                    <img class="settings-profile-avatar-picture" [src]="user?.avatar">
+                </div>
+            </div>
+            <div class="settings-profile-name-username">
+                <h1>{{user?.name}}</h1>
+                <h2>{{user?.username}}</h2>
+            </div>
+        </div>
+        <mat-divider></mat-divider>
+        <ul>
+            <li>
+                <span class="settings-list-content">
+                    <mat-icon>person_outline</mat-icon>
+                    <span><a routerLink="/settings/proflie">Public profile</a></span>
+                </span>
+                <mat-divider></mat-divider>
+            </li>
+            <li>
+                <span class="settings-list-content">
+                    <mat-icon>brush</mat-icon>
+                    <span><a routerLink="/settings/appearance">Appearance</a></span>
+                </span>
+                <mat-divider></mat-divider>
+            </li>
+            <li>
+                <span class="settings-list-content">
+                    <mat-icon> mail_outline</mat-icon>
+                    <span routerLink="/settings/email"><a>Email</a></span>
+                </span>
+                <mat-divider></mat-divider>
+            </li>
+            <li>
+                <span class="settings-list-content">
+                    <mat-icon>lock</mat-icon>
+                    <span routerLink="/settings/password"><a>Password</a></span>
+                </span>
+                <mat-divider></mat-divider>
+            </li>
+        </ul>
+    </mat-card>
+    <mat-card class="settings-page">
+        <router-outlet></router-outlet>
+    </mat-card>
+</div>

@@ -79,6 +79,10 @@ export class NavigationComponent implements OnInit {
     this.router.navigate(['/auth'])
   }
 
+  openSettings() {
+    this.router.navigate(['/settings/proflie'])
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/auth'])

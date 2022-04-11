@@ -27,9 +27,9 @@ export class ContestProblemComponent implements OnInit {
     private fileService: FileService,
   ) { }
 
-  contestProblems: any[] = [];
+  @Input() problems: any[] = [];
 
-  currentProblem!: any;
+  @Input() currentProblem!: any;
 
   fileType!: string;
 
@@ -53,9 +53,15 @@ export class ContestProblemComponent implements OnInit {
     console.log('problem contests', this.currentProblem);
   }
 
-  setContestProblems(contestProblems: any) {
-    console.log('setContestProblems', contestProblems);
-  }
+  // setContestProblems(contestProblems: any) {
+  //   console.log(contestProblems);
+  //   this.contestProblems = contestProblems;
+  // }
+
+  // setCurrentProblem(currentproblem: any) {
+  //   console.log(currentproblem)
+  //   this.currentProblem = currentproblem;
+  // }
 
   generationList() {
     const problems: ProblemContent[] = [];

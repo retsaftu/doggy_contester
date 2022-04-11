@@ -83,4 +83,8 @@ export class UserService {
   updateUserProfile(userProfileInfo: UserProfileInfo) {
     return this.http.put('/api/user/updateUserProfile', userProfileInfo)
   }
+
+  changePassword(oldPassword: string, newPassword: string) {
+    return this.http.put('/api/user/changePassword', {oldPassword: oldPassword, newPassword: newPassword })
+  }
 }

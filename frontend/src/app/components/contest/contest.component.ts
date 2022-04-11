@@ -18,7 +18,7 @@ export class ContestComponent implements OnInit {
 
   currentProgress = 0;
 
-  @ViewChild('contestProblem') contestProblemComponent!: ContestProblemComponent;
+  // @ViewChild('contestProblem') contestProblemComponent!: ContestProblemComponent;
 
   private currentDate = new Date();
 
@@ -29,6 +29,10 @@ export class ContestComponent implements OnInit {
   contestInfo: any;
 
   selectedIndex = 0;
+
+  currentProblem: any;
+
+  problems: any[] = [];
 
   private _isParticipant = false;
 
@@ -41,6 +45,9 @@ export class ContestComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+  }
+
+  ngAfterViewInit() {
     let splittedUrl = this.router.url.split('/');
     const id = splittedUrl[splittedUrl.length - 1];
     console.log(`id`, id);
@@ -57,8 +64,10 @@ export class ContestComponent implements OnInit {
       console.log(this.contestInfo);
       this.contestInfo.startDate = new Date(this.contestInfo.startDate);
       this.contestInfo.endDate = new Date(this.contestInfo.endDate);
-      this.contestProblemComponent.contestProblems = this.contestInfo.tasks;
-      this.contestProblemComponent.currentProblem = this.contestInfo.tasks[0];
+      this.currentProblem = this.contestInfo.tasks[0]
+      this.problems = this.contestInfo.tasks;
+      // this.contestProblemComponent.setContestProblems(this.contestInfo.tasks);
+      // this.contestProblemComponent.setCurrentProblem(this.contestInfo.tasks[0]);
       this.upgradeIntervalTicker = Math.round(getDifferenceInSecondsWithoutAbs(new Date(this.contestInfo.startDate), new Date(this.contestInfo.endDate)) * 10); // Посчитать размер тика (10 = 0.01(1%) * 1000(милисекунды))
 
       this.currentProgress = this.getCurrentProgress();
@@ -91,7 +100,8 @@ export class ContestComponent implements OnInit {
 
   openProblem(index: number) {
     this.selectedIndex = 3; // Открыть Problem tab
-    this.contestProblemComponent.setContestProblems(this.contestProblemComponent.contestProblems[index]);
+    this.currentProblem = this.problems[index];
+    // this.contestProblemComponent.setCurrentProblem(this.contestProblemComponent.contestProblems[index]);
   }
 
   get isLoggedIn() { return this.authService.isLoggedIn() }
@@ -102,7 +112,7 @@ export class ContestComponent implements OnInit {
 
   get isParticipant() { 
     return this._isParticipant;
-   }
+  }
 
   joinContest() {
     this.contestService.joinContest(this.contestInfo._id.toString()).subscribe((res) => {

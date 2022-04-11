@@ -55,6 +55,11 @@ import { ContestProblemComponent } from './components/contest-problem/contest-pr
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { UserComponent } from './components/user/user.component';
 import { AvatarDialogComponent } from './components/user/avatar-dialog/avatar-dialog.component';
+import { SettingsMainPageComponent } from './components/settings-page/settings-main-page/settings-main-page.component';
+import { SettingsPublicProfileComponent } from './components/settings-page/settings-public-profile/settings-public-profile.component';
+import { SettingsAppearanceComponent } from './components/settings-page/settings-appearance/settings-appearance.component';
+import { SettingsEmailComponent } from './components/settings-page/settings-email/settings-email.component';
+import { SettingsPasswordComponent } from './components/settings-page/settings-password/settings-password.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +82,12 @@ import { AvatarDialogComponent } from './components/user/avatar-dialog/avatar-di
     ContestProblemComponent,
     LeaderboardComponent,
     UserComponent,
-    AvatarDialogComponent
+    AvatarDialogComponent,
+    SettingsMainPageComponent,
+    SettingsPublicProfileComponent,
+    SettingsAppearanceComponent,
+    SettingsEmailComponent,
+    SettingsPasswordComponent,
   ],
   imports: [
     BrowserModule,

@@ -19,3 +19,11 @@ export class UserProfileDto {
 }
 
 export class UpdateUserProfileDto extends PartialType(UserProfileDto) {}
+
+export class ChangePasswordDto {
+    @IsString()
+    oldPassword: string;
+
+    @IsString()
+    newPassword: string;
+}
