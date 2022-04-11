@@ -15,7 +15,7 @@
         <div class="datetime">
             <mat-form-field appearance="fill">
                 <mat-label>Duration</mat-label>
-                <app-timepicker-input #durationinput formControlName="duration" required></app-timepicker-input>
+                <app-timepicker-input #durationinput formControlName="duration" required [isTime]="false"></app-timepicker-input>
                 <mat-icon class="icon-button" matSuffix (click)="openDurationpicker()">access_time</mat-icon>
             </mat-form-field>
 

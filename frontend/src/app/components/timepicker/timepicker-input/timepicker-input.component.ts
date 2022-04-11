@@ -30,11 +30,11 @@ export function timeValidator(timeValidatorType: TimeValidatorType, isTime?: boo
     if(timeValidatorType == TimeValidatorType.HOURS) {
       const hours = parseInt(control.value);
       // console.log(`hours ${hours}`)
+      console.log(isTime)
       if(isTime) {
         return hours >= 0 && hours <= 23 ? null : {hours: {value: control.value}};
-      } else {
-        return hours >= 0 ? null : {hours: {value: control.value}};
-      }
+      } 
+      return hours >= 0 ? null : {hours: {value: control.value}};
     } else if(timeValidatorType == TimeValidatorType.MINUTES) {
       const minutes = parseInt(control.value);
       // console.log(`minutes ${minutes}`);
@@ -160,9 +160,20 @@ export class TimepickerInputComponent implements ControlValueAccessor, MatFormFi
     }
   }
 
-  ngOnChange() {
+  ngOnInit() {
+    console.log(this.isTime);
     this.maxLengthForHours = this.isTime ? 2 : 3;
     this.sizeForHours = this.isTime ? 2 : 3;
+    this.parts.get('hours')?.clearValidators();
+    this.parts.get('horus')?.addValidators([Validators.required, Validators.minLength(this.maxLengthForHours), Validators.maxLength(this.maxLengthForHours), timeValidator(TimeValidatorType.HOURS, this.isTime)]);
+  }
+
+  ngOnChange() {
+    console.log(this.isTime);
+    this.maxLengthForHours = this.isTime ? 2 : 3;
+    this.sizeForHours = this.isTime ? 2 : 3;
+    this.parts.get('hours')?.clearValidators();
+    this.parts.addValidators([Validators.required, Validators.minLength(this.maxLengthForHours), Validators.maxLength(this.maxLengthForHours), timeValidator(TimeValidatorType.HOURS, this.isTime)]);
   }
 
   ngOnDestroy() {
