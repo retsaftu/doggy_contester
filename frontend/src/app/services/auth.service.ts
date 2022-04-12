@@ -29,6 +29,10 @@ export class AuthService {
     return this.http.post(`/api/auth/register`, userRegistrationInfo);
   }
 
+  registerByGoogleAccount(userRegistrationInfo: UserRegistrationInfo) {
+    return this.http.post(`/api/auth/registerByGoogleAccount`, userRegistrationInfo);
+  }
+
   login(userLoginInfo: UserLoginInfo) {
     return this.http.post(`/api/auth/login`, userLoginInfo)
       .pipe(
@@ -41,6 +45,16 @@ export class AuthService {
 
   loginByGoogleAccount(email: string) {
     return this.http.post('/api/auth/loginByGoogleAccount', {email: email})
+      .pipe(
+        tap((response: any) => {
+          this.userService.userInfo = new UserBasicInfo(response['username'], response['userId'], response['avatar'])
+          this.setToken(response['access_token'], response['expirationTime']);
+        })
+      );
+  }
+
+  confirmEmail(token: string) {
+    return this.http.post(`/api/auth/confirmEmail/${token}`, null)
       .pipe(
         tap((response: any) => {
           this.userService.userInfo = new UserBasicInfo(response['username'], response['userId'], response['avatar'])

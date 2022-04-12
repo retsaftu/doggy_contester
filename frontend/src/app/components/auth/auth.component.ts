@@ -77,7 +77,7 @@ export class AuthComponent implements OnInit {
       const registerUserInfo = new UserRegistrationInfo(username, email, user.name, username, photo);
       if(this.isRegistrationLoading) {
         this.isRegistrationLoading = false;
-        this.authService.register(registerUserInfo).subscribe((res) => {
+        this.authService.registerByGoogleAccount(registerUserInfo).subscribe((res) => {
           this.authService.login(new UserLoginInfo(email, username)).subscribe((res) => {
             this.router.navigate([''])
             this.snackBarService.openWarnSnackBar("Change your password in settings! Your current password is your username");
@@ -99,7 +99,7 @@ export class AuthComponent implements OnInit {
     this.authService.register(registerUserInfo).subscribe({
       next: (res) => {
         console.log(res);
-        this.snackBarService.openSuccessSnackBar("Registered successfully!", 5000);
+        this.snackBarService.openInfoSnackBar("Registered successfully! Please confirm email", 5000);
         this.isRegistrationLoading = false;
         this.clearRegistrationForm();
       },

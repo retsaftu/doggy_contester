@@ -1,8 +1,8 @@
 {
     "port": 3000,
     "mongodb": {
-        "host": "localhost",
-        "port": 27017,
+        "host": "192.168.66.139",
+        "port": 5000,
         "dbname": "doggy-contester",
         "user": "",
         "password": ""
@@ -10,5 +10,12 @@
     "auth": {
         "secretKey": "test",
         "expiresIn": 43200
+    },
+    "email": {
+        "secretKey": "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"
+    },
+    "client": {
+        "host": "localhost",
+        "port": 4200
     }
 }

@@ -13,9 +13,17 @@ import { SettingsPublicProfileComponent } from './components/settings-page/setti
 import { SettingsAppearanceComponent } from './components/settings-page/settings-appearance/settings-appearance.component';
 import { SettingsEmailComponent } from './components/settings-page/settings-email/settings-email.component';
 import { SettingsPasswordComponent } from './components/settings-page/settings-password/settings-password.component';
+import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 
 const routes: Routes = [
-  { path: 'auth', component: AuthComponent },
+  { 
+    path: 'auth', 
+    component: AuthComponent,
+  },
+  {
+    path: 'auth/confirm',
+    component: ConfirmEmailComponent
+  },
   {
     path: '',
     component: MainComponent,

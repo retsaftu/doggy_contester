@@ -17,12 +17,12 @@
             <app-contest-problems (problemIndexToOpenEvent)="openProblem($event)" [contestInfo]="contestInfo">
             </app-contest-problems>
         </mat-tab>
-        <!-- <mat-tab label="Leaderboard">
+        <mat-tab label="Leaderboard">
             <app-contest-leaderboard [contestInfo]="contestInfo"></app-contest-leaderboard>
-        </mat-tab> -->
-        <!-- <mat-tab label="Submissions">
+        </mat-tab>
+        <mat-tab label="Submissions">
             <app-contest-submission [contestInfo]="contestInfo"></app-contest-submission>
-        </mat-tab> -->
+        </mat-tab>
         <mat-tab label="Problem">
             <app-contest-problem [currentProblem]="currentProblem" [problems]="problems"></app-contest-problem>
         </mat-tab>

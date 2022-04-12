@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, HttpCode, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Controller, HttpCode, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto, LoginByGoogleAccountDto } from "./dto/auth.dto";
 import { ALREADY_REGISTERED_ERROR } from './auth.constants';
@@ -13,6 +13,16 @@ export class AuthController {
   @UsePipes(new ValidationPipe())
   @Post('register')
   async register(@Body() dto: RegisterDto) {
+    const oldUser = await this.authService.findUser(dto.email);
+    if (oldUser) {
+      throw new BadRequestException(ALREADY_REGISTERED_ERROR);
+    }
+    return this.authService.regiserUser(dto);
+  }
+
+  @UsePipes(new ValidationPipe())
+  @Post('registerByGoogleAccount')
+  async registerByGoogleAccount(@Body() dto: RegisterDto) {
     const oldUser = await this.authService.findUser(dto.email);
     if (oldUser) {
       throw new BadRequestException(ALREADY_REGISTERED_ERROR);
@@ -34,7 +44,11 @@ export class AuthController {
   @Post('loginByGoogleAccount')
   async loginByGoogleAccount(@Body() { email }: LoginByGoogleAccountDto) {
     return this.authService.loginByGoogleAccount(email);
+  }
 
+  @Post('confirmEmail/:token')
+  async confirmEmail(@Param('token') token: string) {
+    return this.authService.confirm(token);
   }
 
 }

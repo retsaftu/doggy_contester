@@ -60,6 +60,7 @@ import { SettingsPublicProfileComponent } from './components/settings-page/setti
 import { SettingsAppearanceComponent } from './components/settings-page/settings-appearance/settings-appearance.component';
 import { SettingsEmailComponent } from './components/settings-page/settings-email/settings-email.component';
 import { SettingsPasswordComponent } from './components/settings-page/settings-password/settings-password.component';
+import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import { SettingsPasswordComponent } from './components/settings-page/settings-p
     SettingsAppearanceComponent,
     SettingsEmailComponent,
     SettingsPasswordComponent,
+    ConfirmEmailComponent,
   ],
   imports: [
     BrowserModule,
