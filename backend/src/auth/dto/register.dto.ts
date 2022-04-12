@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class RegisterDto {
 	@IsString()
@@ -14,5 +14,6 @@ export class RegisterDto {
 	password: string;
 
 	@IsString()
-	avatar: string;
+	@IsOptional()
+	avatar?: string;
 }
