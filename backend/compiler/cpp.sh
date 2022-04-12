@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# ./cpp.sh -c [contestId] -t [taskId] -u [userId]
-
-# ./cpp.sh -c 624d045b77da84a9578f547c -t 624d048dab2c664cb2b104ff -u 624d047e12db1453299521dc
-# contestId 624d045b77da84a9578f547c
-# taskId   624d048dab2c664cb2b104ff
-# userId   624d047e12db1453299521dc
-
 while getopts c:t:u: flag
 do
     case "${flag}" in
@@ -24,38 +17,59 @@ g++ ./../uploads/${contestId}/${taskId}/${userId}/cpp/main.cpp \
 
 # Check if compilation errors occurred and stop execution if they did
 if [ -s ./../uploads/${contestId}/${taskId}/${userId}/cpp/compile.log ]; then
-    echo "Compilation failed"
+    echo "Compilation failed" >> ./../uploads/${contestId}/${taskId}/${userId}/cpp/compile.log
     exit 1
 fi
 
 mkdir ./../uploads/${contestId}/${taskId}/${userId}/cpp/output
-mkdir ./../uploads/${contestId}/${taskId}/${userId}/cpp/error
+mkdir ./../uploads/${contestId}/${taskId}/${userId}/cpp/result
 
 testsAmount=$(ls ./../uploads/${contestId}/${taskId}/${userId}/cpp/input | wc -l)
 
 for i in $(seq 1 $testsAmount); do
+    START=$(date +%s.%3N)
+
     # Run program
     ./../uploads/${contestId}/${taskId}/${userId}/cpp/main \
         < ./../uploads/${contestId}/${taskId}/${userId}/cpp/input/test${i}.in \
         1> ./../uploads/${contestId}/${taskId}/${userId}/cpp/output/test${i}.out \
-        2> ./../uploads/${contestId}/${taskId}/${userId}/cpp/error/test${i}.err
+        2> ./../uploads/${contestId}/${taskId}/${userId}/cpp/compile.log
+
+    END=$(date +%s.%3N)
+
+    DIFF=$(echo "$END - $START" | bc)
 
     # Check if test failed
-    if [ -s ./../uploads/${contestId}/${taskId}/${userId}/cpp/error/test${i}.err ]; then
-        echo "Error on test ${i}"
-        exit 1
+    if [ -s ./../uploads/${contestId}/${taskId}/${userId}/cpp/compile.log ]; then
+        echo "Error while compiling test ${i}" >> ./../uploads/${contestId}/${taskId}/${userId}/cpp/compile.log
     fi
 
-    # Compare user answer with correct answer
-    diff ./../uploads/${contestId}/${taskId}/${userId}/cpp/output/test${i}.out \
-        ./../uploads/${contestId}/${taskId}/${userId}/cpp/correct/test${i}.ans \
-        &> ./../uploads/${contestId}/${taskId}/${userId}/cpp/error/test${i}.err
+    j=1
+    isUserAnswerCorrect=false
 
-    # Check if user answer is correct
-    if [ -s ./../uploads/${contestId}/${taskId}/${userId}/cpp/error/test${i}.err ]; then
-        echo "Wrong answer on test ${i}"
-        exit 1
+    while [[ -f ./../uploads/${contestId}/${taskId}/${userId}/cpp/correct/test${i}.answer${j}.out ]]
+    do
+        # Compare user answer with correct answer
+        diff ./../uploads/${contestId}/${taskId}/${userId}/cpp/output/test${i}.out \
+            ./../uploads/${contestId}/${taskId}/${userId}/cpp/correct/test${i}.answer${j}.out \
+            &> ./../uploads/${contestId}/${taskId}/${userId}/cpp/result/test${i}.out
+
+        # Check if user answer is wrong or correct
+        if [ -s ./../uploads/${contestId}/${taskId}/${userId}/cpp/result/test${i}.out ]; then
+            isUserAnswerCorrect=false
+        else
+            isUserAnswerCorrect=true
+            echo "Correct answer" >> ./../uploads/${contestId}/${taskId}/${userId}/cpp/result/test${i}.out
+            break
+        fi
+
+        ((j++))
+    done
+
+    # Check if user answer is not correct
+    if [ "$isUserAnswerCorrect" = false ]; then
+        echo "Wrong answer" > ./../uploads/${contestId}/${taskId}/${userId}/cpp/result/test${i}.out
     fi
+
+    echo ${DIFF} >> ./../uploads/${contestId}/${taskId}/${userId}/cpp/result/test${i}.out
 done
-
-echo "Compilation successful"

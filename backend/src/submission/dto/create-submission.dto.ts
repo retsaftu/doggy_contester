@@ -1,9 +1,9 @@
 export class CreateSubmissionDto {
-  userId: string;
-  
   taskId: string;
 
   contestId: string;
+
+  userId: string;
 
   timestamp: Date;
 
@@ -13,5 +13,5 @@ export class CreateSubmissionDto {
 
   size: number;
 
-  type: string;
+  extension: string;
 }

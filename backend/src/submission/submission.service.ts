@@ -1,8 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as mongodb from 'mongodb';
-import { threadId } from 'worker_threads';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as readline from 'readline';
+import * as shelljs from 'shelljs';
 import { CreateSubmissionDto } from './dto/create-submission.dto';
-import { UpdateSubmissionDto } from './dto/update-submission.dto';
+import { TaskDto } from './dto/task.dto';
 
 @Injectable()
 export class SubmissionService {
@@ -10,35 +13,144 @@ export class SubmissionService {
     @Inject('DATABASE_CONNECTION') private db: mongodb.Db
   ) { }
 
-  async create(createSubmissionDto: CreateSubmissionDto, file: Express.Multer.File) {
+  async saveSolutionFile(submission: CreateSubmissionDto, file: Express.Multer.File) {
+    const fileUTF8 = file.buffer.toString('utf8');
+    const submissionDirectory = path.join(__dirname, '../../../', 'uploads', submission.contestId, submission.taskId, submission.userId, submission.extension.substring(1));
+    const filename = `main${submission.extension}`;
+    const filepath = path.join(submissionDirectory, filename);
 
-    createSubmissionDto.file = file.buffer.toString('base64');
-    createSubmissionDto.originalName = file.originalname;
-    createSubmissionDto.size = file.size;
-    createSubmissionDto.timestamp = new Date();
+    if (!fs.existsSync(submissionDirectory)) {
+      fs.mkdirSync(submissionDirectory, { recursive: true });
+    }
 
-    const fileType = file.originalname.split('.').pop();
-    createSubmissionDto.type = fileType;
+    fs.writeFile(filepath, fileUTF8, error => {
+      if (error) throw error;
+    });
 
-    console.log(fileType);
-    console.log(`createSubmissionDto`, createSubmissionDto);
-    return this.db.collection('submission').insertOne(createSubmissionDto);
+    const fileBase64 = file.buffer.toString('base64');
+    submission.file = fileBase64;
+    submission.originalName = file.originalname;
+    submission.size = file.size;
+    submission.timestamp = new Date();
+
+    const { insertedId } = await this.db.collection('submission').insertOne(submission);
+
+    return {
+      insertedId,
+      submissionDirectory
+    };
   }
 
-  async findAll() {
-    const submissions = await this.db.collection('submission').find().toArray();
-    submissions.forEach(submission => {
-      const submissionFile = Buffer.from(submission.file, 'base64').toString();
+  async downloadTestCases(taskId: string, contestId: string, submissionDirectory: string) {
+    let multipleCorrectOutput = false;
 
-      const submissionDate = new Date(submission.timestamp).toDateString();
-      const submissionTime = new Date(submission.timestamp).toTimeString();
+    const contest = await this.db.collection('contest').findOne({ _id: new mongodb.ObjectID(contestId) });
+    if (!contest) {
+      return { success: false, message: 'Contest not found' };
+    }
 
-      submission.file = submissionFile;
+    const task = contest.tasks.find(task => task._id.toString() === taskId.toString());
+    if (!task) {
+      return { success: false, message: 'Task not found' };
+    }
 
-      // console.log(`${submissionDate} ${submissionTime}`);
-      // console.log(submissionFile);
-    });
-    return submissions;
+    if (task.tests.length < 1) {
+      return { success: false, message: 'No test cases found' };
+    }
+
+    // Loop through all test cases
+    for (let i = 1; i <= task.tests.length; i++) {
+
+      // One test case
+      const test = task.tests[i - 1];
+
+      // Create directories for test case input and correct output
+      const inputDirectory = path.join(submissionDirectory, 'input');
+      const correctDirectory = path.join(submissionDirectory, 'correct');
+
+      if (!fs.existsSync(inputDirectory)) {
+        fs.mkdirSync(inputDirectory, { recursive: true });
+      }
+
+      if (!fs.existsSync(correctDirectory)) {
+        fs.mkdirSync(correctDirectory, { recursive: true });
+      }
+
+      // Write test case input into a file
+      const inputFilepath = path.join(inputDirectory, `test${i}.in`);
+      const input = test.input.join("\r\n");
+      fs.writeFileSync(inputFilepath, input);
+
+      // If test case has multiple correct answers
+      if (test.output.length > 1) {
+        multipleCorrectOutput = true;
+      }
+
+      // Write test case correct output into a file
+      for (let j = 1; j <= test.output.length; j++) {
+        const correctOutputArray = test.output[j - 1];
+        const correctFilepath = path.join(correctDirectory, `test${i}.answer${j}.out`);
+        const correctOutput = correctOutputArray.join("\r\n");
+        fs.writeFileSync(correctFilepath, correctOutput);
+      }
+    }
+
+    return { success: true, message: 'Test cases successfully downloaded', multipleCorrectOutput };
+  }
+
+  async runTests(contestId: string, taskId: string, userId: string, extension: string) {
+    let compiler = "";
+
+    switch (extension) {
+      case '.cpp':
+        shelljs.cd(path.join(__dirname, '../../../compiler/'));
+        compiler = path.join(__dirname, "../../../compiler/cpp.sh");
+        shelljs.chmod("+x", compiler);
+        break;
+    }
+
+    shelljs.exec(`${compiler} -c ${contestId} -t ${taskId} -u ${userId}`);
+
+    const testResults = [];
+    const resultDirectory = path.join(__dirname, '../../../', 'uploads', contestId, taskId, userId, extension.substring(1), 'result');
+    const resultFiles = fs.readdirSync(resultDirectory);
+    let testNum = 1;
+    for (const file of resultFiles) {
+      const fileStream = fs.createReadStream(path.join(resultDirectory, file));
+
+      const rl = readline.createInterface({
+        input: fileStream,
+        crlfDelay: Infinity
+      });
+
+      const lines = [];
+
+      for await (const line of rl) {
+        lines.push(line);
+      }
+
+      const time = lines[1].split('.').join('');
+      const timeInSeconds = parseInt(time) / 1000;
+
+      testResults.push({
+        test: testNum,
+        message: lines[0],
+        time: timeInSeconds
+      });
+
+      testNum++;
+    }
+    
+    return testResults;
+  }
+
+  async saveTestResults(id: string, testResults: any[]) {
+    this.db.collection('submission').updateOne({ _id: new mongodb.ObjectID(id) }, { $set: { testResults } });
+  }
+
+  async deleteLocalDirectory(contestId: string) {
+    const directory = path.join(__dirname, '../../../uploads', contestId);
+    shelljs.rm('-rf', directory);
   }
 
   async findOne(id: string) {
@@ -47,11 +159,9 @@ export class SubmissionService {
     return submission;
   }
 
-  update(id: number, updateSubmissionDto: UpdateSubmissionDto) {
-    return `This action updates a #${id} submission`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} submission`;
+  async findFile(id: string) {
+    const submission = await this.db.collection('submission').findOne({ _id: new mongodb.ObjectID(id) });
+    submission.file = Buffer.from(submission.file, 'base64').toString('utf8');
+    return submission.file;
   }
 }
