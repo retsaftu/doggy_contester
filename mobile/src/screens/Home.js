@@ -27,7 +27,7 @@ export default class Home extends Component {
         if(token){
             await this.setState({isAuth: true, isLoader:true})
         
-            let urlForMyContests=`http://agis.kz:5002/api/contest/myContests`;
+            let urlForMyContests=`http://${backend.host}:${backend.port}/contest/myContests`;
             await RNFetchBlob.config({
                 trusty : true
                 })
@@ -43,7 +43,7 @@ export default class Home extends Component {
                 });
 
 
-            let urlForMyActive=`http://agis.kz:5002/api/contest/myActiveContests`;
+            let urlForMyActive=`http://${backend.host}:${backend.port}/contest/myActiveContests`;
             await RNFetchBlob.config({
                 trusty : true
                 })
@@ -58,7 +58,7 @@ export default class Home extends Component {
                     await this.setState({isLoader:false, activeContests:data})
                 });
 
-            let urlForCurrent=`http://agis.kz:5002/api/contest/currentContests`;
+            let urlForCurrent=`http://${backend.host}:${backend.port}/contest/currentContests`;
             await RNFetchBlob.config({
                 trusty : true
                 })
@@ -73,7 +73,7 @@ export default class Home extends Component {
                     await this.setState({isLoader:false, currentContests:data})
                 })
         } else {
-            let urlForCurrent=`http://agis.kz:5002/api/contest/currentContests`;
+            let urlForCurrent=`http://${backend.host}:${backend.port}/contest/currentContests`;
             await RNFetchBlob.config({
                 trusty : true
                 })
@@ -121,9 +121,13 @@ export default class Home extends Component {
 
                                     
                                 </View>
-                                <TouchableOpacity style={styles.button}>
+                                <TouchableOpacity 
+                                    style={styles.button}
+                                    onPress={()=>{
+                                        this.props.navigation.push('Navigator', {screen:'OneContest', params: {contest:item}})                          
+                                    }}>
                                     <Text style={styles.buttonText}>
-                                        Enter
+                                        Info
                                     </Text>
                                 </TouchableOpacity>
                             </View>

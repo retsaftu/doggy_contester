@@ -16,7 +16,7 @@ class UserService {
         let user=await this.getUser();
         let id=user.uid;
         // console.log(id)
-        let url=`https://${item}/api/identity/getUserInfo?`+id.toString();
+        let url=`https://${item}/identity/getUserInfo?`+id.toString();
         const response= await RNFetchBlob.config({trusty : true}).fetch('GET', url);
         const json=await response.json();
         let resultUser;

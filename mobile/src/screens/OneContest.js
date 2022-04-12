@@ -1,11 +1,13 @@
 import React, {useEffect, useState, Component} from "react";
 import {View, StyleSheet, ScrollView, TouchableOpacity, Text, FlatList, SectionList} from "react-native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import RNFetchBlob from 'rn-fetch-blob'
 import Loader from "react-native-modal-loader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {backend} from '../../config/config.json'
 import * as Progress from 'react-native-progress';
+import CustomisableAlert, { showAlert, closeAlert } from "react-native-customisable-alert";
 
 
 export default class OneContest extends Component {
@@ -18,8 +20,11 @@ export default class OneContest extends Component {
             indeterminate:true,
             startDate:new Date(2022,3,8,0,8,1),
             endDate:new Date(2022,3,8,0,8,55),
-            contests:[{name:'Contest Title', date:'14:00, 28/03/2022\n3 hours', count: 50}],
-            currentProblem:null
+            contest:{name:'Contest Title', date:'14:00, 28/03/2022\n3 hours', count: 50, tasks:[]},
+            currentProblem:null,
+            currentUserId:'',
+            contest:[],
+            isParticipant:false
         }
 
     }
@@ -30,8 +35,8 @@ export default class OneContest extends Component {
     animate() {
         // let progress = 0;
         // this.setState({ progress });
-        var start = this.state.startDate,
-        end = this.state.endDate,
+        var start = new Date(this.state.startDate),
+        end = new Date(this.state.endDate),
         today = new Date();
         today.setHours(today.getHours()+6)
         console.log(`today`, today.toLocaleDateString());
@@ -60,12 +65,50 @@ export default class OneContest extends Component {
     }
 
     getData=async ()=>{
-        this.animate()
+        await this.setState({isLoader:true})
         const token=await AsyncStorage.getItem('token');
-        if(token){
-            await this.setState({isAuth: true})
+        const currentUserId=await AsyncStorage.getItem('userId');
+        let url=`http://${backend.host}:${backend.port}/contest/${this.props.route.params.contest._id}`
+        try{
+            await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': 'Bearer '+token
+                },
+            })
+            .then(res=>res.json())
+            .then(async (data)=>{
+                console.log(`data`, data);
+                await this.setState({contest:data[0], isLoader:false})
+            })
+        } catch(err){
+            console.log(`err`, err);
+            this.setState({isLoader:false})
         }
-        // let url=`http://agis.kz:5002/api/contest`;
+        this.state.contest.participants.map(ob=>{
+            if(ob._id===currentUserId){
+                this.setState({isParticipant:true})
+            }
+        })
+        if(token){
+            console.log(`this.state.contest`, this.state.contest);
+            await this.setState({
+                isAuth: true, 
+                currentUserId:currentUserId, 
+                contest: this.state.contest,
+                startDate: this.state.contest.startDate,
+                endDate: this.state.contest.endDate})
+        }
+        let startDate=new Date(this.state.contest.startDate)
+        let endDate=new Date(this.state.contest.endDate);
+        await this.setState({
+            renderStartDate:startDate.toLocaleDateString(),
+            renderEndDate:endDate.toLocaleDateString(),
+            })
+        this.animate()
+        await this.setState({isLoader:false})
+        // let url=`http://${backend.host}:${backend.port}/contest`;
         // await this.setState({isLoader:true})
         // await RNFetchBlob.config({
         //     trusty : true
@@ -90,27 +133,79 @@ export default class OneContest extends Component {
         })
     }
 
+    joinContest=async ()=>{
+        const token=await AsyncStorage.getItem('token');
+
+        let url=`http://${backend.host}:${backend.port}/contest/joinContest/${this.state.contest._id}`
+        console.log(`url`, url);
+        console.log(`token`, token);
+        try{
+            await fetch(url, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': 'Bearer '+token
+                },
+            })
+            .then(async (data)=>{
+                this.setState({isLoader:false})
+                showAlert({
+                    title: 'Успешно!',
+                    message: 'Вы присоединились!',
+                    alertType: 'success',
+                    onPress:this.successAlert
+                })
+            })
+        } catch(err){
+            console.log(`err`, err);
+            this.setState({isLoader:false})
+        }
+    }
+
+    successAlert=()=>{
+        this.props.navigation.push('Navigator', {screen:'Home'})
+    }
+
     render(){
+        // return(<View></View>)
+        // console.log(this.state.contest);
         return (
             <>
                 <ScrollView style={styles.body}>
                     <Loader loading={this.state.isLoader} color="black" size='large'/>
+                    <CustomisableAlert
+                        // dismissable
+                        btnStyle={{
+                            backgroundColor:'rgba(240, 5, 0, 1)'
+                        }}
+                        titleStyle={{
+                        fontSize: 24,
+                        fontWeight: 'bold'
+                        }}
+                        textStyle={{
+                            fontSize: 18,
+                        }}
+                        btnLabelStyle={{
+                        color: 'white',
+                        paddingHorizontal: 10,
+                        textAlign: 'center',
+                        }}
+                    />
                     <View style={styles.item}>
-                        <Text style={styles.header}>{this.props.route.params.contest.name}</Text>
+                        <Text style={styles.header}>{this.state.contest.name}</Text>
                         <Progress.Bar style={styles.progressBar} progress={this.state.progress} height={11} width={null} indeterminateAnimationDuration={1000} indeterminate={this.state.indeterminate} color={'rgba(240, 5, 0, 1)'}/>
                         <View style={styles.row}>
-                            <Text style={styles.itemText}>Begin: {this.state.startDate.toLocaleDateString()}</Text>
-                            <Text style={styles.itemText}>End: {this.state.endDate.toLocaleDateString()}</Text>
+                            <Text style={styles.itemText}>Begin: {this.state.renderStartDate}</Text>
+                            <Text style={styles.itemText}>End: {this.state.renderEndDate}</Text>
                         </View>
                     </View>
                     <View style={styles.item}>
                         <View style={styles.row}>
-                            <Text style={styles.itemText}>{this.props.route.params.contest.description}</Text>
+                            <Text style={styles.itemText}>{this.state.contest.description}</Text>
                         </View>
                         <View style={[styles.row, {justifyContent:'space-around', marginVertical:'4%'}]}>
                             {
                                 this.props.route.params.contest.tasks.map((c,i)=>{
-                                    console.log(`c`, c);
                                     return(
                                         <TouchableOpacity key={i} 
                                             style={{marginHorizontal:'5%', padding:'4%', marginVertical:'4%', backgroundColor:'rgba(240, 5, 0, 1)'}}
@@ -134,6 +229,9 @@ export default class OneContest extends Component {
                             <View style={styles.row}>
                                 <Text style={styles.itemText}>{this.state.currentProblem.description}</Text>
                             </View>
+                            <TouchableOpacity style={[styles.button, {borderRadius:30}]}>
+                                <Text style={styles.buttonText}>Upload File</Text>
+                            </TouchableOpacity>
                         </View>
                         :
                         null
@@ -143,17 +241,25 @@ export default class OneContest extends Component {
                 {
                     this.state.isAuth
                     ?
+                    this.state.currentUserId!==this.props.route.params.contest.owner._id
+                    ?
+                    this.state.isParticipant
+                    ?
+                    null
+                    :
                     <TouchableOpacity
                         style={styles.floatingButton}
-                        // onPress={()=>{
-                        //     this.props.navigation.navigate('CreateContest')
-                        // }}
+                        onPress={this.joinContest}
                     >
-                        {/* <Icon name='plus' size={30} color='white' /> */}
-                        <Text style={{color:'white', fontSize:18}}>Join</Text>
+                        <MaterialIcon name='person-add' size={30} color='white'/>
                     </TouchableOpacity>
                     : 
-                    null
+                    <TouchableOpacity
+                        style={styles.floatingButton}
+                    >
+                        <Icon name='pencil' size={30} color='white'/>
+                    </TouchableOpacity>
+                    :null
                 }
             </>
         )

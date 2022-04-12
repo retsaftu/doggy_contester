@@ -7,7 +7,7 @@ class ApiService {
     async getObjectsForMonitoring(type) {
         const item=await AsyncStorage.getItem('url');
         let query = qs.stringify({type});
-        const url=`https://${item}/api/main/getObjectsForMonitoring?${query}`;
+        const url=`https://${item}/main/getObjectsForMonitoring?${query}`;
         let response= await RNFetchBlob.config({trusty : true}).fetch('GET', url);
         let json=response.json();
         return json;
@@ -15,7 +15,7 @@ class ApiService {
     async getLastObjectValues201(startDate, finishDate, sysnames) {
         const item=await AsyncStorage.getItem('url')
         const query = qs.stringify({startDate, finishDate, sysnames});
-        const url=`https://${item}/api/value/getLastObjectValues201?${query}`;
+        const url=`https://${item}/value/getLastObjectValues201?${query}`;
         let response= await RNFetchBlob.config({trusty : true}).fetch('GET', url);
         let json=response.json();
         return json;
@@ -23,7 +23,7 @@ class ApiService {
     async getFunctionsForMonitoring(type){
         const item=await AsyncStorage.getItem('url')
         let query = qs.stringify({type});
-        const url=`https://${item}/api/main/getFunctionsForMonitoring?${query}`;
+        const url=`https://${item}/main/getFunctionsForMonitoring?${query}`;
         let response= await RNFetchBlob.config({trusty : true}).fetch('GET', url);
         // console.log(response)
         let json=response.json();
@@ -34,7 +34,7 @@ class ApiService {
         const query = qs.stringify({
             id, templateId
         });
-        const url=`https://${item}/api/main/getFacilityPassportForMonitoring?${query}`;
+        const url=`https://${item}/main/getFacilityPassportForMonitoring?${query}`;
         let response= await RNFetchBlob.config({trusty : true}).fetch('GET', url);
         // console.log(response)
         let json=response.json();
@@ -42,7 +42,7 @@ class ApiService {
     }
     async getFunctionByTemplateId() {
         const item=await AsyncStorage.getItem('url')
-        const url=`https://${item}/api/main/getFunctionByTemplateId`;
+        const url=`https://${item}/main/getFunctionByTemplateId`;
         let response= await RNFetchBlob.config({trusty : true}).fetch('GET', url);
         // console.log(response)
         let json=response.json();

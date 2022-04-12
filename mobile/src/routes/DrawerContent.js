@@ -13,16 +13,21 @@ import userService from "../service/UserService";
 export function DrawerContent(props){
     const [isAuth, setIsAuth]= useState(false);
     const [username, setUsername]= useState('');
+    const [userId, setUserId]= useState('');
 
 
     const getData=async ()=>{
         const token=await AsyncStorage.getItem('token');
         const user=await AsyncStorage.getItem('username');
+        const id=await AsyncStorage.getItem('userId');
         if(token){
             await setIsAuth(true)
         }
         if(user){
             setUsername(user);
+        }
+        if(id){
+            setUserId(id);
         }
     }
 
@@ -82,7 +87,7 @@ export function DrawerContent(props){
                             />
                         )}
                         label={username}
-                        onPress={()=>{props.navigation.navigate('Profile')}}
+                        onPress={()=>{props.navigation.push('Navigator', {screen:'Profile',params:{userId:userId}})}}
                     />
                     : 
                     null

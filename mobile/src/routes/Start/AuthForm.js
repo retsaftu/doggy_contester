@@ -61,7 +61,7 @@ export default class AuthForm extends Component {
             email: this.state.email,
             password: this.state.password
         }
-        let url=`http://agis.kz:5002/api/auth/login`
+        let url=`http://${backend.host}:${backend.port}/auth/login`
         console.log(`url`, url);
 
         console.log(`user`, user);

@@ -45,9 +45,10 @@ export default class Registration extends Component {
             email: this.state.email,
             name:this.state.name,
             password: this.state.password,
-            username:this.state.username
+            username:this.state.username,
+            avatar:''
         }
-        let url=`http://agis.kz:5002/api/auth/register`
+        let url=`http://${backend.host}:${backend.port}/auth/register`
         console.log(`user`, user);
         if(this.state.email.length>0 && this.state.password.length>0 && this.state.username.length>0){
             await this.setState({isLoader:true})

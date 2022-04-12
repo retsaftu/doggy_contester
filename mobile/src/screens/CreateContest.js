@@ -40,7 +40,7 @@ export default class CreateContest extends Component {
                                         }
                                     ]
                                 }
-                            ]
+                            ],
                         }
                     ]
                 },
@@ -79,7 +79,8 @@ export default class CreateContest extends Component {
                 outputExample: ob.data[0].outputExample,
                 time:ob.data[0].time,
                 memory:ob.data[0].memory,
-                tests:this.removeTrashFromTests(ob.data[0].tests)
+                tests:this.removeTrashFromTests(ob.data[0].tests),
+                code:''
             }
         });
         console.log(`tempTasks`, tempTasks);
@@ -110,9 +111,10 @@ export default class CreateContest extends Component {
             total_participants: Number(this.state.totalParticipants),
             startDate: startDate,
             endDate: endDate,
-            tasks:tempTasks
+            tasks:tempTasks,
+            isPaid:false
         }
-        let url=`http://agis.kz:5002/api/contest`
+        let url=`http://${backend.host}:${backend.port}/contest`
 
         console.log(`contest`, contest);
 
@@ -467,6 +469,18 @@ export default class CreateContest extends Component {
                                                         }}>
                                                         <Icon name="add" size={27} color='rgba(240, 5, 0, 1)'/>
                                                     </TouchableOpacity>
+                                                    {
+                                                        item.tests.length===1
+                                                        ?
+                                                        null
+                                                        :
+                                                        <TouchableOpacity onPress={async ()=>{
+                                                                item.tests.pop();
+                                                                this.forceUpdate()
+                                                            }}>
+                                                            <Icon name="remove" size={27} color='rgba(240, 5, 0, 1)'/>
+                                                        </TouchableOpacity>
+                                                    }
                                                 </View>
                                             )
                                         }}
