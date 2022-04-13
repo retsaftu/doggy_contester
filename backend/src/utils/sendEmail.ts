@@ -22,7 +22,7 @@ export const main = async (email: string, link: string) => {
   if(email) {
     // send mail with defined transport object
     let info = await transporter.sendMail({
-        from: 'baimurzinrafael02@gmail.com', // sender address
+        from: config.email.sender, // sender address
         to: email, // list of receivers
         subject: "Confirm email", // Subject line
         html: `<b>Hello!</b> <a href="${link}">confirm email</a>`, // html body

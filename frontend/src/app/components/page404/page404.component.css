@@ -1,0 +1,16 @@
+.page404-wrapper {
+    width: 100%;
+    /* height: 100vh; */
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center;   */
+    align-items: center;
+    text-align: center; 
+}
+.page404-wrapper img {
+    width: 35em;
+}
+.page404-wrapper h1, .page404-wrapper h2, .page404-wrapper h3 {
+    margin: 0;
+    padding: 0;
+}

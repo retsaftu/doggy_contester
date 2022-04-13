@@ -29,6 +29,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatTableModule} from '@angular/material/table';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 import { GoogleLoginProvider } from 'angularx-social-login';
@@ -61,6 +62,7 @@ import { SettingsAppearanceComponent } from './components/settings-page/settings
 import { SettingsEmailComponent } from './components/settings-page/settings-email/settings-email.component';
 import { SettingsPasswordComponent } from './components/settings-page/settings-password/settings-password.component';
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
+import { Page404Component } from './components/page404/page404.component';
 
 @NgModule({
   declarations: [
@@ -90,6 +92,7 @@ import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.
     SettingsEmailComponent,
     SettingsPasswordComponent,
     ConfirmEmailComponent,
+    Page404Component,
   ],
   imports: [
     BrowserModule,
@@ -117,7 +120,8 @@ import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.
     MatProgressBarModule,
     MatTabsModule,
     MatTableModule,
-    MatMenuModule
+    MatMenuModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     {
