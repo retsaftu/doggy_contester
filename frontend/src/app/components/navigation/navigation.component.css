@@ -65,11 +65,13 @@ a {
 }
 .navigation-profile-avatar-img {
     width: 40px;
+    height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 .navigation-profile-avatar-img img {
     width: 100%;
+    height: 100%;
     border-radius: 50%;
 }
