@@ -16,7 +16,13 @@ export class SubmissionService {
   async saveSolutionFile(submission: CreateSubmissionDto, file: Express.Multer.File) {
     const fileUTF8 = file.buffer.toString('utf8');
     const submissionDirectory = path.join(__dirname, '../../../', 'uploads', submission.contestId, submission.taskId, submission.userId, submission.extension.substring(1));
-    const filename = `main${submission.extension}`;
+    let filename = "";
+    if (submission.extension === '.java') {
+      filename = file.originalname;
+    } else {
+      filename = `main${submission.extension}`;
+    }
+    // const filename = `Main${submission.extension}`;
     const filepath = path.join(submissionDirectory, filename);
 
     if (!fs.existsSync(submissionDirectory)) {
@@ -107,10 +113,20 @@ export class SubmissionService {
       case '.py':
         compiler = path.join(__dirname, "../../../compiler/py.sh");
         break;
+      case '.java':
+        compiler = path.join(__dirname, "../../../compiler/java.sh");
+        break;
     }
     shelljs.chmod("+x", compiler);
 
     shelljs.exec(`${compiler} -c ${contestId} -t ${taskId} -u ${userId}`);
+
+    const submissionDirectory = path.join(__dirname, '../../../', 'uploads', contestId, taskId, userId, extension.substring(1));
+    const compileErrors = shelljs.cat(path.join(submissionDirectory, 'compile.log'));
+
+    if (compileErrors.stdout.toString().length > 0) {
+      return [];
+    }
 
     const testResults = [];
     const resultDirectory = path.join(__dirname, '../../../', 'uploads', contestId, taskId, userId, extension.substring(1), 'result');

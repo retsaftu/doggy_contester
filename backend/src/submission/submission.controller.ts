@@ -18,7 +18,7 @@ export class SubmissionController {
     @Body() body: any,
     @Req() req: any
   ) {
-    const supportedFileExtensions = ['.cpp', '.py'];
+    const supportedFileExtensions = ['.cpp', '.py', '.java'];
 
     if (!file)
       return { success: false, message: 'No file uploaded' };
@@ -38,11 +38,16 @@ export class SubmissionController {
 
     const testResults = await this.submissionService.runTests(body.contestId, body.taskId, body.userId, body.extension);
 
+    if (testResults.length === 0) {
+      await this.submissionService.deleteLocalDirectory(body.contestId);
+      return { success: false, message: 'Compilation error' };
+    }
+
     await this.submissionService.saveTestResults(insertedId.toString(), testResults);
 
     await this.submissionService.deleteLocalDirectory(body.contestId);
 
-    return { success: true, insertedId, testResults };
+    return { success: true, insertedId, testResults: testResults || [] };
   }
 
   @UseGuards(JwtAuthGuard)
