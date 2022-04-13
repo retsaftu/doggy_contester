@@ -49,6 +49,9 @@ for i in $(seq 1 $testsAmount); do
 
     while [[ -f ./../uploads/${contestId}/${taskId}/${userId}/cpp/correct/test${i}.answer${j}.out ]]
     do
+        sed -i '$a\' ./../uploads/${contestId}/${taskId}/${userId}/cpp/correct/test${i}.answer${j}.out
+        sed -i '$a\' ./../uploads/${contestId}/${taskId}/${userId}/cpp/output/test${i}.out
+
         # Compare user answer with correct answer
         diff ./../uploads/${contestId}/${taskId}/${userId}/cpp/output/test${i}.out \
             ./../uploads/${contestId}/${taskId}/${userId}/cpp/correct/test${i}.answer${j}.out \

@@ -23,9 +23,7 @@ export class SubmissionService {
       fs.mkdirSync(submissionDirectory, { recursive: true });
     }
 
-    fs.writeFile(filepath, fileUTF8, error => {
-      if (error) throw error;
-    });
+    fs.writeFileSync(filepath, fileUTF8);
 
     const fileBase64 = file.buffer.toString('base64');
     submission.file = fileBase64;
@@ -101,13 +99,16 @@ export class SubmissionService {
   async runTests(contestId: string, taskId: string, userId: string, extension: string) {
     let compiler = "";
 
+    shelljs.cd(path.join(__dirname, '../../../compiler/'));
     switch (extension) {
       case '.cpp':
-        shelljs.cd(path.join(__dirname, '../../../compiler/'));
         compiler = path.join(__dirname, "../../../compiler/cpp.sh");
-        shelljs.chmod("+x", compiler);
+        break;
+      case '.py':
+        compiler = path.join(__dirname, "../../../compiler/py.sh");
         break;
     }
+    shelljs.chmod("+x", compiler);
 
     shelljs.exec(`${compiler} -c ${contestId} -t ${taskId} -u ${userId}`);
 
@@ -140,7 +141,7 @@ export class SubmissionService {
 
       testNum++;
     }
-    
+
     return testResults;
   }
 
