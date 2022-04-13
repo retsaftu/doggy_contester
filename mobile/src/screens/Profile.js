@@ -6,6 +6,7 @@ import DocumentPicker from "react-native-document-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {backend} from '../../config/config.json'
 import Loader from "react-native-modal-loader";
+import CustomisableAlert, { showAlert, closeAlert } from "react-native-customisable-alert";
 
 export default class Profile extends Component {
     constructor(props) {
@@ -16,9 +17,12 @@ export default class Profile extends Component {
             image:'',
             isMyProfile:false,
             isEdit:false,
+            isPasswordEdit:false,
             name:'',
             username:'',
-            about:''
+            about:'',
+            oldPassword:'',
+            newPassword:''
         }
 
     }
@@ -128,6 +132,7 @@ export default class Profile extends Component {
     }
 
     save=async ()=>{
+        this.setState({isLoader:true})
         const url = `http://${backend.host}:${backend.port}/user/updateUserProfile`;
         const token=await AsyncStorage.getItem('token');
         let user={
@@ -151,7 +156,12 @@ export default class Profile extends Component {
             .then(async (data)=>{
                 console.log(`data`, data);
                 this.setState({isLoader:false})
-                this.props.navigation.push('Navigator', {screen:'Profile', params: {userId:this.props.route.params.userId}})
+                showAlert({
+                    title: 'Успешно!',
+                    message: 'Данные были изменены!',
+                    alertType: 'success',
+                    onPress:this.alertPress
+                })
                 // await AsyncStorage.setItem('image', );
             })
         } catch(err){
@@ -160,10 +170,64 @@ export default class Profile extends Component {
         }
     }
 
+    alertPress=()=>{
+        this.props.navigation.push('Navigator', {screen:'Profile', params: {userId:this.props.route.params.userId}})
+    }
+    changePassword=async ()=>{
+        this.setState({isLoader:true})
+        const token=await AsyncStorage.getItem('token');
+        if(this.state.newPassword.length>0 && this.state.oldPassword.length>0){
+            let ob={
+                oldPassword:this.state.oldPassword,
+                newPassword:this.state.newPassword
+            }
+            let urll=`http://${backend.host}:${backend.port}/user/changePassword`
+            await fetch(urll, {
+                method: 'PUT',
+                body: JSON.stringify(ob),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type':'application/json',
+                    'Authorization': 'Bearer '+token
+                },
+            })
+            .then(res=>res.json())
+            .then(async (data)=>{
+                console.log(`data`, data);
+                this.setState({isLoader:false})
+                showAlert({
+                    title: 'Успешно!',
+                    message: 'Данные были изменены!',
+                    alertType: 'success',
+                    onPress:this.alertPress
+                })
+                // await AsyncStorage.setItem('image', );
+            })
+        }
+    }
+
     render() {
         return(
             <View style={styles.body}>
                 <Loader loading={this.state.isLoader} color="black" size='large'/>
+                <CustomisableAlert
+                    // dismissable
+                    btnStyle={{
+                        backgroundColor:'rgba(240, 5, 0, 1)'
+                    }}
+                    titleStyle={{
+                    fontSize: 24,
+                    fontWeight: 'bold'
+                    }}
+                    textStyle={{
+                        fontSize: 18,
+                    }}
+                    btnLabelStyle={{
+                    color: 'white',
+                    paddingHorizontal: 10,
+                    textAlign: 'center',
+                    }}
+                />
                 <View style={[styles.item,{alignItems:'center',}]}>
                     {
                         this.state.isMyProfile
@@ -260,6 +324,47 @@ export default class Profile extends Component {
                     null
                 }
                 {
+                    this.state.isPasswordEdit
+                    ?
+                    <ScrollView style={[styles.item,{flex:1}]}>
+                        <View style={{
+                            justifyContent:'center',
+                            flex:1,
+                            // padding:36,
+                            paddingHorizontal:"5%",
+                            paddingBottom:'5%',
+                            backgroundColor:'#fff',
+                        }}>
+                            <TextInput
+                                style={[styles.input, {backgroundColor:'rgba(0, 81, 202, 0.04)'}]}
+                                value={this.state.oldPassword}
+                                onChangeText={val => this.setState({oldPassword: val})}
+                                placeholder={'Old Password'}
+                            />
+                            <TextInput
+                                style={[styles.input, {backgroundColor:'rgba(0, 81, 202, 0.04)'}]}
+                                value={this.state.newPassword}
+                                onChangeText={val => this.setState({newPassword: val})}
+                                placeholder={'New Password'}
+                            />
+                            <TouchableOpacity
+                                    onPress={this.changePassword}
+                                    style={[styles.button, {backgroundColor:'rgba(240, 5, 0, 1)'}]}>
+                                <Text style={{color:'rgba(255, 255, 255, 1)', fontWeight:"bold"}}>Save</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                    onPress={()=>{
+                                        this.setState({isPasswordEdit:false})
+                                    }}
+                                    style={[styles.button, {backgroundColor:'rgba(220, 220, 220, 1)'}]}>
+                                <Text style={{color:'rgba(255, 255, 255, 1)', fontWeight:"bold"}}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </ScrollView>
+                    :
+                    null
+                }
+                {
                     !this.state.isEdit
                     ?
                     <TouchableOpacity
@@ -269,6 +374,20 @@ export default class Profile extends Component {
                         }}
                     >
                         <Icon name='pencil' size={30} color='white' />
+                    </TouchableOpacity>
+                    : 
+                    null
+                }
+                {
+                    !this.state.isPasswordEdit
+                    ?
+                    <TouchableOpacity
+                        style={styles.changePasswordButton}
+                        onPress={()=>{
+                            this.setState({isPasswordEdit:true})
+                        }}
+                    >
+                        <Icon name='pencil-lock' size={30} color='white' />
                     </TouchableOpacity>
                     : 
                     null
@@ -376,6 +495,17 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 10,
         right: 10,
+        height: 70,
+        backgroundColor: 'rgba(240, 5, 0, 1)',
+        borderRadius: 100,
+    },
+    changePasswordButton:{
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 70,
+        position: 'absolute',
+        bottom: 10,
+        right:90,
         height: 70,
         backgroundColor: 'rgba(240, 5, 0, 1)',
         borderRadius: 100,

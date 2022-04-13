@@ -17,7 +17,12 @@ import CustomisableAlert, { showAlert, closeAlert } from "react-native-customisa
 import Loader from "react-native-modal-loader";
 import RNFetchBlob from 'rn-fetch-blob'
 import {backend} from '../../../config/config.json'
-
+import {
+    GoogleSignin,
+    GoogleSigninButton,
+    statusCodes,
+} from '@react-native-google-signin/google-signin';
+GoogleSignin.configure();
 export default class Registration extends Component {
     constructor(props) {
         super(props);
@@ -27,6 +32,7 @@ export default class Registration extends Component {
             email:'',
             name:'',
             isLoader:false,
+            userInfo:{}
         }
     }
 
@@ -39,7 +45,75 @@ export default class Registration extends Component {
     }
 
     //Функция авторизации
-
+    googleSignUp = async () => {
+        console.log('press');
+        try {
+            let res=await GoogleSignin.hasPlayServices();
+            console.log(`res`, res);
+            const userInfo = await GoogleSignin.signIn();
+            this.register(userInfo)
+        } catch (error) {
+            console.log(`error`, error);
+        }
+        
+    };
+    register=async (user)=>{
+        let username=user.user.email.split('@');
+        let userForUpload={
+            email: user.user.email,
+            name:user.user.name,
+            password: user.user.email,
+            username:username[0],
+            avatar:''
+        }
+        console.log(`user`, user);
+        let url=`http://${backend.host}:${backend.port}/auth/register`
+        try {
+            await RNFetchBlob.config({
+            trusty : true
+            })
+            .fetch('POST',url, {
+            'Accept': 'application/json',
+            'Content-Type':'application/json'
+            },JSON.stringify(userForUpload))
+            .then(res=>res.json())
+            .then(async (data)=>{
+                console.log(`data`, data);
+                if (data.acknowledged){
+                    await this.setState({isLoader:false})
+                    showAlert({
+                        title: 'Успешно!',
+                        message: 'Пользователь успешно создан!',
+                        alertType: 'success',
+                        onPress:this.successAlert
+                    })
+                }else if (data.statusCode === 401){
+                    await this.setState({isLoader:false})
+                    showAlert({
+                        title: 'Ошибка!',
+                        // message: 'Неверные логин или пароль!',
+                        message:data.message,
+                        alertType: 'error'
+                    })
+                }else if (data.statusCode === 400){
+                    await this.setState({isLoader:false})
+                    showAlert({
+                        title: 'Warning!',
+                        message: data.message,
+                        alertType: 'error'
+                    })
+                }
+            })
+        }catch (err){
+            console.log(err)
+            this.setState({isLoader:false})
+            showAlert({
+                title: 'Ошибка!',
+                message: 'Проблемы с соединением!',
+                alertType: 'error'
+            })
+        }
+    }
     authHandler = async () => {
         let user={
             email: this.state.email,
@@ -211,10 +285,10 @@ export default class Registration extends Component {
                             <View style={localStyles.line} />
                         </View>
                         <TouchableOpacity
-                            // onPress={this.authHandler}
+                            onPress={this.googleSignUp}
                             style={localStyles.googleButton}>
                             <Image source={require('../../../assets/google.png')} style={{height:30, width:30}}/>
-                            <Text style={{color:'black', fontSize:15}}>  Continue with Google</Text>
+                            <Text style={{color:'black', fontSize:15}}>  Sign up with Google</Text>
                         </TouchableOpacity>
                     </View>
                 </TouchableWithoutFeedback>

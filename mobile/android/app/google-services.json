@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "483781512080",
+    "project_id": "doggy-contester-1649833943113",
+    "storage_bucket": "doggy-contester-1649833943113.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:483781512080:android:510db007b87bbc174f8115",
+        "android_client_info": {
+          "package_name": "com.doggy_contester_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "483781512080-ga36vmr7nb3bge00nkgnbh0vhjm498i7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.doggy_contester_mobile",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "483781512080-cnovgeqo7ac4vm6d8q0gls7o2ut1l7mn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_JjUZvxb1CQaE_cAL9wl2Q1DTK5lc4EI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "483781512080-cnovgeqo7ac4vm6d8q0gls7o2ut1l7mn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

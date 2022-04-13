@@ -18,7 +18,12 @@ import Loader from "react-native-modal-loader";
 import RNFetchBlob from 'rn-fetch-blob'
 import {backend} from '../../../config/config.json'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-
+import {
+    GoogleSignin,
+    GoogleSigninButton,
+    statusCodes,
+} from '@react-native-google-signin/google-signin';
+GoogleSignin.configure();
 export default class AuthForm extends Component {
     constructor(props) {
         super(props);
@@ -52,6 +57,73 @@ export default class AuthForm extends Component {
         //         this.setState({password: value});
         //     }
         // }).done();
+    }
+    googleSignIn = async () => {
+        console.log('press');
+        try {
+            let res=await GoogleSignin.hasPlayServices();
+            console.log(`res`, res);
+            const user = await GoogleSignin.signIn();
+            this.authGoogle(user);
+        } catch (error) {
+            console.log(`error`, error);
+        }
+    };
+
+    authGoogle = async (userGoogle) => {
+        let user={
+            email: userGoogle.user.email,
+            password: userGoogle.user.email
+        }
+        let url=`http://${backend.host}:${backend.port}/auth/login`
+        console.log(`url`, url);
+
+        console.log(`user`, user);
+            try {
+                await this.setState({isLoader:true})
+                await RNFetchBlob.config({
+                trusty : true
+                })
+                .fetch('POST',url, {
+                'Accept': 'application/json',
+                'Content-Type':'application/json'
+                },JSON.stringify(user))
+                .then(res=>res.json())
+                .then(async (data)=>{
+                    console.log(`data`, data);
+                    if (data.access_token){
+                        await AsyncStorage.setItem('token', data.access_token)
+                        await AsyncStorage.setItem('username', data.username)
+                        await AsyncStorage.setItem('userId', data.userId)
+                        await this.setState({isLoader:false})
+                        showAlert({
+                            title: 'Внимание!',
+                            message: 'На данный момент ваш пароль это ваш emai. Поменяйте пожалуйста в настройках!',
+                            alertType: 'error',
+                            onPress:this.alertPress
+                        })
+                    }else if (data.statusCode === 401){
+                        await this.setState({isLoader:false})
+                        showAlert({
+                            title: 'Ошибка!',
+                            message: data.message,
+                            alertType: 'error'
+                        })
+                    }
+                })
+            }catch (err){
+                console.log(err)
+                await this.setState({isLoader:false})
+                showAlert({
+                    title: 'Ошибка!',
+                    message: 'Проблемы с соединением!',
+                    alertType: 'error'
+                })
+            }
+    }
+
+    alertPress=async ()=>{
+        this.props.navigation.navigate('Navigator')
     }
 
     //Функция авторизации
@@ -208,7 +280,7 @@ export default class AuthForm extends Component {
                             <View style={localStyles.line} />
                         </View>
                         <TouchableOpacity
-                            // onPress={this.authHandler}
+                            onPress={this.googleSignIn}
                             style={localStyles.googleButton}>
                             <Image source={require('../../../assets/google.png')} style={{height:30, width:30}}/>
                             <Text style={{color:'black', fontSize:15}}>  Sign in with Google</Text>
