@@ -64,6 +64,7 @@ import { SettingsPasswordComponent } from './components/settings-page/settings-p
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 import { Page404Component } from './components/page404/page404.component';
 import { BalanceComponent } from './components/balance/balance.component';
+import { ContestAboutComponent } from './components/contest-about/contest-about.component';
 
 @NgModule({
   declarations: [
@@ -95,6 +96,7 @@ import { BalanceComponent } from './components/balance/balance.component';
     ConfirmEmailComponent,
     Page404Component,
     BalanceComponent,
+    ContestAboutComponent,
   ],
   imports: [
     BrowserModule,

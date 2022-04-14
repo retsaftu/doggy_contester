@@ -34,7 +34,7 @@ export class ContestComponent implements OnInit {
 
   problems: any[] = [];
 
-  private _isParticipant = false;
+  private _isParticipant = true;
 
   constructor(
     private router: Router,
