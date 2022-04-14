@@ -83,6 +83,9 @@ export class UserComponent implements OnInit {
   // }
 
   openDialog() {
+    if(this.userService.userInfo._id != this.user._id) {
+      return;
+    }
     const dialogRef = this.dialog.open(AvatarDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
