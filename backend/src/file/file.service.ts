@@ -169,7 +169,7 @@ export class FileService {
 
     async updateImage(fileId: string, user) {
 
-        return await this.db.collection('users').updateOne(
+        await this.db.collection('users').updateOne(
             { _id: new mongodb.ObjectId(user._id) },
             {
                 $set: {
@@ -177,6 +177,14 @@ export class FileService {
                 }
             }
         )
+        console.log(`user`, user);
+        return await this.db.collection('users').aggregate([
+            {
+                $match: {
+                    _id: new mongodb.ObjectId(user._id)
+                }
+            }
+        ]).toArray()
     }
 
 
