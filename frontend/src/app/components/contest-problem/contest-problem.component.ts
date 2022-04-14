@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProblemContent } from 'src/app/entities/contester.entity';
+import { AuthService } from 'src/app/services/auth.service';
 import { FileService } from '../../services/file.service';
 
 class FileSnippet {
@@ -25,6 +26,7 @@ export class ContestProblemComponent implements OnInit {
   constructor(
     private router: Router,
     private fileService: FileService,
+    private authService: AuthService
   ) { }
 
   @Input() problems: any[] = [];
@@ -117,5 +119,7 @@ export class ContestProblemComponent implements OnInit {
 
     reader.readAsDataURL(file);
   }
+
+  get isLoggedIn() { return this.authService.isLoggedIn() }
 
 }

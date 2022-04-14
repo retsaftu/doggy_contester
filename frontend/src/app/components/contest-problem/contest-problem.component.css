@@ -43,3 +43,14 @@
     content: "\f00c";
     color: #5AAC7B
 }
+#submit-code {
+    display: none;
+}
+.contest-problem-submit-code label{
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+.submit-code-label {
+    display: block;
+}

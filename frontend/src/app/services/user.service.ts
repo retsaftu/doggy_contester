@@ -37,6 +37,12 @@ export class UserService {
     localStorage.setItem(environment.USER_INFO_FIELDS.AVATAR, avatar);
   }
 
+  set balance(balance: number) {
+    let currBalance = this.balance;
+    currBalance += balance;
+    localStorage.setItem(environment.USER_INFO_FIELDS.BALANCE, currBalance.toString())
+  }
+
   get username() { 
     let username = localStorage.getItem(environment.USER_INFO_FIELDS.USERNAME);
     if(!username) {
@@ -53,6 +59,14 @@ export class UserService {
      return avatar;
    }
 
+   get balance() {
+     let balance = Number(localStorage.getItem(environment.USER_INFO_FIELDS.BALANCE));
+     if(!balance) {
+       balance = 0.00;
+     }
+     return balance;
+   }
+
   get userInfo() { 
     const username = this.username;
     let _id = localStorage.getItem(environment.USER_INFO_FIELDS.ID);
@@ -60,7 +74,7 @@ export class UserService {
       _id = '';
     }
     const avatar = this.avatar;
-    return new UserBasicInfo(username, _id, avatar);
+    return new UserBasicInfo(username, _id, this.balance, avatar);
   }
 
   emitChangeOfUserProfile(info: UserBasicInfo) {
@@ -86,5 +100,9 @@ export class UserService {
 
   changePassword(oldPassword: string, newPassword: string) {
     return this.http.put('/api/user/changePassword', {oldPassword: oldPassword, newPassword: newPassword })
+  }
+
+  recharge(balance: number) {
+    return this.http.patch('/api/user/balance/recharge', {balance: balance})
   }
 }

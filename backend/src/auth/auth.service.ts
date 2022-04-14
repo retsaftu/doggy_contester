@@ -27,7 +27,8 @@ export class AuthService {
       username: dto.username,
       email: dto.email,
       passwordHash: await hash(dto.password, salt),
-      isActive: true
+      isActive: true,
+      balance: 0
     }
 
     if(dto.avatar) {
@@ -45,7 +46,8 @@ export class AuthService {
       username: dto.username,
       email: dto.email,
       passwordHash: await hash(dto.password, salt),
-      isActive: false
+      isActive: false,
+      balance: 0
     }
 
     if(dto.avatar) {
@@ -96,6 +98,7 @@ export class AuthService {
       access_token: await this.jwtService.signAsync(payload),
       userId: user._id,
       username: user.username,
+      balance: user.balance,
       avatar: user.avatar
     };
   }

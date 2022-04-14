@@ -9,6 +9,9 @@
             <li><a routerLink="/leaderboard" [ngClass]="{'activeRoute': 'leaderboard' == currentRoute}">Leaderboard</a></li>
         </ul>
         <ul class="navbar-right-menu">
+            <li class="item-with-icon" *ngIf="isAuthenticated">
+                <a routerLink="/balance">{{(userInfo.balance ? userInfo.balance : '0.00') | currency}}</a>
+            </li>
             <li class="item-with-icon" (click)="changeTheme()"><mat-icon>brightness_medium</mat-icon></li>
             <li class="item-with-icon"><mat-icon aria-hidden="false">notifications</mat-icon></li>
             <li class="item-with-icon" *ngIf="isAuthenticated" [matMenuTriggerFor]="menu">

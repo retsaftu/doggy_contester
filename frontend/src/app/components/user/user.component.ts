@@ -90,7 +90,7 @@ export class UserComponent implements OnInit {
         this.userService.getUserById(this.id).subscribe((res: any) => {
           this.user = res
           this.filePath = this.user.avatar;
-          this.userService.userInfo = new UserBasicInfo(res.username, res._id, res.avatar);
+          this.userService.userInfo = new UserBasicInfo(res.username, res._id, res.balance, res.avatar);
           this.userService.emitChangeOfUserProfile(this.userService.userInfo);
         });
       }

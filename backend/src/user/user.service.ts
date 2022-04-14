@@ -80,4 +80,15 @@ export class UserService {
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
+
+  async rechargeBalance(userId: string, balance: number) {
+    return await this.db.collection('users').findOneAndUpdate(
+      {_id: new mongodb.ObjectId(userId)},
+      {
+        $inc: {
+          balance: balance
+        }
+      }
+    )
+  }
 }

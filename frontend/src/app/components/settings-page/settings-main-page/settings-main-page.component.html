@@ -2,8 +2,11 @@
     <mat-card class="settings-list">
         <div class="settings-profile">
             <div class="settings-profile-avatar">
-                <div class="settings-proflie-avatar-wrapper">
+                <div class="settings-proflie-avatar-wrapper" *ngIf="user.avatar">
                     <img class="settings-profile-avatar-picture" [src]="user?.avatar">
+                </div>
+                <div class="settings-proflie-avatar-wrapper" *ngIf="!user.avatar">
+                    <mat-icon>account_circle</mat-icon>
                 </div>
             </div>
             <div class="settings-profile-name-username">
