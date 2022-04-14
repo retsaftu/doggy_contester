@@ -128,6 +128,10 @@ export default class Profile extends Component {
                 }
                 
             })
+            .catch(()=>{
+                this.setState({isLoader:false})
+
+            })
         }
     }
 

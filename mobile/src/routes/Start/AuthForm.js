@@ -75,7 +75,7 @@ export default class AuthForm extends Component {
             email: userGoogle.user.email,
             password: userGoogle.user.email
         }
-        let url=`http://${backend.host}:${backend.port}/auth/login`
+        let url=`http://${backend.host}:${backend.port}/auth/loginByGoogleAccount`
         console.log(`url`, url);
 
         console.log(`user`, user);

@@ -67,7 +67,7 @@ export default class Registration extends Component {
             avatar:''
         }
         console.log(`user`, user);
-        let url=`http://${backend.host}:${backend.port}/auth/register`
+        let url=`http://${backend.host}:${backend.port}/auth/registerByGoogleAccount`
         try {
             await RNFetchBlob.config({
             trusty : true

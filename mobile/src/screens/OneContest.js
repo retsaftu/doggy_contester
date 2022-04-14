@@ -1,5 +1,5 @@
 import React, {useEffect, useState, Component} from "react";
-import {View, StyleSheet, ScrollView, TouchableOpacity, Text, FlatList, SectionList} from "react-native";
+import {View, StyleSheet, ScrollView, TouchableOpacity, Text, PermissionsAndroid} from "react-native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import RNFetchBlob from 'rn-fetch-blob'
@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {backend} from '../../config/config.json'
 import * as Progress from 'react-native-progress';
 import CustomisableAlert, { showAlert, closeAlert } from "react-native-customisable-alert";
+import DocumentPicker from "react-native-document-picker";
 
 
 export default class OneContest extends Component {
@@ -166,6 +167,73 @@ export default class OneContest extends Component {
         this.props.navigation.push('Navigator', {screen:'Home'})
     }
 
+    uploadFile=async ()=>{
+        const token=await AsyncStorage.getItem('token');
+        const granted = await PermissionsAndroid.requestMultiple([
+            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+        ]);
+        if (granted['android.permission.READ_EXTERNAL_STORAGE'] === PermissionsAndroid.RESULTS.GRANTED && granted['android.permission.WRITE_EXTERNAL_STORAGE'] === PermissionsAndroid.RESULTS.GRANTED) {
+            await DocumentPicker.pick({
+                type: [DocumentPicker.types.allFiles],
+            })
+            .then(async response => {
+                console.log('ASDASDASFD',response);
+                const res=await RNFetchBlob.fs.stat(response[0].uri)
+                console.log('SADFFSDF',res);
+                let { name, uri } = response[0];
+                console.log('SAFDSAFD',name, uri);
+    
+                let nameParts = name.split('.');
+                let fileType = nameParts[nameParts.length - 1];
+                let fileToUpload = {
+                name: name,
+                size: res.size,
+                type: "application/"+fileType,
+                extension:fileType,
+                uri: Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+                };
+
+                const formData = new FormData();
+                formData.append('file', fileToUpload);
+                formData.append('contestId', '60c09af61d2fc08732e62edd');
+                formData.append('taskId', '60c09b891d2fc08732e62ede');
+                formData.append('extension', fileType);
+                console.log('form',formData);        
+        
+        
+                let url=`http://${backend.host}:${backend.port}/api/file`
+
+                try{
+                    await fetch(url, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            'Authorization': 'Bearer '+token
+                        },
+                    })
+                    .then(res=>res.json())
+                    .then(async (data)=>{
+                        console.log(`data`, data);
+                        this.setState({isLoader:false})
+                        // this.props.navigation.push('Navigator', {screen:'Profile', params: {userId:this.props.route.params.userId}})
+                        // await AsyncStorage.setItem('image', );
+                    })
+                } catch(err){
+                    console.log(`err`, err);
+                    this.setState({isLoader:false})
+                }
+                
+            })
+            .catch(()=>{
+                this.setState({isLoader:false})
+
+            })
+        }
+    }
+
+
     render(){
         // return(<View></View>)
         // console.log(this.state.contest);
@@ -229,7 +297,9 @@ export default class OneContest extends Component {
                             <View style={styles.row}>
                                 <Text style={styles.itemText}>{this.state.currentProblem.description}</Text>
                             </View>
-                            <TouchableOpacity style={[styles.button, {borderRadius:30}]}>
+                            <TouchableOpacity 
+                                onPress={this.uploadFile}
+                                style={[styles.button, {borderRadius:30}]}>
                                 <Text style={styles.buttonText}>Upload File</Text>
                             </TouchableOpacity>
                         </View>
