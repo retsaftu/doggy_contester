@@ -8,10 +8,13 @@ export class LeaderboardService {
   constructor(
     @Inject('DATABASE_CONNECTION') private db: mongodb.Db,
   ) { }
-  async findAll(contestId:string) {
+  async findSubmissionByContestIdAndUserId(contestId: string, userId: string) {
     return await this.db.collection('submission').aggregate([
       {
-        $match: { contestId: contestId }
+        $match: {
+          contestId: contestId,
+          userId: userId
+        }
       }
     ]).toArray();
 
