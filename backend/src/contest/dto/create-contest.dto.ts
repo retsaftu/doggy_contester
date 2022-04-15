@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsDate, IsDateString, IsNumber, IsObject, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsBoolean, IsDate, IsDateString, IsNumber, IsObject, IsString, ValidateNested } from 'class-validator';
 
 
 
@@ -78,6 +78,12 @@ export class CreateContestDto {
 
     @IsDateString()
     endDate: Date | string;
+
+    @IsBoolean()
+    private: boolean
+
+    @IsNumber()
+    price?: number
 
     @IsArray()
 

@@ -22,6 +22,9 @@ export class ContestService {
       total_participants: createContestDto.total_participants,
       startDate: new Date(createContestDto.startDate),
       endDate: new Date(createContestDto.endDate),
+      private: createContestDto.private,
+      price: createContestDto?.price,
+      cush: 0,
       tasks: []
     }
     console.log(`createContest`, createContest);
@@ -211,6 +214,13 @@ export class ContestService {
   }
 
   async joinContest(contestId: string, userId: string, username: string) {
+    await this.db.collection('contest').aggregate([
+      {
+        $match: {
+          _id: new mongodb.ObjectId(contestId)
+        }
+      }
+    ])
     await (this.db.collection('contest').updateOne(
       { "_id": new mongodb.ObjectId(contestId) },
       {
