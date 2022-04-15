@@ -1,9 +1,7 @@
 export class TestResultDto {
-  passed: boolean;
-
-  time: number;
-
-  memory: number;
+  test: number;
 
   message: string;
+
+  time: number;
 }

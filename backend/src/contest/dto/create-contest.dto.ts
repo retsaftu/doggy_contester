@@ -80,7 +80,7 @@ export class CreateContestDto {
     endDate: Date | string;
 
     @IsBoolean()
-    private: boolean
+    premium: boolean
 
     @IsNumber()
     price?: number
