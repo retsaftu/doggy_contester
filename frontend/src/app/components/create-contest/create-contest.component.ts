@@ -58,8 +58,8 @@ export class CreateContestComponent implements OnInit {
     this.form = fb.group({
       name: new FormControl('', [Validators.required]),
       description: new FormControl('', [Validators.required]),
-      premium: new FormControl('', [Validators.required]),
-      price: new FormControl('', [Validators.required]),
+      premium: new FormControl(false, [Validators.required]),
+      price: new FormControl(0, [Validators.required]),
       time: new FormControl(new Time('00', '00'), [Validators.required]),
       duration: new FormControl(new Time('01', '00'), [Validators.required]),
       date: new FormControl(moment(), [Validators.required]),

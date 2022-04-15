@@ -65,3 +65,22 @@ mat-dialog-content::-webkit-scrollbar {
 .limits  mat-form-field {
     width: 48%;
 }
+.example-right-align {
+    text-align: right;
+  }
+  
+  input.example-right-align::-webkit-outer-spin-button,
+  input.example-right-align::-webkit-inner-spin-button {
+    display: none;
+  }
+  
+  input.example-right-align {
+    -moz-appearance: textfield;
+  }
+  .create-contest-premium-wrapper {
+      display: flex;
+      width: 100%;
+  }
+  .create-contest-premium-wrapper mat-slide-toggle {
+      margin-top: 1em;
+  }
