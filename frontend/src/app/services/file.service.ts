@@ -21,7 +21,7 @@ export class FileService {
     formData.append('taskId', taskId);
     formData.append('extension', fileExtention);
     console.log(`formData`, formData);
-    return this.http.post('/api/file', formData);
+    return this.http.post('/api/submission', formData);
   }
 
   uploadAvatar(file: File) {
