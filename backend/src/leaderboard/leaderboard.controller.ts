@@ -26,5 +26,17 @@ export class LeaderboardController {
     return this.leaderboardService.getGlobal();
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  localLeaderBoard(
+    @Query('contestId') contestId: string,
+    @Req() req: any,
+
+  ) {
+    const userId = req.user._id
+    console.log(`id`, userId);
+    return this.leaderboardService.findSubmissionByContestIdAndUserId(contestId, userId);
+  }
+
 
 }
