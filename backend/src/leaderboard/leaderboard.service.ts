@@ -31,8 +31,8 @@ export class LeaderboardService {
     return await this.db.collection('users').aggregate([
       {
         $sort: {
+          attempted: -1,
           solved: -1,
-          attempted: -1
         }
       }
     ]).toArray();
