@@ -7,10 +7,11 @@ import { DatabaseModule } from './database/database.module';
 import { SubmissionModule } from './submission/submission.module';
 import { UserModule } from './user/user.module';
 import { FileModule } from './file/file.module';
+import { LeaderboardModule } from './leaderboard/leaderboard.module';
 
 
 @Module({
-  imports: [DatabaseModule, AuthModule, ContestModule, SubmissionModule, UserModule, FileModule],
+  imports: [DatabaseModule, AuthModule, ContestModule, SubmissionModule, UserModule, FileModule, LeaderboardModule],
   controllers: [AppController],
   providers: [AppService],
 })
