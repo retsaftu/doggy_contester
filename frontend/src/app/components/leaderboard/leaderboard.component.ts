@@ -29,16 +29,17 @@ export class LeaderboardComponent implements OnInit {
     this.length = 100;
     // this.userLeaderboard = this.generateList(0, this.pageSize);
     this.userService.getGlobalLeaderBoard().subscribe((res: any) => {
-      console.log(res);
-      for(let i=0; i<res.length; i++ ) {
-        console.log(res[i])
-        this.fullLeaderboard.push(new UserLeaderboard(res[i].username, res[i].name, res[i].solved, res[i].attempted))
-      }
-      for(let i=0; i < this.pageSize; i++) {
-        console.log(this.fullLeaderboard[i])
-        this.userLeaderboard.push(this.fullLeaderboard[i])
-      }
-      
+      console.log(`res`, res);
+      // for (let i = 0; i < res.length; i++) {
+      //   console.log(res[i])
+      //   this.fullLeaderboard.push(new UserLeaderboard(res[i].username, res[i].name, res[i].solved, res[i].attempted))
+      // }
+      // for (let i = 0; i < this.pageSize; i++) {
+      //   console.log(this.fullLeaderboard[i])
+      //   this.userLeaderboard.push(this.fullLeaderboard[i])
+      // }
+      this.userLeaderboard = res;
+
     })
   }
 
@@ -54,8 +55,8 @@ export class LeaderboardComponent implements OnInit {
     this.pageSize = event.pageSize;
     this.pageIndex = event.pageIndex;
     this.userLeaderboard = [];
-    for(let i=this.pageSize * this.pageIndex; i <this.pageSize * (this.pageIndex + 1); i++) {
-      this.userLeaderboard.push(new UserLeaderboard(this.fullLeaderboard[i].username,this.fullLeaderboard[i].name,this.fullLeaderboard[i].solved,this.fullLeaderboard[i].attempted,))
+    for (let i = this.pageSize * this.pageIndex; i < this.pageSize * (this.pageIndex + 1); i++) {
+      this.userLeaderboard.push(new UserLeaderboard(this.fullLeaderboard[i].username, this.fullLeaderboard[i].name, this.fullLeaderboard[i].solved, this.fullLeaderboard[i].attempted,))
     }
     // this.userLeaderboard = this.generateList(event.pageIndex * this.pageSize, (event.pageIndex + 1) * this.pageSize);
   }
