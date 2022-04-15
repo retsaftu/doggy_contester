@@ -102,4 +102,8 @@ export class ContestService {
     return this.http.patch(`/api/contest/joinContest/${contestId}`, null);
   }
 
+  getSubmission(submissionId: string) {
+    return this.http.get(`/api/submission/${submissionId}`)
+  }
+
 }
