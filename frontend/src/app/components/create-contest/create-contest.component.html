@@ -11,11 +11,20 @@
             <mat-label>Description</mat-label>
             <textarea formControlName="description" matInput required></textarea>
         </mat-form-field>
+        <mat-form-field class="input" appearance="fill">
+            <mat-label>Premium</mat-label>
+            <textarea formControlName="premium" matInput required></textarea>
+        </mat-form-field>
+        <mat-form-field class="input" appearance="fill">
+            <mat-label>Price</mat-label>
+            <textarea formControlName="price" matInput required></textarea>
+        </mat-form-field>
 
         <div class="datetime">
             <mat-form-field appearance="fill">
                 <mat-label>Duration</mat-label>
-                <app-timepicker-input #durationinput formControlName="duration" required [isTime]="false"></app-timepicker-input>
+                <app-timepicker-input #durationinput formControlName="duration" required [isTime]="false">
+                </app-timepicker-input>
                 <mat-icon class="icon-button" matSuffix (click)="openDurationpicker()">access_time</mat-icon>
             </mat-form-field>
 
@@ -127,8 +136,9 @@
 
             </mat-accordion>
 
-        </div>      
+        </div>
 
-        <button type="submit" (click)="createContest()" mat-flat-button color="primary" [disabled]="!isAllContestFieldsAreValid()">Create</button>
+        <button type="submit" (click)="createContest()" mat-flat-button color="primary"
+            [disabled]="!isAllContestFieldsAreValid()">Create</button>
     </form>
 </mat-dialog-content>

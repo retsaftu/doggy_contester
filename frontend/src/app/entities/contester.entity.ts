@@ -70,11 +70,16 @@ export class ContestCreation {
   private tasks!: ProblemCreation[];
   private description!: string;
   private total_participants!: number;
+  private premium!: boolean;
+  private price!: number;
 
-  constructor(name: string, description: string, duration: Time, time: Time, date: Date,
+
+  constructor(name: string, description: string, premium: boolean, price: number, duration: Time, time: Time, date: Date,
     total_participants: number, tasks: ProblemCreation[]) {
     this.name = name;
     this.tasks = tasks;
+    this.premium = premium
+    this.price = price
     this.startDate = this.getStartTime(time, date);
     this.endDate = this.getEndTime(time, duration, date);
     this.description = description;
