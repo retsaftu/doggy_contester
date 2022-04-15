@@ -15,14 +15,13 @@ export class SubmissionService {
 
   async saveSolutionFile(submission: CreateSubmissionDto, file: Express.Multer.File) {
     const fileUTF8 = file.buffer.toString('utf8');
-    const submissionDirectory = path.join(__dirname, '../../../', 'uploads', submission.contestId, submission.taskId, submission.userId, submission.extension.substring(1));
+    const submissionDirectory = path.join(__dirname, '../../../', 'uploads', submission.contestId, submission.taskId, submission.user._id, submission.extension.substring(1));
     let filename = "";
     if (submission.extension === '.java') {
       filename = file.originalname;
     } else {
       filename = `main${submission.extension}`;
     }
-    // const filename = `Main${submission.extension}`;
     const filepath = path.join(submissionDirectory, filename);
 
     if (!fs.existsSync(submissionDirectory)) {
@@ -37,23 +36,23 @@ export class SubmissionService {
     submission.size = file.size;
     submission.timestamp = new Date();
 
-    const { insertedId } = await this.db.collection('submission').insertOne(submission);
+    // const { insertedId } = await this.db.collection('submission').insertOne(submission);
 
     return {
-      insertedId,
+      // insertedId,
       submissionDirectory
     };
   }
 
-  async downloadTestCases(taskId: string, contestId: string, submissionDirectory: string) {
+  async downloadTestCases(submission: CreateSubmissionDto, submissionDirectory: string) {
     let multipleCorrectOutput = false;
 
-    const contest = await this.db.collection('contest').findOne({ _id: new mongodb.ObjectID(contestId) });
+    const contest = await this.db.collection('contest').findOne({ _id: new mongodb.ObjectID(submission.contestId) });
     if (!contest) {
       return { success: false, message: 'Contest not found' };
     }
 
-    const task = contest.tasks.find(task => task._id.toString() === taskId.toString());
+    const task = contest.tasks.find(task => task._id.toString() === submission.taskId.toString());
     if (!task) {
       return { success: false, message: 'Task not found' };
     }
@@ -99,14 +98,14 @@ export class SubmissionService {
       }
     }
 
-    return { success: true, message: 'Test cases successfully downloaded', multipleCorrectOutput };
+    return { success: true, message: 'Test cases successfully downloaded', multipleCorrectOutput, taskName: task.name };
   }
 
-  async runTests(contestId: string, taskId: string, userId: string, extension: string) {
+  async runTests(submission: CreateSubmissionDto) {
     let compiler = "";
 
     shelljs.cd(path.join(__dirname, '../../../compiler/'));
-    switch (extension) {
+    switch (submission.extension) {
       case '.cpp':
         compiler = path.join(__dirname, "../../../compiler/cpp.sh");
         break;
@@ -119,17 +118,21 @@ export class SubmissionService {
     }
     shelljs.chmod("+x", compiler);
 
-    shelljs.exec(`${compiler} -c ${contestId} -t ${taskId} -u ${userId}`);
+    shelljs.exec(`${compiler} -c ${submission.contestId} -t ${submission.taskId} -u ${submission.user._id}`);
 
-    const submissionDirectory = path.join(__dirname, '../../../', 'uploads', contestId, taskId, userId, extension.substring(1));
+    const submissionDirectory = path.join(__dirname, '../../../', 'uploads', submission.contestId, submission.taskId, submission.user._id, submission.extension.substring(1));
     const compileErrors = shelljs.cat(path.join(submissionDirectory, 'compile.log'));
 
     if (compileErrors.stdout.toString().length > 0) {
-      return [];
+      return {
+        totalTests: 0,
+        correctTests: 0,
+        testResults: []
+      };
     }
 
     const testResults = [];
-    const resultDirectory = path.join(__dirname, '../../../', 'uploads', contestId, taskId, userId, extension.substring(1), 'result');
+    const resultDirectory = path.join(__dirname, '../../../', 'uploads', submission.contestId, submission.taskId, submission.user._id, submission.extension.substring(1), 'result');
     const resultFiles = fs.readdirSync(resultDirectory);
     let testNum = 1;
     for (const file of resultFiles) {
@@ -158,15 +161,33 @@ export class SubmissionService {
       testNum++;
     }
 
-    return testResults;
+    testNum--;
+
+    // count number of correct tests
+    let correctTests = 0;
+    let totalTime = 0.0
+    for (const test of testResults) {
+      if (test.message === 'Correct answer') {
+        correctTests++;
+      }
+      totalTime += test.time;
+    }
+
+    return {
+      totalTests: testNum,
+      correctTests,
+      testResults,
+      solved: testNum === correctTests ? true : false,
+      averageTime: Number((totalTime / testNum).toFixed(3))
+    };
   }
 
   async saveTestResults(id: string, testResults: any[]) {
     this.db.collection('submission').updateOne({ _id: new mongodb.ObjectID(id) }, { $set: { testResults } });
   }
 
-  async deleteLocalDirectory(contestId: string) {
-    const directory = path.join(__dirname, '../../../uploads', contestId);
+  async deleteLocalDirectory(submission: CreateSubmissionDto) {
+    const directory = path.join(__dirname, '../../../uploads', submission.contestId);
     shelljs.rm('-rf', directory);
   }
 
@@ -180,5 +201,11 @@ export class SubmissionService {
     const submission = await this.db.collection('submission').findOne({ _id: new mongodb.ObjectID(id) });
     submission.file = Buffer.from(submission.file, 'base64').toString('utf8');
     return submission.file;
+  }
+
+  async saveSubmission(submission: CreateSubmissionDto) {
+    const { insertedId } = await this.db.collection('submission').insertOne(submission);
+
+    return { insertedId };
   }
 }
