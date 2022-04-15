@@ -26,10 +26,13 @@ export class LeaderboardService {
   }
 
   async getGlobal() {
-    return await this.db.collection('user').aggregate([
+    console.log('getGlobal');
+
+    return await this.db.collection('users').aggregate([
       {
         $sort: {
-          solved: -1
+          solved: -1,
+          attempted: -1
         }
       }
     ]).toArray();
