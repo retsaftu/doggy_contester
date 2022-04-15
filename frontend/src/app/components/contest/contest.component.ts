@@ -56,10 +56,16 @@ export class ContestComponent implements OnInit {
     this.contestService.getContestById(id).subscribe((res: any) => {
       this.contestInfo = res[0];
 
+      let isParticipant = false;
       for(let i=0; i<this.contestInfo?.participants?.length; i++) {
         if(this.userService.userInfo._id.toString() == this.contestInfo?.participants[i]?._id.toString()) {
           this._isParticipant = true;
+          isParticipant = true;
+          break;
         }
+      }
+      if(!isParticipant) {
+        this._isParticipant = false;
       }
       console.log(this.contestInfo);
       this.contestInfo.startDate = new Date(this.contestInfo.startDate);
