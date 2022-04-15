@@ -22,7 +22,7 @@ export class ContestService {
       total_participants: createContestDto.total_participants,
       startDate: new Date(createContestDto.startDate),
       endDate: new Date(createContestDto.endDate),
-      private: createContestDto.private,
+      premium: createContestDto.premium,
       price: createContestDto?.price,
       cush: 0,
       tasks: []
