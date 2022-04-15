@@ -24,7 +24,7 @@
             <app-contest-submission [contestInfo]="contestInfo"></app-contest-submission>
         </mat-tab>
         <mat-tab label="Problem" *ngIf="isStarted || isOwner">
-            <app-contest-problem [currentProblem]="currentProblem" [problems]="problems"></app-contest-problem>
+            <app-contest-problem [currentProblem]="currentProblem" [problems]="problems" [contestInfo]="contestInfo"></app-contest-problem>
         </mat-tab>
         <mat-tab label="About">
             <app-contest-about [contestInfo]="contestInfo"></app-contest-about>

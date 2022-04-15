@@ -5,7 +5,7 @@
     <pre>{{currentProblem?.inputExample}}</pre>
     <h2>Sample output</h2>
     <pre>{{currentProblem?.outputExample}}</pre>
-    <div *ngIf="isLoggedIn">
+    <div *ngIf="isLoggedIn && !isOwner">
         <button class="contest-problem-submit-code" mat-raised-button color="primary"><label class="submit-code-label" for="submit-code">Submit code</label></button>
         <input #fileInput type="file" id="submit-code" [accept]=fileType (change)="processFile(fileInput)"
             mat-raised-button color="primary">

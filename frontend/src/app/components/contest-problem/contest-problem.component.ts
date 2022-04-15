@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { ProblemContent } from 'src/app/entities/contester.entity';
+import { ContestInfo, ProblemContent } from 'src/app/entities/contester.entity';
 import { AuthService } from 'src/app/services/auth.service';
+import { UserService } from 'src/app/services/user.service';
 import { FileService } from '../../services/file.service';
 
 class FileSnippet {
@@ -26,12 +27,15 @@ export class ContestProblemComponent implements OnInit {
   constructor(
     private router: Router,
     private fileService: FileService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) { }
 
   @Input() problems: any[] = [];
 
   @Input() currentProblem!: any;
+
+  @Input() contestInfo!: ContestInfo;
 
   fileType!: string;
 
@@ -122,5 +126,7 @@ export class ContestProblemComponent implements OnInit {
   }
 
   get isLoggedIn() { return this.authService.isLoggedIn() }
+
+  get isOwner() { return this.userService.userInfo._id == this.contestInfo.owner._id}
 
 }

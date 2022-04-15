@@ -32,31 +32,34 @@ export class ContestSubmissionComponent implements OnInit {
 
   ngOnInit(): void {
     this.length = 100;
-    this.submissions = this.generateList(0, this.pageSize);
+    // this.submissions = this.generateList(0, this.pageSize);
+    this.contestService.getSubmissions(this.contestInfo._id).subscribe((res) => {
+      console.log(res);
+    })
   }
 
-  generateList(start: number, end: number) {
-    const submission: SubmissionInfo[] = [];
-    for(let i=start; i<end; i++) {
-      let random = Math.floor(Math.random() * (3 - 1 + 1)) + 1;
-      const language = random == 1 ? AvailableProgrammingLanguages.CPP : random == 2 ? AvailableProgrammingLanguages.PY : AvailableProgrammingLanguages.JS;
-      random = Math.floor(Math.random() * (5 - 1 + 1)) + 1
-      const match = [
-        SubmissionResult.ACCEPTED,
-        SubmissionResult.MEMMORY_LIMIT,
-        SubmissionResult.RUNTIM_ERROR,
-        SubmissionResult.TIME_LIMIT,
-        SubmissionResult.WRONG_ANSWARE
-      ]
-      const submissionResult = match[random-1];
-      random = Math.floor(Math.random() * (5 - 1 + 1)) + 1
-      const match2 = [
-        'A', 'B', 'C', 'D', 'E', 'F', 'G'
-      ]
-      submission.push(new SubmissionInfo(match2[random-1], 'Some problem ' + i, submissionResult, language, new Date()))
-    }
-    return submission;
-  }
+  // generateList(start: number, end: number) {
+  //   const submission: SubmissionInfo[] = [];
+  //   for(let i=start; i<end; i++) {
+  //     let random = Math.floor(Math.random() * (3 - 1 + 1)) + 1;
+  //     const language = random == 1 ? AvailableProgrammingLanguages.CPP : random == 2 ? AvailableProgrammingLanguages.PY : AvailableProgrammingLanguages.JS;
+  //     random = Math.floor(Math.random() * (5 - 1 + 1)) + 1
+  //     const match = [
+  //       SubmissionResult.ACCEPTED,
+  //       SubmissionResult.MEMMORY_LIMIT,
+  //       SubmissionResult.RUNTIM_ERROR,
+  //       SubmissionResult.TIME_LIMIT,
+  //       SubmissionResult.WRONG_ANSWARE
+  //     ]
+  //     const submissionResult = match[random-1];
+  //     random = Math.floor(Math.random() * (5 - 1 + 1)) + 1
+  //     const match2 = [
+  //       'A', 'B', 'C', 'D', 'E', 'F', 'G'
+  //     ]
+  //     submission.push(new SubmissionInfo(match2[random-1], 'Some problem ' + i, submissionResult, language, new Date()))
+  //   }
+  //   return submission;
+  // }
 
   getSubmitTime(submitedTime?: Date) {
     if(!submitedTime) {
@@ -84,7 +87,7 @@ export class ContestSubmissionComponent implements OnInit {
 
   changePage(event: PageEvent) {
     this.pageSize = event.pageSize;
-    this.submissions = this.generateList(event.pageIndex * this.pageSize, (event.pageIndex + 1) * this.pageSize);
+    // this.submissions = this.generateList(event.pageIndex * this.pageSize, (event.pageIndex + 1) * this.pageSize);
   }
 
   open(row: any) {
