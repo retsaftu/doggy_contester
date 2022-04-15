@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, tap } from 'rxjs';
 import { ContestCreation, ContestInfo } from '../entities/contester.entity';
@@ -104,6 +104,11 @@ export class ContestService {
 
   getSubmission(submissionId: string) {
     return this.http.get(`/api/submission/${submissionId}`)
+  }
+
+  getSubmissions(contestId: string) {
+    let params = new HttpParams().set("contestId", contestId);
+    return this.http.get(`/api/leaderboard`, {params})
   }
 
 }
