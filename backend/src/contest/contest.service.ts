@@ -215,24 +215,79 @@ export class ContestService {
   }
 
   async joinContest(contestId: string, userId: string, username: string) {
-    await this.db.collection('contest').aggregate([
+    const check = (await this.db.collection('contest').aggregate([
       {
         $match: {
-          _id: new mongodb.ObjectId(contestId)
+          _id: new mongodb.ObjectId(contestId),
+          premium: true
         }
       }
-    ])
-    await (this.db.collection('contest').updateOne(
-      { "_id": new mongodb.ObjectId(contestId) },
-      {
-        $push: {
-          participants: {
-            _id: new mongodb.ObjectId(userId),
-            name: username
+    ]).toArray())[0]
+    if (check) {
+      const peny = check.price;
+
+      console.log(`userId`, userId);
+
+      const user = (await this.db.collection('users').aggregate(
+        [{
+          $match: {
+            _id: new mongodb.ObjectId(userId)
+          }
+        }]
+      ).toArray())[0]
+      console.log(`user`, user);
+      if (user.balance >= peny) {
+
+        const newBalance = user.balance - peny;
+
+        await (this.db.collection('users').updateOne(
+          { "_id": new mongodb.ObjectId(userId) },
+          {
+            $set: {
+              balance: newBalance
+            }
+          }
+        ))
+
+        const newCush = check.cush + peny;
+        await (this.db.collection('contest').updateOne(
+          { "_id": new mongodb.ObjectId(contestId) },
+          {
+            $set: {
+              cush: newCush
+            }
+          }
+        ))
+
+        await (this.db.collection('contest').updateOne(
+          { "_id": new mongodb.ObjectId(contestId) },
+          {
+            $push: {
+              participants: {
+                _id: new mongodb.ObjectId(userId),
+                name: username
+              }
+            }
+          }
+        ))
+      } else {
+        return "deneg malo"
+      }
+    } else {
+
+      await (this.db.collection('contest').updateOne(
+        { "_id": new mongodb.ObjectId(contestId) },
+        {
+          $push: {
+            participants: {
+              _id: new mongodb.ObjectId(userId),
+              name: username
+            }
           }
         }
-      }
-    ))
+      ))
+    }
+
   }
 
 
