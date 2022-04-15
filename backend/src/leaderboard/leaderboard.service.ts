@@ -1,26 +1,24 @@
-import { Injectable } from '@nestjs/common';
-import { CreateLeaderboardDto } from './dto/create-leaderboard.dto';
-import { UpdateLeaderboardDto } from './dto/update-leaderboard.dto';
+import { Inject, Injectable } from '@nestjs/common';
+
+import * as mongodb from 'mongodb';
 
 @Injectable()
 export class LeaderboardService {
-  create(createLeaderboardDto: CreateLeaderboardDto) {
-    return 'This action adds a new leaderboard';
-  }
 
-  findAll() {
-    return `This action returns all leaderboard`;
+  constructor(
+    @Inject('DATABASE_CONNECTION') private db: mongodb.Db,
+  ) { }
+  async findAll(contestId:string) {
+    return await this.db.collection('submission').aggregate([
+      {
+        $match: { contestId: contestId }
+      }
+    ]).toArray();
+
   }
 
   findOne(id: number) {
     return `This action returns a #${id} leaderboard`;
   }
 
-  update(id: number, updateLeaderboardDto: UpdateLeaderboardDto) {
-    return `This action updates a #${id} leaderboard`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} leaderboard`;
-  }
 }

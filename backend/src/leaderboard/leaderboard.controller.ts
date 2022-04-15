@@ -1,16 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { LeaderboardService } from './leaderboard.service';
 import { CreateLeaderboardDto } from './dto/create-leaderboard.dto';
 import { UpdateLeaderboardDto } from './dto/update-leaderboard.dto';
 
 @Controller('leaderboard')
 export class LeaderboardController {
-  constructor(private readonly leaderboardService: LeaderboardService) {}
+  constructor(private readonly leaderboardService: LeaderboardService) { }
 
 
   @Get()
-  findAll() {
-    return this.leaderboardService.findAll();
+  findAll(@Query('contestId') contestId: string) {
+    return this.leaderboardService.findAll(contestId);
   }
 
   @Get(':id')
