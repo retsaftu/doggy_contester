@@ -15,12 +15,10 @@ export class SettingsMainPageComponent implements OnInit {
 
   user!: any;
 
-  private _id!: string;
-
   ngOnInit(): void {
-    this._id = this.userService.userInfo._id;
-    this.userService.getUserById(this._id).subscribe((res: any) => {
-      this.user = res;
+    this.user = this.userService.userInfo;
+    this.userService.changeEmitted$.subscribe((info) => {
+      this.user = info;
     })
   }
 

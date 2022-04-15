@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProblemContent } from 'src/app/entities/contester.entity';
+import { AuthService } from 'src/app/services/auth.service';
 import { FileService } from '../../services/file.service';
 
 class FileSnippet {
@@ -20,11 +21,12 @@ class FileSnippet {
 
 export class ContestProblemComponent implements OnInit {
 
-  contestId!: number;
+  contestId!: string;
 
   constructor(
     private router: Router,
     private fileService: FileService,
+    private authService: AuthService
   ) { }
 
   @Input() problems: any[] = [];
@@ -42,7 +44,8 @@ export class ContestProblemComponent implements OnInit {
   ngOnInit(): void {
     this.fileType = '.cpp,.js,.py';
     let splittedUrl = this.router.url.split('/');
-    this.contestId = parseInt(splittedUrl[splittedUrl.length - 1]);
+    this.contestId = splittedUrl[splittedUrl.length - 1];
+    console.log('currProblem',this.currentProblem);
     // this.contestProblems = this.generationList();
     // this.currentProblem = this.contestProblems[0];
     // console.log(`this.contestProblems`, this.contestProblems);
@@ -97,8 +100,8 @@ export class ContestProblemComponent implements OnInit {
       this.selectedFile = new FileSnippet(event.target.result, file);
 
       this.selectedFile.pending = true;
-      console.log(this.selectedFile, this.userId);
-      this.fileService.uploadOne(this.selectedFile.file, this.userId).subscribe(
+      console.log(this.selectedFile);
+      this.fileService.uploadOne(this.selectedFile.file, this.contestId, this.currentProblem._id).subscribe(
         (res: any) => {
           this.onSuccess();
           setTimeout(() => {
@@ -117,5 +120,7 @@ export class ContestProblemComponent implements OnInit {
 
     reader.readAsDataURL(file);
   }
+
+  get isLoggedIn() { return this.authService.isLoggedIn() }
 
 }

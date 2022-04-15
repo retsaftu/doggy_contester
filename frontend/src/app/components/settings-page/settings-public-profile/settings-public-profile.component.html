@@ -1,1 +1,29 @@
-<p>settings-public-profile works!</p>
+<div>
+    <form [formGroup]="form" class="settings-public-profile-wrapper">
+        <div class="user-avtar">
+            <div class="user-avatar-icon" *ngIf="!user?.avatar">
+                <mat-icon (click)="openDialog()">account_circle</mat-icon>
+            </div>
+            <div class="user-avatar-picture" *ngIf="user?.avatar">
+                <img (click)="openDialog()" [src]="filePath">
+            </div>
+        </div>
+
+        <mat-form-field appearance="fill" class="settings-public-profile-input">
+            <mat-label>Name</mat-label>
+            <input type="text" formControlName="name" matInput/>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="settings-public-profile-input">
+            <mat-label>Username</mat-label>
+            <input type="text" formControlName="username" matInput required/>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="settings-public-profile-input">
+            <mat-label>About</mat-label>
+            <textarea formControlName="about" matInput></textarea>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="saveChanges()">Save</button>
+    </form>
+</div>

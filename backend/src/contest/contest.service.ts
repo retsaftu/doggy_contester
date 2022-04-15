@@ -22,6 +22,9 @@ export class ContestService {
       total_participants: createContestDto.total_participants,
       startDate: new Date(createContestDto.startDate),
       endDate: new Date(createContestDto.endDate),
+      premium: createContestDto.premium,
+      price: createContestDto?.price,
+      cush: 0,
       tasks: []
     }
     console.log(`createContest`, createContest);
@@ -34,7 +37,7 @@ export class ContestService {
     // createContest.endDate = createContestDto.endDate;
 
 
-
+    console.log(`createContestDto`, JSON.stringify(createContestDto.tasks));
 
     for (let _task of createContestDto.tasks) {
       let newTask = {
@@ -47,25 +50,34 @@ export class ContestService {
         code: _task.code,
         time: _task.time,
         memory: _task.memory,
-        input: '',
-        output: ''
+        tests: []
+        // input: [],
+        // output: []
       }
       console.log(`newTask`, newTask);
-      let input = '';
-      let output = '';
-      let counter = 0;
-      for (let index = 0; index < _task.tests.length; index++) {
-        input = input + _task.tests[index].input;
-        output = output + _task.tests[index].output;
-        counter++;
 
+      // let counter = 0;
+      for (let index = 0; index < _task.tests.length; index++) {
+        let input = [];
+        let output = [];
+        input.push(_task.tests[index].input);
+        let preOutput = [];
+        preOutput.push(_task.tests[index].output)
+        output.push(preOutput);
+        newTask.tests.push({
+          input: input,
+          output: output,
+        })
+        // output = output + _task.tests[index].output;
+        // counter++;
       }
-      input = counter.toString() + '\n' + input;
-      newTask.input = input;
-      newTask.output = output;
+      console.log(`JSON.stringify(newTask)`, JSON.stringify(newTask));
+      // input = input;
+      // newTask.input = input;
+      // newTask.output = output;
       createContest.tasks.push(newTask)
-      console.log(`input`, input);
-      console.log(`output`, output);
+      // console.log(`input`, input);
+      // console.log(`output`, output);
     }
     return await this.db.collection('contest').insertOne(createContest);
   }
@@ -202,6 +214,13 @@ export class ContestService {
   }
 
   async joinContest(contestId: string, userId: string, username: string) {
+    await this.db.collection('contest').aggregate([
+      {
+        $match: {
+          _id: new mongodb.ObjectId(contestId)
+        }
+      }
+    ])
     await (this.db.collection('contest').updateOne(
       { "_id": new mongodb.ObjectId(contestId) },
       {

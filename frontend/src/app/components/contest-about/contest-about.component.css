@@ -1,0 +1,8 @@
+.contest-about-wrapper {
+    padding: 1.5em;
+}
+
+.contest-about-wrapper h2 a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

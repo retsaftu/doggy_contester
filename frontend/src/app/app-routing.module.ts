@@ -15,6 +15,7 @@ import { SettingsEmailComponent } from './components/settings-page/settings-emai
 import { SettingsPasswordComponent } from './components/settings-page/settings-password/settings-password.component';
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 import { Page404Component } from './components/page404/page404.component';
+import { BalanceComponent } from './components/balance/balance.component';
 
 const routes: Routes = [
   { 
@@ -48,6 +49,12 @@ const routes: Routes = [
       {
         path: 'user/:id',
         component: UserComponent
+      },
+      {
+        path: 'balance',
+        component: BalanceComponent,
+        canActivate: [AuthGuard],
+        runGuardsAndResolvers: 'always'
       },
       {
         path: '',

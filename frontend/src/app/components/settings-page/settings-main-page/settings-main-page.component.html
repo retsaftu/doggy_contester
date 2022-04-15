@@ -2,8 +2,11 @@
     <mat-card class="settings-list">
         <div class="settings-profile">
             <div class="settings-profile-avatar">
-                <div class="settings-proflie-avatar-wrapper">
+                <div class="settings-proflie-avatar-wrapper" *ngIf="user.avatar">
                     <img class="settings-profile-avatar-picture" [src]="user?.avatar">
+                </div>
+                <div class="settings-proflie-avatar-wrapper" *ngIf="!user.avatar">
+                    <mat-icon>account_circle</mat-icon>
                 </div>
             </div>
             <div class="settings-profile-name-username">
@@ -20,20 +23,20 @@
                 </span>
                 <mat-divider></mat-divider>
             </li>
-            <li>
+            <!-- <li>
                 <span class="settings-list-content">
                     <mat-icon>brush</mat-icon>
                     <span><a routerLink="/settings/appearance">Appearance</a></span>
                 </span>
                 <mat-divider></mat-divider>
-            </li>
-            <li>
+            </li> -->
+            <!-- <li>
                 <span class="settings-list-content">
                     <mat-icon> mail_outline</mat-icon>
                     <span routerLink="/settings/email"><a>Email</a></span>
                 </span>
                 <mat-divider></mat-divider>
-            </li>
+            </li> -->
             <li>
                 <span class="settings-list-content">
                     <mat-icon>lock</mat-icon>

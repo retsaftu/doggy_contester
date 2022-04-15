@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import * as moment from 'moment';
-import {FormArray, FormControl, FormGroup, Validators, FormBuilder, AbstractControl} from '@angular/forms';
-import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import { FormArray, FormControl, FormGroup, Validators, FormBuilder, AbstractControl } from '@angular/forms';
+import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { TimepickerInputComponent } from '../timepicker/timepicker-input/timepicker-input.component';
 import { ContestCreation, ContestInfo, ProblemCreation, TestCreation } from 'src/app/entities/contester.entity';
 import { Time } from 'src/app/entities/time';
@@ -37,7 +37,7 @@ export const MY_FORMATS = {
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
     },
 
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
 export class CreateContestComponent implements OnInit {
@@ -52,12 +52,14 @@ export class CreateContestComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<HomeComponent>,
     public dialog: MatDialog,
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private contestService: ContestService,
-    private snackBarService: SnackBarService) { 
+    private snackBarService: SnackBarService) {
     this.form = fb.group({
       name: new FormControl('', [Validators.required]),
       description: new FormControl('', [Validators.required]),
+      premium: new FormControl('', [Validators.required]),
+      price: new FormControl('', [Validators.required]),
       time: new FormControl(new Time('00', '00'), [Validators.required]),
       duration: new FormControl(new Time('01', '00'), [Validators.required]),
       date: new FormControl(moment(), [Validators.required]),
@@ -77,7 +79,7 @@ export class CreateContestComponent implements OnInit {
             })
           ]),
           code: new FormControl(''),
-        }) 
+        })
       ])
     })
   }
@@ -184,8 +186,8 @@ export class CreateContestComponent implements OnInit {
   private isProblemValid(problemIndex: number) {
     const problem = this.getProblem(problemIndex);
     return !problem.get('name')?.hasError('required') && !problem.get('description')?.hasError('required') &&
-           !problem.get('sampleTestInput')?.hasError('required') && !problem.get('sampleTestOutput')?.hasError('required') &&
-           !problem.get('memmoryLimit')?.hasError('required') && !problem.get('timeLimit')?.hasError('required');
+      !problem.get('sampleTestInput')?.hasError('required') && !problem.get('sampleTestOutput')?.hasError('required') &&
+      !problem.get('memmoryLimit')?.hasError('required') && !problem.get('timeLimit')?.hasError('required');
   }
 
   private isTestValid(problemIndex: number, testIndex: number) {
@@ -195,20 +197,20 @@ export class CreateContestComponent implements OnInit {
 
   isAllContestFieldsAreValid() {
     // Validate general contest fields
-    if(this.name?.hasError('required') || this.duration?.hasError('required') ||
-       this.time?.hasError('required') || this.date?.hasError('required') || 
-       this.total_participants?.hasError('required') || this.description?.hasError('required')) {
+    if (this.name?.hasError('required') || this.duration?.hasError('required') ||
+      this.time?.hasError('required') || this.date?.hasError('required') ||
+      this.total_participants?.hasError('required') || this.description?.hasError('required')) {
       return false;
     }
 
     // Validate problems fields
-    for(let i = 0; i<this.problems.length; i++) {
+    for (let i = 0; i < this.problems.length; i++) {
 
-      if(!this.isProblemValid(i)) { return false; }
+      if (!this.isProblemValid(i)) { return false; }
 
       // Validate tests
-      for(let j=0; j<this.getTests(i).length; j++) {
-        if(!this.isTestValid(i, j)) { return false; }
+      for (let j = 0; j < this.getTests(i).length; j++) {
+        if (!this.isTestValid(i, j)) { return false; }
       }
     }
     return true;
@@ -228,7 +230,7 @@ export class CreateContestComponent implements OnInit {
     problem.get('description')?.disable();
     problem.get('sampleTestInput')?.disable()
     problem.get('sampleTestOutput')?.disable() &&
-    problem.get('memmoryLimit')?.disable()
+      problem.get('memmoryLimit')?.disable()
     problem.get('timeLimit')?.disable()
   }
 
@@ -239,15 +241,15 @@ export class CreateContestComponent implements OnInit {
     this.date?.disable();
     this.total_participants?.disable();
     this.description?.disable();
-    for(let i = 0; i<this.problems.length; i++) {
+    for (let i = 0; i < this.problems.length; i++) {
       this.disableProblemFields(i);
-      for(let j=0; j<this.getTests(i).length; j++) {
+      for (let j = 0; j < this.getTests(i).length; j++) {
         this.disableTestFields(i, j);
       }
     }
-    
+
   }
-  
+
   private enableTestFields(problemIndex: number, testIndex: number) {
     const test = this.getTest(problemIndex, testIndex);
     test.get('testInput')?.enable();
@@ -262,7 +264,7 @@ export class CreateContestComponent implements OnInit {
     problem.get('description')?.enable();
     problem.get('sampleTestInput')?.enable()
     problem.get('sampleTestOutput')?.enable() &&
-    problem.get('memmoryLimit')?.enable()
+      problem.get('memmoryLimit')?.enable()
     problem.get('timeLimit')?.enable()
   }
 
@@ -273,24 +275,24 @@ export class CreateContestComponent implements OnInit {
     this.date?.enable();
     this.total_participants?.enable();
     this.description?.enable();
-    for(let i = 0; i<this.problems.length; i++) {
+    for (let i = 0; i < this.problems.length; i++) {
       this.enableProblemFields(i);
-      for(let j=0; j<this.getTests(i).length; j++) {
+      for (let j = 0; j < this.getTests(i).length; j++) {
         this.enableTestFields(i, j);
       }
     }
-    
+
   }
 
   createContest() {
 
-    if(!this.isAllContestFieldsAreValid()) {
+    if (!this.isAllContestFieldsAreValid()) {
       return
     }
 
     const problems: ProblemCreation[] = [];
 
-    for(let i = 0; i<this.problems.length; i++) {
+    for (let i = 0; i < this.problems.length; i++) {
       const problem = this.getProblem(i);
       const name = problem.get('name')?.value;
       const description = problem.get('description')?.value;
@@ -302,7 +304,7 @@ export class CreateContestComponent implements OnInit {
 
       const tests: TestCreation[] = [];
 
-      for(let j=0; j<this.getTests(i).length; j++) {
+      for (let j = 0; j < this.getTests(i).length; j++) {
         const testInput = this.getTest(i, j).get('testInput')?.value;
         const testOutput = this.getTest(i, j).get('testOutput')?.value;
         tests.push(new TestCreation(testInput, testOutput))
@@ -311,19 +313,21 @@ export class CreateContestComponent implements OnInit {
     }
     const name = this.name?.value;
     const description = this.description?.value;
+    const premium = this.premium?.value;
+    const price = this.price?.value;
     const duration = this.duration?.value;
     const time = this.time?.value;
     const date = this.date?.value?.toDate();
     const total_participants = this.total_participants?.value;
 
-    const contest = new ContestCreation(name, description, duration, time, date, total_participants, problems);
+    const contest = new ContestCreation(name, description, premium, price, duration, time, date, total_participants, problems);
 
     console.log(contest);
 
     this.contestService.createContest(contest).subscribe(({
       next: (res) => {
         this.snackBarService.openSuccessSnackBar("Contest created succsessfully!", 5000);
-        this.dialogRef.close({created: true});
+        // this.dialogRef.close({created: true});
       },
       error: (err) => {
         this.enableContestFields();
@@ -334,6 +338,10 @@ export class CreateContestComponent implements OnInit {
   get name() { return this.form.get('name'); }
 
   get description() { return this.form.get('description'); }
+
+  get premium() { return this.form.get('premium'); }
+
+  get price() { return this.form.get('price'); }
 
   get duration() { return this.form.get('duration'); }
 
@@ -347,7 +355,7 @@ export class CreateContestComponent implements OnInit {
 
   set isLoading(value: boolean) {
     this._isLoading = value;
-    if(this._isLoading) {
+    if (this._isLoading) {
       this.disableContestFields();
     } else {
       this.enableContestFields();

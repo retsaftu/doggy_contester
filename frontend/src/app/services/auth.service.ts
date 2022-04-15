@@ -37,7 +37,7 @@ export class AuthService {
     return this.http.post(`/api/auth/login`, userLoginInfo)
       .pipe(
         tap((response: any) => {
-          this.userService.userInfo = new UserBasicInfo(response['username'], response['userId'], response['avatar'])
+          this.userService.userInfo = new UserBasicInfo(response['username'], response['userId'], response['balance'], response['avatar'])
           this.setToken(response['access_token'], response['expirationTime']);
         })
       )
@@ -47,7 +47,7 @@ export class AuthService {
     return this.http.post('/api/auth/loginByGoogleAccount', {email: email})
       .pipe(
         tap((response: any) => {
-          this.userService.userInfo = new UserBasicInfo(response['username'], response['userId'], response['avatar'])
+          this.userService.userInfo = new UserBasicInfo(response['username'], response['userId'], response['balance'], response['avatar'])
           this.setToken(response['access_token'], response['expirationTime']);
         })
       );
@@ -57,7 +57,7 @@ export class AuthService {
     return this.http.post(`/api/auth/confirmEmail/${token}`, null)
       .pipe(
         tap((response: any) => {
-          this.userService.userInfo = new UserBasicInfo(response['username'], response['userId'], response['avatar'])
+          this.userService.userInfo = new UserBasicInfo(response['username'], response['userId'], response['balance'], response['avatar'])
           this.setToken(response['access_token'], response['expirationTime']);
         })
       );
@@ -68,6 +68,9 @@ export class AuthService {
   }
 
   private setToken(token: string, expirationTime: Date) {
+    if(!expirationTime) {
+      expirationTime = new Date(new Date().setHours(new Date().getHours() + 168));
+    }
     this.cookieService.set(environment.tokenHeader, token, expirationTime);
   }
 

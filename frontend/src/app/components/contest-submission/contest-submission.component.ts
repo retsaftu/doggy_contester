@@ -1,7 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { AvailableProgrammingLanguages, ContestInfo, SubmissionInfo, SubmissionResult } from 'src/app/entities/contester.entity';
 import { getDifferenceInDays, getDifferenceInHours, getDifferenceInMinutes, getDifferenceInSeconds } from 'src/app/entities/time';
+import { ContestService } from 'src/app/services/contest.service';
+import { SubmissionDialogComponent } from './submission-dialog/submission-dialog.component';
 
 @Component({
   selector: 'app-contest-submission',
@@ -22,7 +25,10 @@ export class ContestSubmissionComponent implements OnInit {
 
   submissions: SubmissionInfo[] = [];
 
-  constructor() { }
+  constructor(
+    private contestService: ContestService,
+    public dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
     this.length = 100;
@@ -79,6 +85,16 @@ export class ContestSubmissionComponent implements OnInit {
   changePage(event: PageEvent) {
     this.pageSize = event.pageSize;
     this.submissions = this.generateList(event.pageIndex * this.pageSize, (event.pageIndex + 1) * this.pageSize);
+  }
+
+  open(row: any) {
+
+    const dialogRef = this.dialog.open(SubmissionDialogComponent, {
+      width: '60%',
+      data: {
+        submissionId: "62563d2b90017acbc99c3326"
+      }
+    })
   }
 
 }

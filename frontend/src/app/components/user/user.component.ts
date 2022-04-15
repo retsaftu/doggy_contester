@@ -83,6 +83,9 @@ export class UserComponent implements OnInit {
   // }
 
   openDialog() {
+    if(this.userService.userInfo._id != this.user._id) {
+      return;
+    }
     const dialogRef = this.dialog.open(AvatarDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
@@ -90,7 +93,7 @@ export class UserComponent implements OnInit {
         this.userService.getUserById(this.id).subscribe((res: any) => {
           this.user = res
           this.filePath = this.user.avatar;
-          this.userService.userInfo = new UserBasicInfo(res.username, res._id, res.avatar);
+          this.userService.userInfo = new UserBasicInfo(res.username, res._id, res.balance, res.avatar);
           this.userService.emitChangeOfUserProfile(this.userService.userInfo);
         });
       }

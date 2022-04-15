@@ -5,3 +5,6 @@
 .contest-submission-table-item {
     text-align: center;
 }
+.contest-submission-row {
+    cursor: pointer;
+}

@@ -18,7 +18,8 @@ export const environment = {
   USER_INFO_FIELDS: {
     USERNAME: "USER_INFO_USERNAME",
     ID: "USER_INFO_EMAIL_ID",
-    AVATAR: "USER_AVATAR"
+    AVATAR: "USER_AVATAR",
+    BALANCE: "USER_BALANCE"
   }
 };
 

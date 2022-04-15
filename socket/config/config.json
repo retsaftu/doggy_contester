@@ -1,0 +1,18 @@
+{
+    "port": 9000,
+    "mongodb": {
+        "host": "192.168.66.139",
+        "port": 5000,
+        "dbname": "doggy-contester",
+        "user": "",
+        "password": ""
+    },
+    "email": {
+        "sender": "doggycontester@gmail.com",
+        "secretKey": "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"
+    },
+    "client": {
+        "host": "localhost",
+        "port": 4200
+    }
+}

@@ -57,7 +57,11 @@
 .settings-proflie-avatar-wrapper {
     width: 100%;
 }
-.settings-profile-avatar-picture {
+.settings-proflie-avatar-wrapper mat-icon {
     width: 100%;
+    font-size: 4.8em;
+}
+.settings-profile-avatar-picture {
+    width: 4.8em;
     border-radius: 50%;
 }
