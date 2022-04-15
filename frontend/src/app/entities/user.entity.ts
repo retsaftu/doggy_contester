@@ -34,6 +34,6 @@ export class UserProfileInfo {
 }
 
 export class UserLeaderboard {
-    constructor(public username: string, public name: string, public solved: number) {}
+    constructor(public username: string, public name: string, public solved: number, public attempted: number) {}
 }
 

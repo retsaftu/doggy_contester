@@ -105,4 +105,8 @@ export class UserService {
   recharge(balance: number) {
     return this.http.patch('/api/user/balance/recharge', {balance: balance})
   }
+
+  getGlobalLeaderBoard() {
+    return this.http.get('/api/leaderboard/getGlobal')
+  }
 }
