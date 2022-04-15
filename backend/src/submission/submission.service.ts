@@ -206,6 +206,17 @@ export class SubmissionService {
   async saveSubmission(submission: CreateSubmissionDto) {
     const { insertedId } = await this.db.collection('submission').insertOne(submission);
 
+    // update user solved and attempted number
+    await this.db.collection('users').updateOne(
+      { _id: new mongodb.ObjectID(submission.user._id) },
+      {
+        $inc: {
+          attempted: 1,
+          solved: submission.solved ? 1 : 0
+        }
+      }
+    );
+
     return { insertedId };
   }
 }
