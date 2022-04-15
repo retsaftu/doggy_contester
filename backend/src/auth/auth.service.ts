@@ -28,10 +28,12 @@ export class AuthService {
       email: dto.email,
       passwordHash: await hash(dto.password, salt),
       isActive: true,
-      balance: 0
+      balance: 0,
+      solved: 0,
+      attempted: 0
     }
 
-    if(dto.avatar) {
+    if (dto.avatar) {
       user['avatar'] = dto.avatar;
     }
 
@@ -47,15 +49,17 @@ export class AuthService {
       email: dto.email,
       passwordHash: await hash(dto.password, salt),
       isActive: false,
-      balance: 0
+      balance: 0,
+      solved: 0,
+      attempted: 0
     }
 
-    if(dto.avatar) {
+    if (dto.avatar) {
       user['avatar'] = dto.avatar;
     }
 
     const createdInfo = await this.db.collection('users').insertOne(user);
-    const createdUser = await this.db.collection('users').findOne({_id: createdInfo.insertedId})
+    const createdUser = await this.db.collection('users').findOne({ _id: createdInfo.insertedId })
     await this.sendConfirmation(createdUser)
   }
 
@@ -75,7 +79,7 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException(USER_NOT_FOUND_ERROR);
     }
-    if(user.isActive === false) {
+    if (user.isActive === false) {
       throw new UnauthorizedException(EMAIL_NOT_CONFIRM);
     }
     const isCorrectPassword = await compare(password, user.passwordHash);
@@ -113,9 +117,9 @@ export class AuthService {
 
   async sendConfirmation(user: any) {
     const tokenPayload = {
-        _id: user._id,
-        isActive: user.isActive,
-        email: user.email
+      _id: user._id,
+      isActive: user.isActive,
+      email: user.email
     };
 
     const token = await this.generateToken(tokenPayload);
@@ -131,8 +135,8 @@ export class AuthService {
 
   private async saveToken(token, userId) {
     await this.db.collection('users').updateOne(
-      {_id: new mongodb.ObjectId(userId)},
-      {$set: { token: token }}
+      { _id: new mongodb.ObjectId(userId) },
+      { $set: { token: token } }
     );
   }
 
@@ -140,20 +144,20 @@ export class AuthService {
     const data = JSON.parse(JSON.stringify(this.jwtService.decode(token)));
     console.log(data);
     const user = await this.findUser(data.email);
-    if(user.token != token) {
+    if (user.token != token) {
       throw new BadRequestException('Confirmation error')
     }
     return user;
   }
 
-  async confirm(token: string){
+  async confirm(token: string) {
     const user = await this.verifyToken(token);
 
-    if(user && !user.isActive) {
+    if (user && !user.isActive) {
 
       await this.db.collection('users').updateOne(
-        {_id: new mongodb.ObjectId(user._id)},
-        {$set: { isActive: true }, $unset: { token: 1}}
+        { _id: new mongodb.ObjectId(user._id) },
+        { $set: { isActive: true }, $unset: { token: 1 } }
       );
 
       const email = user.email;
@@ -169,6 +173,6 @@ export class AuthService {
     }
 
     throw new BadRequestException('Confirmation error')
-}
+  }
 
 }
