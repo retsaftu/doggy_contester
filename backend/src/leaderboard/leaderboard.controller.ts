@@ -15,15 +15,15 @@ export class LeaderboardController {
     @Query('contestId') contestId: string,
     @Req() req: any,
 
-    ) {
+  ) {
     const userId = req.user._id
     console.log(`id`, userId);
     return this.leaderboardService.findSubmissionByContestIdAndUserId(contestId, userId);
   }
 
-  @Get(':id')
-  getGlobal(@Param('id') id: string) {
-    return this.leaderboardService.findOne(+id);
+  @Get('getGlobal')
+  getGlobal() {
+    return this.leaderboardService.getGlobal();
   }
 
 

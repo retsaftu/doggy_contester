@@ -25,8 +25,14 @@ export class LeaderboardService {
 
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} leaderboard`;
+  async getGlobal() {
+    return await this.db.collection('user').aggregate([
+      {
+        $sort: {
+          solved: -1
+        }
+      }
+    ]).toArray();
   }
 
 }
