@@ -15,39 +15,71 @@ export class SubmissionController {
   @UseInterceptors(FileInterceptor('file'))
   async create(
     @UploadedFile() file: Express.Multer.File,
-    @Body() body: any,
+    @Body() submission: any,
     @Req() req: any
   ) {
     const supportedFileExtensions = ['.cpp', '.py', '.java'];
 
+    const fileExtension = path.extname(file.originalname);
+
     if (!file)
       return { success: false, message: 'No file uploaded' };
 
-    if (!supportedFileExtensions.includes(path.extname(file.originalname)) ||
-        !supportedFileExtensions.includes(body.extension))
+    if (!supportedFileExtensions.includes(fileExtension) ||
+        !supportedFileExtensions.includes(submission.extension))
       return { success: false, message: 'File extension not supported' };
 
-    if (!body.contestId || !body.taskId || !req.user._id)
+    if (fileExtension !== submission.extension)
+      return { success: false, message: 'File extension does not match' };
+
+    if (!submission.contestId || !submission.taskId || !req.user._id)
       return { success: false, message: 'Missing required fields' };
-    
-    body.userId = req.user._id;
 
-    const { insertedId, submissionDirectory } = await this.submissionService.saveSolutionFile(body, file);
+    submission.user = {
+      _id: req.user._id,
+      username: req.user.username
+    };
 
-    await this.submissionService.downloadTestCases(body.taskId, body.contestId, submissionDirectory);
+    const { submissionDirectory } = await this.submissionService.saveSolutionFile(submission, file);
 
-    const testResults = await this.submissionService.runTests(body.contestId, body.taskId, body.userId, body.extension);
+    const { taskName } = await this.submissionService.downloadTestCases(submission, submissionDirectory);
+    submission.taskName = taskName;
+
+    const {
+      totalTests,
+      correctTests,
+      testResults,
+      solved,
+      averageTime
+    } = await this.submissionService.runTests(submission);
+    submission.totalTestCases = totalTests;
+    submission.correctTestCases = correctTests;
+    submission.testResults = testResults;
+    submission.solved = solved;
+    submission.averageTime = averageTime;
 
     if (testResults.length === 0) {
-      await this.submissionService.deleteLocalDirectory(body.contestId);
+      await this.submissionService.deleteLocalDirectory(submission.contestId);
       return { success: false, message: 'Compilation error' };
     }
 
-    await this.submissionService.saveTestResults(insertedId.toString(), testResults);
+    // await this.submissionService.saveTestResults(insertedId.toString(), testResults);
 
-    await this.submissionService.deleteLocalDirectory(body.contestId);
+    // await this.submissionService.saveSubmission(submission, file);
 
-    return { success: true, insertedId, testResults: testResults || [] };
+    await this.submissionService.deleteLocalDirectory(submission);
+
+    submission.originalName = file.originalname;
+    submission.file = file.buffer.toString('base64');
+    submission.size = file.size;
+    submission.timestamp = new Date();
+
+    const { insertedId } = await this.submissionService.saveSubmission(submission);
+
+    return {
+      success: true,
+      ...submission
+    };
   }
 
   @UseGuards(JwtAuthGuard)
