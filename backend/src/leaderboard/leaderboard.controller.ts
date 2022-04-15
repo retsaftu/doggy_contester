@@ -22,7 +22,7 @@ export class LeaderboardController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  getGlobal(@Param('id') id: string) {
     return this.leaderboardService.findOne(+id);
   }
 

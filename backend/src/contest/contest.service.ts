@@ -20,6 +20,7 @@ export class ContestService {
         name: owner.username
       },
       total_participants: createContestDto.total_participants,
+      participants: [],
       startDate: new Date(createContestDto.startDate),
       endDate: new Date(createContestDto.endDate),
       premium: createContestDto.premium,
