@@ -15,6 +15,11 @@ export class LeaderboardService {
           contestId: contestId,
           userId: userId
         }
+      },
+      {
+        $sort: {
+          _id: -1
+        }
       }
     ]).toArray();
 
