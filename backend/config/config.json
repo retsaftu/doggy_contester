@@ -1,7 +1,7 @@
 {
-    "port": 3000,
+    "port": 5001,
     "mongodb": {
-        "host": "192.168.66.139",
+        "host": "localhost",
         "port": 5000,
         "dbname": "doggy-contester",
         "user": "",
@@ -13,10 +13,10 @@
     },
     "email": {
         "sender": "doggycontester@gmail.com",
-        "secretKey": "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"
+        "secretKey": "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"
     },
     "client": {
-        "host": "localhost",
-        "port": 4200
+        "host": "agis.kz",
+        "port": 5002
     }
 }

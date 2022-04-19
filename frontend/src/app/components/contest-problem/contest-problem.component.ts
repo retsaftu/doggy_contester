@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ContestInfo, ProblemContent } from 'src/app/entities/contester.entity';
 import { AuthService } from 'src/app/services/auth.service';
+import { SnackBarService } from 'src/app/services/snack-bar.service';
 import { UserService } from 'src/app/services/user.service';
 import { FileService } from '../../services/file.service';
 
@@ -28,7 +29,8 @@ export class ContestProblemComponent implements OnInit {
     private router: Router,
     private fileService: FileService,
     private authService: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private snackBarService: SnackBarService
   ) { }
 
   @Input() problems: any[] = [];
@@ -111,7 +113,11 @@ export class ContestProblemComponent implements OnInit {
           setTimeout(() => {
             this.selectedFile = null;
           }, 5000);
-          console.log(`res`, res);
+          if(res.correctTestCases == res.totalTestCases) {
+            this.snackBarService.openSuccessSnackBar("Correct: " + res.correctTestCases + "/" + res.totalTestCases, 5000)
+          } else {
+            this.snackBarService.openErrorSnackBar("Correct: " + res.correctTestCases + "/" + res.totalTestCases, 5000)
+          }
           // res.data ? this.uploadResult.emit(res.data) : null;
         },
         (err: any) => {
