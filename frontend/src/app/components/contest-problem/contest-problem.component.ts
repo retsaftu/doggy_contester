@@ -37,40 +37,32 @@ export class ContestProblemComponent implements OnInit {
 
   @Input() currentProblem!: any;
 
-  @Input() contestInfo!: ContestInfo;
+  @Input() contestInfo!: any;
 
   fileType!: string;
 
   disabled = false;
 
-
   userId: any;
   selectedFile: FileSnippet | any;
+
+  private _isParticipant = false;
 
   ngOnInit(): void {
     this.fileType = '.cpp,.js,.py';
     let splittedUrl = this.router.url.split('/');
     this.contestId = splittedUrl[splittedUrl.length - 1];
-    console.log('currProblem',this.currentProblem);
-    // this.contestProblems = this.generationList();
-    // this.currentProblem = this.contestProblems[0];
-    // console.log(`this.contestProblems`, this.contestProblems);
-    // console.log(`this.currentProblem `, this.currentProblem);
+    for(let i=0; i<this.contestInfo?.participants?.length; i++) {
+      if(this.userService.userInfo._id.toString() == this.contestInfo?.participants[i]?._id.toString()) {
+        this._isParticipant = true;
+        break;
+      }
+    }
   }
 
   ngOnChanges() {
     console.log('problem contests', this.currentProblem);
   }
-
-  // setContestProblems(contestProblems: any) {
-  //   console.log(contestProblems);
-  //   this.contestProblems = contestProblems;
-  // }
-
-  // setCurrentProblem(currentproblem: any) {
-  //   console.log(currentproblem)
-  //   this.currentProblem = currentproblem;
-  // }
 
   generationList() {
     const problems: ProblemContent[] = [];
@@ -134,5 +126,9 @@ export class ContestProblemComponent implements OnInit {
   get isLoggedIn() { return this.authService.isLoggedIn() }
 
   get isOwner() { return this.userService.userInfo._id == this.contestInfo.owner._id}
+
+  get isParticipant() { return this._isParticipant }
+
+  set isParticipant(isParticipant: boolean) { this._isParticipant = isParticipant }
 
 }
