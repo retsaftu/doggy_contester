@@ -118,6 +118,9 @@ export class SubmissionService {
       case '.java':
         compiler = path.join(__dirname, "../../../compiler/java.sh");
         break;
+      case '.js':
+        compiler = path.join(__dirname, "../../../compiler/js.sh");
+        break;
     }
     shelljs.chmod("+x", compiler);
 

@@ -18,8 +18,7 @@ export class SubmissionController {
     @Body() submission: any,
     @Req() req: any
   ) {
-    const supportedFileExtensions = ['.cpp', '.py', '.java'];
-
+    const supportedFileExtensions = ['.cpp', '.py', '.java', '.js'];
     
     if (!file)
     return { success: false, message: 'No file uploaded' };
