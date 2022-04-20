@@ -16,6 +16,8 @@ import { SnackBarService } from 'src/app/services/snack-bar.service';
 })
 export class ContestComponent implements OnInit {
 
+  @ViewChild('contestProblem') contestProblem: any;
+
   currentProgress = 0;
 
   // @ViewChild('contestProblem') contestProblemComponent!: ContestProblemComponent;
@@ -124,6 +126,7 @@ export class ContestComponent implements OnInit {
     this.contestService.joinContest(this.contestInfo._id.toString()).subscribe((res) => {
       this._isParticipant = true;
       this.snackBarService.openSuccessSnackBar("Joined to contest successfully", 5000);
+      this.contestProblem.isParticipant = true;
     })
   }
 

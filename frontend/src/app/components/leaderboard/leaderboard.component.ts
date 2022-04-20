@@ -26,7 +26,6 @@ export class LeaderboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.length = 100;
     // this.userLeaderboard = this.generateList(0, this.pageSize);
     this.userService.getGlobalLeaderBoard().subscribe((res: any) => {
       console.log(`res`, res);
@@ -38,8 +37,14 @@ export class LeaderboardComponent implements OnInit {
       //   console.log(this.fullLeaderboard[i])
       //   this.userLeaderboard.push(this.fullLeaderboard[i])
       // }
-      this.userLeaderboard = res;
-
+      this.length = res.length;
+      this.fullLeaderboard = res;
+      const currPage = [];
+      for (let i = 0; i < this.pageSize; i++) {
+        currPage.push(new UserLeaderboard(this.fullLeaderboard[i].username, this.fullLeaderboard[i].name, this.fullLeaderboard[i].solved, this.fullLeaderboard[i].attempted,))
+      }
+      this.userLeaderboard = currPage;
+      console.log(this.userLeaderboard)
     })
   }
 
@@ -55,9 +60,13 @@ export class LeaderboardComponent implements OnInit {
     this.pageSize = event.pageSize;
     this.pageIndex = event.pageIndex;
     this.userLeaderboard = [];
-    for (let i = this.pageSize * this.pageIndex; i < this.pageSize * (this.pageIndex + 1); i++) {
-      this.userLeaderboard.push(new UserLeaderboard(this.fullLeaderboard[i].username, this.fullLeaderboard[i].name, this.fullLeaderboard[i].solved, this.fullLeaderboard[i].attempted,))
+    const currPage = []
+    console.log(this.pageSize * this.pageIndex)
+    for (let i = this.pageSize * this.pageIndex; i < this.pageSize * (this.pageIndex + 1) && i < this.fullLeaderboard.length; i++) {
+      console.log(this.fullLeaderboard[i]);
+      currPage.push(new UserLeaderboard(this.fullLeaderboard[i].username, this.fullLeaderboard[i].name, this.fullLeaderboard[i].solved, this.fullLeaderboard[i].attempted,))
     }
+    this.userLeaderboard = currPage;
     // this.userLeaderboard = this.generateList(event.pageIndex * this.pageSize, (event.pageIndex + 1) * this.pageSize);
   }
 

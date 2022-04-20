@@ -32,6 +32,10 @@
             <button (click)="loginByGoogleAccount()" class="button service-registration-btn" mat-raised-button>
                 <img src="../../../assets/google_logo.png"> Sign in with Google
             </button>
+
+            <button (click)="continueAsGuest()" class="button continue-as-guest-btn" mat-raised-button>
+                <mat-icon>person</mat-icon><span>Continue as guest</span>
+            </button>
         </form>
 
         <form *ngIf="!showLoginPage" [formGroup]="registrationForm">

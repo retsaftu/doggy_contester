@@ -13,7 +13,7 @@ import { SubmissionDialogComponent } from './submission-dialog/submission-dialog
 })
 export class ContestSubmissionComponent implements OnInit {
 
-  @Input() contestInfo!: ContestInfo;
+  @Input() contestInfo!: any;
 
   length = 0;
   pageSize = 10;
@@ -25,6 +25,10 @@ export class ContestSubmissionComponent implements OnInit {
 
   submissions: SubmissionInfo[] = [];
 
+  fullSubmisions: any[] = [];
+
+  taskIndexMatches:any = {};
+
   constructor(
     private contestService: ContestService,
     public dialog: MatDialog
@@ -32,9 +36,31 @@ export class ContestSubmissionComponent implements OnInit {
 
   ngOnInit(): void {
     this.length = 100;
-    // this.submissions = this.generateList(0, this.pageSize);
-    this.contestService.getSubmissions(this.contestInfo._id).subscribe((res) => {
-      console.log(res);
+    for(let task of this.contestInfo.tasks) {
+      this.taskIndexMatches[task.name] = task.index;
+    }
+    this.contestService.getSubmissions(this.contestInfo._id).subscribe((res: any) => {
+      this.length = res.length;
+      this.fullSubmisions = res;
+      const submissions = []
+      for(let i=0; i<this.pageSize && i < this.length; i++) {
+        let submissionResult: SubmissionResult = SubmissionResult.WRONG_ANSWARE;
+        if(this.fullSubmisions[i]['solved']) {
+          submissionResult = SubmissionResult.ACCEPTED;
+        }
+        let programmingLang = 'UNKNOWN';
+        if(this.fullSubmisions[i].extension == '.cpp') {
+          programmingLang = 'C++'
+        } else if(this.fullSubmisions[i].extension == '.py'){
+          programmingLang = 'Python'
+        } else if(this.fullSubmisions[i].extension == '.js') {
+          programmingLang = 'JavaScript'
+        }
+        submissions.push(new SubmissionInfo(this.taskIndexMatches[this.fullSubmisions[i].taskName],
+                                            this.fullSubmisions[i].taskName, submissionResult,
+                                            this.fullSubmisions[i].timestamp, programmingLang));
+      }
+      this.submissions = submissions;
     })
   }
 
@@ -65,6 +91,7 @@ export class ContestSubmissionComponent implements OnInit {
     if(!submitedTime) {
       return '';
     }
+    submitedTime = new Date(submitedTime);
     let submitedTimeStr = '';
     let result = getDifferenceInDays(this.contestInfo.startDate, this.contestInfo.endDate);
     // Если контест идет больше одного дня
@@ -87,7 +114,27 @@ export class ContestSubmissionComponent implements OnInit {
 
   changePage(event: PageEvent) {
     this.pageSize = event.pageSize;
+    let pageIndex = event.pageIndex;
     // this.submissions = this.generateList(event.pageIndex * this.pageSize, (event.pageIndex + 1) * this.pageSize);
+    const submissions = []
+      for(let i=pageIndex * this.pageSize; i<this.pageSize * (pageIndex + 1) && i < this.length; i++) {
+        let submissionResult: SubmissionResult = SubmissionResult.WRONG_ANSWARE;
+        if(this.fullSubmisions[i]['solved']) {
+          submissionResult = SubmissionResult.ACCEPTED;
+        }
+        let programmingLang = 'UNKNOWN';
+        if(this.fullSubmisions[i].extension == '.cpp') {
+          programmingLang = 'C++'
+        } else if(this.fullSubmisions[i].extension == '.py'){
+          programmingLang = 'Python'
+        } else if(this.fullSubmisions[i].extension == '.js') {
+          programmingLang = 'JavaScript'
+        }
+        submissions.push(new SubmissionInfo(this.taskIndexMatches[this.fullSubmisions[i].taskName],
+                                            this.fullSubmisions[i].taskName, submissionResult,
+                                            this.fullSubmisions[i].timestamp, programmingLang));
+      }
+      this.submissions = submissions;
   }
 
   open(row: any) {

@@ -206,4 +206,8 @@ export class AuthComponent implements OnInit {
 
   get isLoginLoading() { return this._isLoginLoading }
 
+  continueAsGuest(){
+    this.router.navigate([''])
+  }
+
 }

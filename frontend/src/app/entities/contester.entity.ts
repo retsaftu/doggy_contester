@@ -160,7 +160,7 @@ export enum SubmissionResult {
 
 export class SubmissionInfo {
   constructor(public number: string, public problemTitle: string, public submissionResult: SubmissionResult,
-    public language: AvailableProgrammingLanguages, public submitTime: Date) { }
+      public submitTime: Date, public language?: any) { }
 }
 
 export enum AvailableProgrammingLanguages {
@@ -170,9 +170,9 @@ export enum AvailableProgrammingLanguages {
 }
 
 export enum AvailableProgrammingLanguagesExtension {
-  CPP = 'cpp',
-  PY = 'py',
-  JS = 'JS'
+  CPP = '.cpp',
+  PY = '.py',
+  JS = '.js'
 }
 
 export class ProblemContent {

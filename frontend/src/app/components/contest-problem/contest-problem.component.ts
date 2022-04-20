@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ContestInfo, ProblemContent } from 'src/app/entities/contester.entity';
 import { AuthService } from 'src/app/services/auth.service';
+import { SnackBarService } from 'src/app/services/snack-bar.service';
 import { UserService } from 'src/app/services/user.service';
 import { FileService } from '../../services/file.service';
 
@@ -28,47 +29,40 @@ export class ContestProblemComponent implements OnInit {
     private router: Router,
     private fileService: FileService,
     private authService: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private snackBarService: SnackBarService
   ) { }
 
   @Input() problems: any[] = [];
 
   @Input() currentProblem!: any;
 
-  @Input() contestInfo!: ContestInfo;
+  @Input() contestInfo!: any;
 
   fileType!: string;
 
   disabled = false;
 
-
   userId: any;
   selectedFile: FileSnippet | any;
+
+  private _isParticipant = false;
 
   ngOnInit(): void {
     this.fileType = '.cpp,.js,.py';
     let splittedUrl = this.router.url.split('/');
     this.contestId = splittedUrl[splittedUrl.length - 1];
-    console.log('currProblem',this.currentProblem);
-    // this.contestProblems = this.generationList();
-    // this.currentProblem = this.contestProblems[0];
-    // console.log(`this.contestProblems`, this.contestProblems);
-    // console.log(`this.currentProblem `, this.currentProblem);
+    for(let i=0; i<this.contestInfo?.participants?.length; i++) {
+      if(this.userService.userInfo._id.toString() == this.contestInfo?.participants[i]?._id.toString()) {
+        this._isParticipant = true;
+        break;
+      }
+    }
   }
 
   ngOnChanges() {
     console.log('problem contests', this.currentProblem);
   }
-
-  // setContestProblems(contestProblems: any) {
-  //   console.log(contestProblems);
-  //   this.contestProblems = contestProblems;
-  // }
-
-  // setCurrentProblem(currentproblem: any) {
-  //   console.log(currentproblem)
-  //   this.currentProblem = currentproblem;
-  // }
 
   generationList() {
     const problems: ProblemContent[] = [];
@@ -111,7 +105,11 @@ export class ContestProblemComponent implements OnInit {
           setTimeout(() => {
             this.selectedFile = null;
           }, 5000);
-          console.log(`res`, res);
+          if(res.correctTestCases == res.totalTestCases) {
+            this.snackBarService.openSuccessSnackBar("Correct: " + res.correctTestCases + "/" + res.totalTestCases, 5000)
+          } else {
+            this.snackBarService.openErrorSnackBar("Correct: " + res.correctTestCases + "/" + res.totalTestCases, 5000)
+          }
           // res.data ? this.uploadResult.emit(res.data) : null;
         },
         (err: any) => {
@@ -128,5 +126,9 @@ export class ContestProblemComponent implements OnInit {
   get isLoggedIn() { return this.authService.isLoggedIn() }
 
   get isOwner() { return this.userService.userInfo._id == this.contestInfo.owner._id}
+
+  get isParticipant() { return this._isParticipant }
+
+  set isParticipant(isParticipant: boolean) { this._isParticipant = isParticipant }
 
 }
