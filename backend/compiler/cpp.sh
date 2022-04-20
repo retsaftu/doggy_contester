@@ -23,6 +23,7 @@ fi
 
 mkdir ./../uploads/${contestId}/${taskId}/${userId}/cpp/output
 mkdir ./../uploads/${contestId}/${taskId}/${userId}/cpp/result
+mkdir ./../uploads/${contestId}/${taskId}/${userId}/cpp/error
 
 testsAmount=$(ls ./../uploads/${contestId}/${taskId}/${userId}/cpp/input | wc -l)
 
@@ -30,19 +31,19 @@ for i in $(seq 1 $testsAmount); do
     START=$(date +%s.%3N)
 
     # Run program
-    ./../uploads/${contestId}/${taskId}/${userId}/cpp/main \
+    ./timeout -t 1 -m 1024 ./../uploads/${contestId}/${taskId}/${userId}/cpp/main \
         < ./../uploads/${contestId}/${taskId}/${userId}/cpp/input/test${i}.in \
         1> ./../uploads/${contestId}/${taskId}/${userId}/cpp/output/test${i}.out \
-        2> ./../uploads/${contestId}/${taskId}/${userId}/cpp/compile.log
+        2> ./../uploads/${contestId}/${taskId}/${userId}/cpp/error/test${i}.err
 
     END=$(date +%s.%3N)
 
     DIFF=$(echo "$END - $START" | bc)
 
     # Check if test failed
-    if [ -s ./../uploads/${contestId}/${taskId}/${userId}/cpp/compile.log ]; then
-        echo "Error while compiling test ${i}" >> ./../uploads/${contestId}/${taskId}/${userId}/cpp/compile.log
-    fi
+    # if [ -s ./../uploads/${contestId}/${taskId}/${userId}/cpp/compile.log ]; then
+    #     echo "Error while compiling test ${i}" >> ./../uploads/${contestId}/${taskId}/${userId}/cpp/compile.log
+    # fi
 
     j=1
     isUserAnswerCorrect=false

@@ -20,10 +20,11 @@ export class SubmissionController {
   ) {
     const supportedFileExtensions = ['.cpp', '.py', '.java'];
 
-    const fileExtension = path.extname(file.originalname);
-
+    
     if (!file)
-      return { success: false, message: 'No file uploaded' };
+    return { success: false, message: 'No file uploaded' };
+    
+    const fileExtension = path.extname(file.originalname);
 
     if (!supportedFileExtensions.includes(fileExtension) ||
         !supportedFileExtensions.includes(submission.extension))
@@ -58,8 +59,8 @@ export class SubmissionController {
     submission.solved = solved;
     submission.averageTime = averageTime;
 
-    if (testResults.length === 0) {
-      await this.submissionService.deleteLocalDirectory(submission.contestId);
+    if (testResults.length === 0 && averageTime === 0) {
+      await this.submissionService.deleteLocalDirectory(submission);
       return { success: false, message: 'Compilation error' };
     }
 

@@ -15,7 +15,8 @@ export class SubmissionService {
 
   async saveSolutionFile(submission: CreateSubmissionDto, file: Express.Multer.File) {
     const fileUTF8 = file.buffer.toString('utf8');
-    const submissionDirectory = path.join(__dirname, '../../../', 'uploads', submission.contestId, submission.taskId, submission.user._id, submission.extension.substring(1));
+    const submissionDirectory = path.join(__dirname, '../../../', 'uploads',
+     submission.contestId, submission.taskId, submission.user._id, submission.extension.substring(1));
     let filename = "";
     if (submission.extension === '.java') {
       filename = file.originalname;
@@ -47,7 +48,9 @@ export class SubmissionService {
   async downloadTestCases(submission: CreateSubmissionDto, submissionDirectory: string) {
     let multipleCorrectOutput = false;
 
-    const contest = await this.db.collection('contest').findOne({ _id: new mongodb.ObjectID(submission.contestId) });
+    const contest = await this.db.collection('contest')
+      .findOne({ _id: new mongodb.ObjectID(submission.contestId) });
+
     if (!contest) {
       return { success: false, message: 'Contest not found' };
     }
@@ -120,19 +123,23 @@ export class SubmissionService {
 
     shelljs.exec(`${compiler} -c ${submission.contestId} -t ${submission.taskId} -u ${submission.user._id}`);
 
-    const submissionDirectory = path.join(__dirname, '../../../', 'uploads', submission.contestId, submission.taskId, submission.user._id, submission.extension.substring(1));
+    const submissionDirectory = path.join(__dirname, '../../../', 'uploads',
+     submission.contestId, submission.taskId, submission.user._id, submission.extension.substring(1));
     const compileErrors = shelljs.cat(path.join(submissionDirectory, 'compile.log'));
 
     if (compileErrors.stdout.toString().length > 0) {
       return {
         totalTests: 0,
         correctTests: 0,
-        testResults: []
+        testResults: [],
+        solved: false,
+        averageTime: 0,
       };
     }
 
     const testResults = [];
-    const resultDirectory = path.join(__dirname, '../../../', 'uploads', submission.contestId, submission.taskId, submission.user._id, submission.extension.substring(1), 'result');
+    const resultDirectory = path.join(__dirname, '../../../uploads', submission.contestId,
+     submission.taskId, submission.user._id, submission.extension.substring(1), 'result');
     const resultFiles = fs.readdirSync(resultDirectory);
     let testNum = 1;
     for (const file of resultFiles) {
@@ -154,7 +161,7 @@ export class SubmissionService {
 
       testResults.push({
         test: testNum,
-        message: lines[0],
+        message: timeInSeconds > 1 ? 'Time Limit Exceeded' : lines[0],
         time: timeInSeconds
       });
 
