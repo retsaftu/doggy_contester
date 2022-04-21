@@ -40,7 +40,7 @@ export class LeaderboardComponent implements OnInit {
       this.length = res.length;
       this.fullLeaderboard = res;
       const currPage = [];
-      for (let i = 0; i < this.pageSize; i++) {
+      for (let i = 0; i < this.pageSize && i < this.fullLeaderboard.length; i++) {
         currPage.push(new UserLeaderboard(this.fullLeaderboard[i].username, this.fullLeaderboard[i].name, this.fullLeaderboard[i].solved, this.fullLeaderboard[i].attempted,))
       }
       this.userLeaderboard = currPage;

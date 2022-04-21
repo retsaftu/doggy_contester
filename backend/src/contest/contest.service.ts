@@ -89,6 +89,19 @@ export class ContestService {
         $sort: {
           _id: -1
         }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          description: 1,
+          owner: 1,
+          total_participants: 1,
+          // participants: 1,
+          startDate: 1,
+          endDate: 1,
+          premium: 1,
+        }
       }
     ]).toArray());
   }
@@ -105,11 +118,27 @@ export class ContestService {
             $gt: new Date(),
           }
         }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          description: 1,
+          owner: 1,
+          total_participants: 1,
+          // participants: 1,
+          startDate: 1,
+          endDate: 1,
+          premium: 1,
+        }
       }
+
     ]).toArray());
   }
 
   async findMyActiveContest(myid: string) {
+    console.log('findMyActiveContest');
+
     return (await this.db.collection('contest').aggregate([
       {
         $match: {
@@ -120,6 +149,19 @@ export class ContestService {
           endDate: {
             $gt: new Date()
           }
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          description: 1,
+          owner: 1,
+          // total_participants: 1,
+          participants: 1,
+          startDate: 1,
+          endDate: 1,
+          premium: 1,
         }
       }
       // {
@@ -156,6 +198,19 @@ export class ContestService {
           endDate: {
             $gt: new Date()
           }
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          description: 1,
+          owner: 1,
+          total_participants: 1,
+          // participants: 1,
+          startDate: 1,
+          endDate: 1,
+          premium: 1,
         }
       }
       // {
@@ -201,6 +256,30 @@ export class ContestService {
       {
         $match: {
           _id: new mongodb.ObjectId(id)
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          description: 1,
+          owner: 1,
+          total_participants: 1,
+          participants: 1,
+          startDate: 1,
+          endDate: 1,
+          premium: 1,
+          tasks: {
+            _id: 1,
+            index: 1,
+            name: 1,
+            description: 1,
+            inputExample: 1,
+            outputExample: 1,
+            time: 1,
+            memory: 1
+
+          }
         }
       }
     ]).toArray());

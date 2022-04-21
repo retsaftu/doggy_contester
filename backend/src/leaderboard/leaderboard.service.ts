@@ -20,6 +20,23 @@ export class LeaderboardService {
         $sort: {
           _id: -1
         }
+      },
+      {
+        $project: {
+          _id: 1,
+          contestId: 1,
+          taskId: 1,
+          extension: 1,
+          user: 1,
+          size: 1,
+          timestamp: 1,
+          taskName: 1,
+          totalTestCases: 1,
+          correctTestCases: 1,
+          testResults: 1,
+          solved: 1,
+          averageTime: 1
+        }
       }
     ]).toArray();
 
@@ -33,6 +50,15 @@ export class LeaderboardService {
         $sort: {
           solved: -1,
           attempted: 1,
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          username: 1,
+          name: 1,
+          solved: 1,
+          attempted: 1
         }
       }
     ]).toArray();

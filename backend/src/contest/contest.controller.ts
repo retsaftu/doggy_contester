@@ -29,11 +29,11 @@ export class ContestController {
     @Req() req: any,
     // @Query('id') id: string
   ) {
-    console.log(`req`, req);
+    // console.log(`req`, req);
     const id = req.user._id
-    console.log(`req.user`, req.user.email);
-    console.log(`req.user`, req._id);
-    console.log(`id`, id);
+    // console.log(`req.user`, req.user.email);
+    // console.log(`req.user`, req._id);
+    // console.log(`id`, id);
     if (!id) {
       return ID_NOT_FOUND
     }
@@ -46,13 +46,15 @@ export class ContestController {
 
     // @Query('id') id: string
   ) {
+    console.log('---myActiveContests');
+
     const id = req.user._id
 
     console.log(`id`, id);
     if (!id) {
       return ID_NOT_FOUND
-    }
-    return this.contestService.findMyActiveContest(id);
+    } else
+      return this.contestService.findMyActiveContest(id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -62,6 +64,8 @@ export class ContestController {
 
     // @Query('id') id: string
   ) {
+    console.log('---currentContests');
+
     const id = req.user._id
 
     console.log(`id`, id);
@@ -79,7 +83,7 @@ export class ContestController {
   ) {
     return this.contestService.findCurrentContestsForUnauthorizedUser();
   }
-  
+
   @UseGuards(JwtAuthGuard)
   @Patch('joinContest/:contestId')
   joinContest(@Param('contestId') contestId: string, @Req() req: any) {
