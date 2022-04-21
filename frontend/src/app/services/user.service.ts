@@ -27,6 +27,12 @@ export class UserService {
     } else if(!!localStorage.getItem(environment.USER_INFO_FIELDS.AVATAR)){
       localStorage.removeItem(environment.USER_INFO_FIELDS.AVATAR);
     }
+    if(userInfo.balance) {
+      this.balance = userInfo.balance;
+    } else {
+      this.balance = 0;
+    }
+
   }
 
   set username(username: string) {
@@ -76,7 +82,7 @@ export class UserService {
     const avatar = this.avatar;
     return new UserBasicInfo(username, _id, this.balance, avatar);
   }
-
+  
   emitChangeOfUserProfile(info: UserBasicInfo) {
     this.emitChangeOfUserProfileSource.next(info)
   }

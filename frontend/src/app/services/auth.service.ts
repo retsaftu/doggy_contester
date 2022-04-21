@@ -37,7 +37,8 @@ export class AuthService {
     return this.http.post(`/api/auth/login`, userLoginInfo)
       .pipe(
         tap((response: any) => {
-          this.userService.userInfo = new UserBasicInfo(response['username'], response['userId'], response['balance'], response['avatar'])
+          console.log('response', response);
+          this.userService.userInfo = new UserBasicInfo(response['username'], response['userId'], response['balance'], response['avatar'], response['about'], response['isManager'])
           this.setToken(response['access_token'], response['expirationTime']);
         })
       )
@@ -47,7 +48,8 @@ export class AuthService {
     return this.http.post('/api/auth/loginByGoogleAccount', {email: email})
       .pipe(
         tap((response: any) => {
-          this.userService.userInfo = new UserBasicInfo(response['username'], response['userId'], response['balance'], response['avatar'])
+          console.log('response', response);
+          this.userService.userInfo = new UserBasicInfo(response['username'], response['userId'], response['balance'], response['avatar'], response['about'], response['isManager'])
           this.setToken(response['access_token'], response['expirationTime']);
         })
       );

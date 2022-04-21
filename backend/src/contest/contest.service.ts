@@ -86,8 +86,8 @@ export class ContestService {
   async findAll() {
     return (await this.db.collection('contest').aggregate([
       {
-        $match: {
-
+        $sort: {
+          _id: -1
         }
       }
     ]).toArray());
