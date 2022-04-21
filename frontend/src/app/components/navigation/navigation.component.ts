@@ -46,6 +46,7 @@ export class NavigationComponent implements OnInit {
     this.isAuthenticated = this.authService.isLoggedIn();
 
     this.userInfo = this.userService.userInfo;
+    console.log(this.userInfo);
 
     let splitedRoute = this.router.url.split('/');
     if(splitedRoute.length > 1) {
