@@ -46,7 +46,7 @@ export class ContestProblemComponent implements OnInit {
   userId: any;
   selectedFile: FileSnippet | any;
 
-  isLoading = true;
+  isLoading = false;
 
   private _isParticipant = false;
 
