@@ -159,7 +159,7 @@ export enum SubmissionResult {
 }
 
 export class SubmissionInfo {
-  constructor(public number: string, public problemTitle: string, public submissionResult: SubmissionResult,
+  constructor(public _id: string, public number: string, public problemTitle: string, public submissionResult: SubmissionResult,
       public submitTime: Date, public language?: any) { }
 }
 

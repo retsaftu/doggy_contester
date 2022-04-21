@@ -40,6 +40,7 @@ export class ContestSubmissionComponent implements OnInit {
       this.taskIndexMatches[task.name] = task.index;
     }
     this.contestService.getSubmissions(this.contestInfo._id).subscribe((res: any) => {
+      console.log('HEEEEEEECTOR1', res);
       this.length = res.length;
       this.fullSubmisions = res;
       const submissions = []
@@ -56,7 +57,7 @@ export class ContestSubmissionComponent implements OnInit {
         } else if(this.fullSubmisions[i].extension == '.js') {
           programmingLang = 'JavaScript'
         }
-        submissions.push(new SubmissionInfo(this.taskIndexMatches[this.fullSubmisions[i].taskName],
+        submissions.push(new SubmissionInfo(this.fullSubmisions[i]._id, this.taskIndexMatches[this.fullSubmisions[i].taskName],
                                             this.fullSubmisions[i].taskName, submissionResult,
                                             this.fullSubmisions[i].timestamp, programmingLang));
       }
@@ -64,6 +65,33 @@ export class ContestSubmissionComponent implements OnInit {
     })
   }
 
+
+  ngOnChange() {
+    this.contestService.getSubmissions(this.contestInfo._id).subscribe((res: any) => {
+      console.log('HEEEEEEECTOR', res);
+      this.length = res.length;
+      this.fullSubmisions = res;
+      const submissions = []
+      for(let i=0; i<this.pageSize && i < this.length; i++) {
+        let submissionResult: SubmissionResult = SubmissionResult.WRONG_ANSWARE;
+        if(this.fullSubmisions[i]['solved']) {
+          submissionResult = SubmissionResult.ACCEPTED;
+        }
+        let programmingLang = 'UNKNOWN';
+        if(this.fullSubmisions[i].extension == '.cpp') {
+          programmingLang = 'C++'
+        } else if(this.fullSubmisions[i].extension == '.py'){
+          programmingLang = 'Python'
+        } else if(this.fullSubmisions[i].extension == '.js') {
+          programmingLang = 'JavaScript'
+        }
+        submissions.push(new SubmissionInfo(this.fullSubmisions[i]._id, this.taskIndexMatches[this.fullSubmisions[i].taskName],
+                                            this.fullSubmisions[i].taskName, submissionResult,
+                                            this.fullSubmisions[i].timestamp, programmingLang));
+      }
+      this.submissions = submissions;
+    })
+  }
   // generateList(start: number, end: number) {
   //   const submission: SubmissionInfo[] = [];
   //   for(let i=start; i<end; i++) {
@@ -99,9 +127,10 @@ export class ContestSubmissionComponent implements OnInit {
       result = getDifferenceInDays(this.contestInfo.startDate, submitedTime);
       submitedTimeStr += result < 10 ? '0' + result : result;
     }
+    let diffInDays = result;
     result = getDifferenceInHours(this.contestInfo.startDate, this.contestInfo.endDate);
     // Если контест идет больше одного часа
-    if(result > 0) {
+    if(result > 0 || diffInDays > 0) {
       result = getDifferenceInHours(this.contestInfo.startDate, submitedTime);
       submitedTimeStr += (submitedTimeStr.length > 0 ? ' : ' : '') + (result < 10 ? '0' + result : result);
     }
@@ -130,7 +159,7 @@ export class ContestSubmissionComponent implements OnInit {
         } else if(this.fullSubmisions[i].extension == '.js') {
           programmingLang = 'JavaScript'
         }
-        submissions.push(new SubmissionInfo(this.taskIndexMatches[this.fullSubmisions[i].taskName],
+        submissions.push(new SubmissionInfo(this.fullSubmisions[i]._id, this.taskIndexMatches[this.fullSubmisions[i].taskName],
                                             this.fullSubmisions[i].taskName, submissionResult,
                                             this.fullSubmisions[i].timestamp, programmingLang));
       }
@@ -138,11 +167,11 @@ export class ContestSubmissionComponent implements OnInit {
   }
 
   open(row: any) {
-
+    console.log("row",row)
     const dialogRef = this.dialog.open(SubmissionDialogComponent, {
       width: '60%',
       data: {
-        submissionId: "62563d2b90017acbc99c3326"
+        submissionId: row._id
       }
     })
   }

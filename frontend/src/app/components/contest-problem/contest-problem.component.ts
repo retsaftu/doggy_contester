@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ContestInfo, ProblemContent } from 'src/app/entities/contester.entity';
 import { AuthService } from 'src/app/services/auth.service';
@@ -45,6 +45,8 @@ export class ContestProblemComponent implements OnInit {
 
   userId: any;
   selectedFile: FileSnippet | any;
+
+  isLoading = true;
 
   private _isParticipant = false;
 
@@ -93,6 +95,8 @@ export class ContestProblemComponent implements OnInit {
     const file: File = fileInput.files[0];
     const reader = new FileReader();
 
+    this.isLoading = true;    
+
     reader.addEventListener('load', (event: any) => {
 
       this.selectedFile = new FileSnippet(event.target.result, file);
@@ -101,6 +105,7 @@ export class ContestProblemComponent implements OnInit {
       console.log(this.selectedFile);
       this.fileService.uploadOne(this.selectedFile.file, this.contestId, this.currentProblem._id).subscribe(
         (res: any) => {
+          this.isLoading = false;
           this.onSuccess();
           setTimeout(() => {
             this.selectedFile = null;
@@ -114,10 +119,11 @@ export class ContestProblemComponent implements OnInit {
         },
         (err: any) => {
           this.onError();
+          this.isLoading = false;
           setTimeout(() => {
             this.selectedFile = null;
           }, 5000);
-        })
+      })
     });
 
     reader.readAsDataURL(file);

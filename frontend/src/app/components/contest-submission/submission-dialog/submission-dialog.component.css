@@ -5,3 +5,14 @@
 
     height: 100%;
 }
+textarea::-webkit-scrollbar {
+    width: 10px;               /* width of the entire scrollbar */
+  }
+textarea::-webkit-scrollbar-track {
+    background: transparent;        /* color of the tracking area */
+  }
+textarea::-webkit-scrollbar-thumb {
+    background-color: rgb(128, 128, 128);    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    border: 3px solid transparent;  /* creates padding around scroll thumb */
+}
