@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, UseGuards, Req, BadRequestException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import * as path from 'path';
@@ -43,8 +43,7 @@ export class SubmissionController {
     const { submissionDirectory } = await this.submissionService.saveSolutionFile(submission, file);
 
     const { taskName } = await this.submissionService.downloadTestCases(submission, submissionDirectory);
-    submission.taskName = taskName;
-
+    
     const {
       totalTests,
       correctTests,
@@ -52,32 +51,31 @@ export class SubmissionController {
       solved,
       averageTime
     } = await this.submissionService.runTests(submission);
+
+    submission.taskName = taskName;
     submission.totalTestCases = totalTests;
     submission.correctTestCases = correctTests;
     submission.testResults = testResults;
     submission.solved = solved;
     submission.averageTime = averageTime;
-
-    if (testResults.length === 0 && averageTime === 0) {
-      await this.submissionService.deleteLocalDirectory(submission);
-      return { success: false, message: 'Compilation error' };
-    }
-
-    // await this.submissionService.saveTestResults(insertedId.toString(), testResults);
-
-    // await this.submissionService.saveSubmission(submission, file);
-
-    await this.submissionService.deleteLocalDirectory(submission);
-
     submission.originalName = file.originalname;
     submission.file = file.buffer.toString('base64');
     submission.size = file.size;
     submission.timestamp = new Date();
 
+    const isCompilationError = testResults.length === 0 && averageTime === 0;
+
+    await this.submissionService.deleteLocalDirectory(submission);
+
     const { insertedId } = await this.submissionService.saveSubmission(submission);
+
+    if (isCompilationError) {
+      throw new BadRequestException('Compilation error');
+    }
 
     return {
       success: true,
+      message: 'Submission successful',
       ...submission
     };
   }
