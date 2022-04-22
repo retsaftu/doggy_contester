@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 import { UserLeaderboard } from 'src/app/entities/user.entity';
 import { UserService } from 'src/app/services/user.service';
 
@@ -22,7 +23,8 @@ export class LeaderboardComponent implements OnInit {
   fullLeaderboard: UserLeaderboard[] = [];
 
   constructor(
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -41,7 +43,7 @@ export class LeaderboardComponent implements OnInit {
       this.fullLeaderboard = res;
       const currPage = [];
       for (let i = 0; i < this.pageSize && i < this.fullLeaderboard.length; i++) {
-        currPage.push(new UserLeaderboard(this.fullLeaderboard[i].username, this.fullLeaderboard[i].name, this.fullLeaderboard[i].solved, this.fullLeaderboard[i].attempted,))
+        currPage.push(new UserLeaderboard(this.fullLeaderboard[i]._id, this.fullLeaderboard[i].username, this.fullLeaderboard[i].name, this.fullLeaderboard[i].solved, this.fullLeaderboard[i].attempted,))
       }
       this.userLeaderboard = currPage;
       console.log(this.userLeaderboard)
@@ -64,10 +66,14 @@ export class LeaderboardComponent implements OnInit {
     console.log(this.pageSize * this.pageIndex)
     for (let i = this.pageSize * this.pageIndex; i < this.pageSize * (this.pageIndex + 1) && i < this.fullLeaderboard.length; i++) {
       console.log(this.fullLeaderboard[i]);
-      currPage.push(new UserLeaderboard(this.fullLeaderboard[i].username, this.fullLeaderboard[i].name, this.fullLeaderboard[i].solved, this.fullLeaderboard[i].attempted,))
+      currPage.push(new UserLeaderboard(this.fullLeaderboard[i]._id, this.fullLeaderboard[i].username, this.fullLeaderboard[i].name, this.fullLeaderboard[i].solved, this.fullLeaderboard[i].attempted,))
     }
     this.userLeaderboard = currPage;
     // this.userLeaderboard = this.generateList(event.pageIndex * this.pageSize, (event.pageIndex + 1) * this.pageSize);
+  }
+
+  open(row: any) {
+    this.router.navigate([`/user/${row._id}`])
   }
 
 }

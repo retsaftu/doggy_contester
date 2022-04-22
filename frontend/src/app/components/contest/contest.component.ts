@@ -68,6 +68,7 @@ export class ContestComponent implements OnInit {
       }
       if(!isParticipant) {
         this._isParticipant = false;
+        this.snackBarService.openInfoSnackBar("Join to contest to participate", 2000)
       }
       console.log(this.contestInfo);
       this.contestInfo.startDate = new Date(this.contestInfo.startDate);

@@ -111,7 +111,11 @@ export class ContestProblemComponent implements OnInit {
             this.selectedFile = null;
           }, 5000);
           if(res.correctTestCases == res.totalTestCases) {
-            this.snackBarService.openSuccessSnackBar("Correct: " + res.correctTestCases + "/" + res.totalTestCases, 5000)
+            if(res.correctTestCases == undefined) {
+              this.snackBarService.openErrorSnackBar("Compilation error!");
+            } else {
+              this.snackBarService.openSuccessSnackBar("Correct: " + res.correctTestCases + "/" + res.totalTestCases, 5000)
+            }
           } else {
             this.snackBarService.openErrorSnackBar("Correct: " + res.correctTestCases + "/" + res.totalTestCases, 5000)
           }

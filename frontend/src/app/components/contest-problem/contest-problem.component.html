@@ -5,6 +5,8 @@
     <pre>{{currentProblem?.inputExample}}</pre>
     <h2>Sample output</h2>
     <pre>{{currentProblem?.outputExample}}</pre>
+    <h4>Memmory limit: {{currentProblem?.memory}} MB</h4>
+    <h4>Time limit: {{currentProblem?.time}} milliseconds</h4>
     <div *ngIf="isLoggedIn && !isOwner && isParticipant && !isLoading">
         <button class="contest-problem-submit-code" mat-raised-button color="primary" (click) = "fileInput.value = ''">
             <label class="submit-code-label" for="submit-code">Submit code</label>
