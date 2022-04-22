@@ -90,29 +90,31 @@ export class AuthService {
     return { user: user };
   }
 
-  async login(user: any) {
+  async login(user: any, accountCreated = false) {
     const email = user.email;
     const _id = user._id;
     const username = user.username;
     const test = user
     const payload = { email, _id, username };
     const avatar = user.avatar;
-    console.log(`email`, email);
     return {
       access_token: await this.jwtService.signAsync(payload),
       userId: user._id,
       username: user.username,
       balance: user.balance,
-      avatar: user.avatar
+      avatar: user.avatar,
+      created: accountCreated
     };
   }
 
-  async loginByGoogleAccount(email: string) {
-    const user = await this.findUser(email);
+  async loginByGoogleAccount(register: RegisterDto) {
+    const user = await this.findUser(register.email);
+    let accountCreated = false;
     if (!user) {
-      throw new UnauthorizedException(USER_NOT_FOUND_ERROR);
+      await this.createUser(register);
+      accountCreated = true;
     }
-    return this.login(user)
+    return this.login(user, accountCreated);
   }
 
   async sendConfirmation(user: any) {

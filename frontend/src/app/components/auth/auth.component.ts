@@ -113,8 +113,15 @@ export class AuthComponent implements OnInit {
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
     this.socialAuthService.authState.subscribe((user) => {
       console.log(user);
-      this.authService.loginByGoogleAccount(user.email).subscribe((res) => {
-        this.router.navigate([''])
+      const email = user.email;
+      const username = email.substring(0, email.indexOf('@'));
+      const photo = user.photoUrl;
+      const registerUserInfo = new UserRegistrationInfo(username, email, user.name, username, photo);
+      this.authService.loginByGoogleAccount(registerUserInfo).subscribe((res) => {
+        this.router.navigate(['']);
+        if(res.created) {
+          this.snackBarService.openWarnSnackBar("Change your password in settings! Your current password is your username");
+        }
       })
     });
   }

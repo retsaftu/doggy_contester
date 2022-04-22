@@ -39,11 +39,10 @@ export class AuthController {
 
   }
 
-  @UsePipes(new ValidationPipe())
   @HttpCode(200)
   @Post('loginByGoogleAccount')
-  async loginByGoogleAccount(@Body() { email }: LoginByGoogleAccountDto) {
-    return this.authService.loginByGoogleAccount(email);
+  async loginByGoogleAccount(@Body() dto: RegisterDto) {
+    return this.authService.loginByGoogleAccount(dto);
   }
 
   @Post('confirmEmail/:token')

@@ -18,13 +18,6 @@ export class AuthService {
     private http: HttpClient
   ) { }
 
-  // registerByGoogleAccount(userRegistrationInfo: UserRegistrationInfo, googleToken: string, expires_at?: string) {
-  //   // const expirationTime = expires_at == undefined ? new Date(60 * 60 * 24) : new Date(Number(expires_at))
-  //   // this.setToken(googleToken, expirationTime);
-  //   // TODO: отправить запрос на правильный url
-  //   return this.http.post(`/api/auth/register `, userRegistrationInfo);
-  // }
-
   register(userRegistrationInfo: UserRegistrationInfo) {
     return this.http.post(`/api/auth/register`, userRegistrationInfo);
   }
@@ -44,8 +37,8 @@ export class AuthService {
       )
   }
 
-  loginByGoogleAccount(email: string) {
-    return this.http.post('/api/auth/loginByGoogleAccount', {email: email})
+  loginByGoogleAccount(userRegistrationInfo: UserRegistrationInfo) {
+    return this.http.post('/api/auth/loginByGoogleAccount', userRegistrationInfo)
       .pipe(
         tap((response: any) => {
           console.log('response', response);
