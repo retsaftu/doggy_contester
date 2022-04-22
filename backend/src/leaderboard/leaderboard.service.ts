@@ -54,7 +54,7 @@ export class LeaderboardService {
       },
       {
         $project: {
-          _id: 0,
+          _id: 1,
           username: 1,
           name: 1,
           solved: 1,
