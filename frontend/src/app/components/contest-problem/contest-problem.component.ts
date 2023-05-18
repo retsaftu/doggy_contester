@@ -10,19 +10,15 @@ class FileSnippet {
   pending: boolean = false;
   status: string = 'init';
 
-  constructor(public src: string, public file: File) { }
+  constructor(public src: string, public file: File) {}
 }
 
 @Component({
   selector: 'app-contest-problem',
   templateUrl: './contest-problem.component.html',
-  styleUrls: ['./contest-problem.component.css']
+  styleUrls: ['./contest-problem.component.css'],
 })
-
-
-
 export class ContestProblemComponent implements OnInit {
-
   contestId!: string;
 
   constructor(
@@ -31,7 +27,7 @@ export class ContestProblemComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private snackBarService: SnackBarService
-  ) { }
+  ) {}
 
   @Input() problems: any[] = [];
 
@@ -51,11 +47,14 @@ export class ContestProblemComponent implements OnInit {
   private _isParticipant = false;
 
   ngOnInit(): void {
-    this.fileType = '.cpp,.js,.py';
+    this.fileType = '.cpp,.js,.py,.java';
     let splittedUrl = this.router.url.split('/');
     this.contestId = splittedUrl[splittedUrl.length - 1];
-    for(let i=0; i<this.contestInfo?.participants?.length; i++) {
-      if(this.userService.userInfo._id.toString() == this.contestInfo?.participants[i]?._id.toString()) {
+    for (let i = 0; i < this.contestInfo?.participants?.length; i++) {
+      if (
+        this.userService.userInfo._id.toString() ==
+        this.contestInfo?.participants[i]?._id.toString()
+      ) {
         this._isParticipant = true;
         break;
       }
@@ -68,13 +67,21 @@ export class ContestProblemComponent implements OnInit {
 
   generationList() {
     const problems: ProblemContent[] = [];
-    const descriptionTmp = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis tempore velit maxime nemo animi laboriosam illum ullam. Eos fuga ullam blanditiis at dignissimos, beatae architecto ipsa nesciunt necessitatibus numquam nemo!'
+    const descriptionTmp =
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis tempore velit maxime nemo animi laboriosam illum ullam. Eos fuga ullam blanditiis at dignissimos, beatae architecto ipsa nesciunt necessitatibus numquam nemo!';
     for (let i = 0; i < 7; i++) {
-      let description = ""
+      let description = '';
       for (let j = 0; j < 10; j++) {
         description += descriptionTmp;
       }
-      const problem = new ProblemContent("Problem " + i, description, "2\n3 2", "5\n10", 1000, 1);
+      const problem = new ProblemContent(
+        'Problem ' + i,
+        description,
+        '2\n3 2',
+        '5\n10',
+        1000,
+        1
+      );
       problems.push(problem);
     }
     return problems;
@@ -95,50 +102,69 @@ export class ContestProblemComponent implements OnInit {
     const file: File = fileInput.files[0];
     const reader = new FileReader();
 
-    this.isLoading = true;    
+    this.isLoading = true;
 
     reader.addEventListener('load', (event: any) => {
-
       this.selectedFile = new FileSnippet(event.target.result, file);
 
       this.selectedFile.pending = true;
       console.log(this.selectedFile);
-      this.fileService.uploadOne(this.selectedFile.file, this.contestId, this.currentProblem._id).subscribe(
-        (res: any) => {
-          this.isLoading = false;
-          this.onSuccess();
-          setTimeout(() => {
-            this.selectedFile = null;
-          }, 5000);
-          if(res.correctTestCases == res.totalTestCases) {
-            if(res.correctTestCases == undefined) {
-              this.snackBarService.openErrorSnackBar("Compilation error!");
+      this.fileService
+        .uploadOne(
+          this.selectedFile.file,
+          this.contestId,
+          this.currentProblem._id
+        )
+        .subscribe(
+          (res: any) => {
+            this.isLoading = false;
+            this.onSuccess();
+            setTimeout(() => {
+              this.selectedFile = null;
+            }, 5000);
+            if (res.correctTestCases == res.totalTestCases) {
+              if (res.correctTestCases == undefined) {
+                this.snackBarService.openErrorSnackBar('Compilation error!');
+              } else {
+                this.snackBarService.openSuccessSnackBar(
+                  'Correct: ' + res.correctTestCases + '/' + res.totalTestCases,
+                  5000
+                );
+              }
             } else {
-              this.snackBarService.openSuccessSnackBar("Correct: " + res.correctTestCases + "/" + res.totalTestCases, 5000)
+              this.snackBarService.openErrorSnackBar(
+                'Correct: ' + res.correctTestCases + '/' + res.totalTestCases,
+                5000
+              );
             }
-          } else {
-            this.snackBarService.openErrorSnackBar("Correct: " + res.correctTestCases + "/" + res.totalTestCases, 5000)
+            // res.data ? this.uploadResult.emit(res.data) : null;
+          },
+          (err: any) => {
+            this.onError();
+            this.isLoading = false;
+            setTimeout(() => {
+              this.selectedFile = null;
+            }, 5000);
           }
-          // res.data ? this.uploadResult.emit(res.data) : null;
-        },
-        (err: any) => {
-          this.onError();
-          this.isLoading = false;
-          setTimeout(() => {
-            this.selectedFile = null;
-          }, 5000);
-      })
+        );
     });
 
     reader.readAsDataURL(file);
   }
 
-  get isLoggedIn() { return this.authService.isLoggedIn() }
+  get isLoggedIn() {
+    return this.authService.isLoggedIn();
+  }
 
-  get isOwner() { return this.userService.userInfo._id == this.contestInfo.owner._id}
+  get isOwner() {
+    return this.userService.userInfo._id == this.contestInfo.owner._id;
+  }
 
-  get isParticipant() { return this._isParticipant }
+  get isParticipant() {
+    return this._isParticipant;
+  }
 
-  set isParticipant(isParticipant: boolean) { this._isParticipant = isParticipant }
-
+  set isParticipant(isParticipant: boolean) {
+    this._isParticipant = isParticipant;
+  }
 }
